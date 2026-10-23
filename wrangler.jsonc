@@ -1,0 +1,11 @@
+// Cloudflare Worker settings.
+// Serves the site folder as the website at benjaminpacini.com. Static files only; no worker code.
+// The archive folder is never published.
+{
+  "name": "benjaminpacini-site",
+  "compatibility_date": "2026-09-01",
+  "previews": {},
+  "assets": {
+    "directory": "./site"
+  }
+}

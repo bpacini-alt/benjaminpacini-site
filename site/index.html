@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Benjamin Pacini</title>
+<meta name="description" content="Benjamin Pacini, Professor of Education at BYU-Idaho. Students: find your EDCOR 310 or Econ 150 textbook here.">
+<meta name="color-scheme" content="light">
+<link rel="canonical" href="https://benjaminpacini.com/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://benjaminpacini.com/">
+<meta property="og:title" content="Benjamin Pacini">
+<meta property="og:description" content="Professor of Education, BYU-Idaho. Students: find your textbook here.">
+<meta property="og:image" content="https://benjaminpacini.com/assets/benjamin-pacini.jpg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231a3a5c'/%3E%3Ctext x='32' y='43' font-family='Georgia,serif' font-size='30' font-weight='700' fill='%23ffffff' text-anchor='middle'%3EBP%3C/text%3E%3C/svg%3E">
+<style>
+  :root {
+    --ground: #f6f7f9;
+    --ink: #1a1a1a;
+    --muted: #5f6570;
+    --faint: #6b7079;
+    --rule: #e8ebef;
+    --card: #ffffff;
+    --link: #1a3a5c;
+    --link-hover: #244d78;
+    --edcor: #145d90;
+    --econ-bar: #1b2430;
+    --econ-label: #85601f;
+    --serif: Georgia, "Times New Roman", serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--serif);
+    -webkit-text-size-adjust: 100%;
+  }
+  a { color: var(--link); }
+  a:hover { color: var(--link-hover); }
+  a:focus-visible { outline: 3px solid var(--edcor); outline-offset: 3px; }
+
+  .page { min-height: 100vh; padding: 56px 16px 40px; }
+  .wrap { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 44px; }
+
+  /* Header */
+  .intro { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+  .photo {
+    width: 108px; height: 108px; border-radius: 50%; object-fit: cover; flex-shrink: 0;
+    border: 3px solid #ffffff;
+    box-shadow: 0 0 0 1px #d5dbe2, 0 6px 18px rgba(26, 58, 92, 0.14);
+    background: #e3e8ee;
+  }
+  .intro-text { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  h1 { margin: 0; font-weight: 700; font-size: 38px; line-height: 1.1; }
+  .role { margin: 0; font-size: 17px; font-style: italic; color: var(--muted); }
+
+  /* Textbooks */
+  .books { display: flex; flex-direction: column; gap: 16px; }
+  .books-head { display: flex; flex-direction: column; gap: 6px; }
+  h2.big { margin: 0; font-size: 26px; font-weight: 700; line-height: 1.2; }
+  .lede { margin: 0; font-family: var(--sans); font-size: 15px; color: var(--muted); }
+  .book-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 16px; }
+  .book {
+    display: flex; gap: 18px; align-items: center; padding: 20px;
+    background: var(--card); border-radius: 0 0 12px 12px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.07);
+    text-decoration: none; color: var(--ink);
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
+  }
+  .book:hover { color: var(--ink); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12); transform: translateY(-1px); }
+  .book.edcor { border-top: 4px solid var(--edcor); }
+  .book.econ { border-top: 4px solid var(--econ-bar); }
+  .book img { width: 92px; height: auto; flex-shrink: 0; border-radius: 2px 4px 4px 2px; }
+  .book.edcor img { box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12), 0 6px 14px rgba(20, 93, 144, 0.25); }
+  .book.econ img { box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2), 0 6px 14px rgba(27, 36, 48, 0.35); }
+  .book-text { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .course { font-family: var(--sans); font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; }
+  .edcor .course { color: var(--edcor); }
+  .econ .course { color: var(--econ-label); }
+  .title { font-size: 22px; font-weight: 700; line-height: 1.2; }
+  .url { font-family: var(--sans); font-size: 13.5px; color: var(--muted); overflow-wrap: anywhere; }
+
+  /* More from me */
+  .more { display: flex; flex-direction: column; gap: 12px; }
+  h2.small {
+    margin: 0; padding-bottom: 6px; border-bottom: 1px solid var(--rule);
+    font-family: var(--sans); font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--faint);
+  }
+  .list { display: flex; flex-direction: column; background: var(--card); border-radius: 10px; box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06); overflow: hidden; }
+  .row {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 20px;
+    text-decoration: none; color: var(--ink);
+  }
+  .row + .row { border-top: 1px solid var(--rule); }
+  a.row:hover { color: var(--ink); background: #fafbfc; }
+  .row-text { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  .row-name { font-weight: 700; font-size: 17px; }
+  .row-note { font-size: 15px; font-style: italic; color: var(--muted); }
+  .soon {
+    flex-shrink: 0; padding: 4px 10px; border-radius: 999px; background: #eef1f4; color: var(--muted);
+    font-family: var(--sans); font-size: 12.5px; font-weight: 600;
+  }
+  .row svg { flex-shrink: 0; }
+
+  footer { font-family: var(--sans); font-size: 13px; color: var(--muted); }
+
+  @media (max-width: 480px) {
+    .page { padding-top: 40px; }
+    .wrap { gap: 36px; }
+    h1 { font-size: 32px; }
+    .photo { width: 92px; height: 92px; }
+    .book { padding: 16px; gap: 16px; }
+    .book img { width: 76px; }
+    .title { font-size: 20px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .book { transition: none; }
+    .book:hover { transform: none; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <main class="wrap">
+
+    <header class="intro">
+      <img class="photo" src="assets/benjamin-pacini.jpg" width="108" height="108" alt="Photo of Benjamin Pacini">
+      <div class="intro-text">
+        <h1>Benjamin Pacini</h1>
+        <p class="role">Professor of Education, BYU-Idaho</p>
+      </div>
+    </header>
+
+    <section class="books" aria-labelledby="books-h">
+      <div class="books-head">
+        <h2 id="books-h" class="big">Students: find your textbook</h2>
+        <p class="lede">Pick your course. Both books are free and open online.</p>
+      </div>
+
+      <div class="book-grid">
+        <a class="book edcor" href="https://learning.benjaminpacini.com/">
+          <img src="assets/edcor-310-cover.jpg" width="92" height="142" alt="">
+          <span class="book-text">
+            <span class="course">EDCOR 310</span>
+            <span class="title">The Science of Learning</span>
+            <span class="url">learning.benjaminpacini.com</span>
+          </span>
+        </a>
+
+        <a class="book econ" href="https://econ.benjaminpacini.com/">
+          <img src="assets/econ-150-cover.jpg" width="92" height="115" alt="">
+          <span class="book-text">
+            <span class="course">Econ 150</span>
+            <span class="title">Principles of Microeconomics</span>
+            <span class="url">econ.benjaminpacini.com</span>
+          </span>
+        </a>
+      </div>
+    </section>
+
+    <section class="more" aria-labelledby="more-h">
+      <h2 id="more-h" class="small">More from me</h2>
+      <div class="list">
+
+        <div class="row">
+          <span class="row-text">
+            <span class="row-name">Professional site</span>
+            <span class="row-note">CV, research, and faculty development work</span>
+          </span>
+          <span class="soon">Coming soon</span>
+        </div>
+
+        <a class="row" href="https://skepticaleducator.substack.com">
+          <span class="row-text">
+            <span class="row-name">The Skeptical Educator</span>
+            <span class="row-note">My Substack on education and evidence</span>
+          </span>
+          <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6b7079" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"></path><path d="M8 7h9v9"></path></svg>
+        </a>
+
+        <a class="row" href="https://www.linkedin.com/in/benjamin-pacini-5161a512/">
+          <span class="row-text">
+            <span class="row-name">LinkedIn</span>
+            <span class="row-note">Background and experience</span>
+          </span>
+          <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6b7079" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"></path><path d="M8 7h9v9"></path></svg>
+        </a>
+
+      </div>
+    </section>
+
+    <footer>© 2026 Benjamin Pacini</footer>
+
+  </main>
+</div>
+</body>
+</html>
