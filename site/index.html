@@ -45,9 +45,9 @@
   .wrap { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 44px; }
 
   /* Header */
-  .intro { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+  .intro { display: flex; align-items: center; gap: 28px; }
   .photo {
-    width: 108px; height: 108px; border-radius: 50%; object-fit: cover; flex-shrink: 0;
+    width: 176px; height: 220px; border-radius: 14px; object-fit: cover; flex-shrink: 0;
     border: 3px solid #ffffff;
     box-shadow: 0 0 0 1px #d5dbe2, 0 6px 18px rgba(26, 58, 92, 0.14);
     background: #e3e8ee;
@@ -110,7 +110,8 @@
     .page { padding-top: 40px; }
     .wrap { gap: 36px; }
     h1 { font-size: 32px; }
-    .photo { width: 92px; height: 92px; }
+    .intro { flex-direction: column; align-items: flex-start; gap: 20px; }
+    .photo { width: 176px; height: 220px; }
     .book { padding: 16px; gap: 16px; }
     .book img { width: 76px; }
     .title { font-size: 20px; }
@@ -126,7 +127,7 @@
   <main class="wrap">
 
     <header class="intro">
-      <img class="photo" src="assets/benjamin-pacini.jpg" width="108" height="108" alt="Photo of Benjamin Pacini">
+      <img class="photo" src="assets/benjamin-pacini.jpg" width="176" height="220" alt="Benjamin Pacini, smiling, tossing coins and holding a copy of Mistborn">
       <div class="intro-text">
         <h1>Benjamin Pacini</h1>
         <p class="role">Faculty in the Department of Teacher Preparation, BYU-Idaho</p>
