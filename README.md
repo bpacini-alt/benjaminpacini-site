@@ -14,4 +14,4 @@ The textbooks live in their own repositories and on their own subdomains:
 
 The cover thumbnails are smaller copies of each book's `build/cover-web.png`. If a cover changes, regenerate the thumbnail here too.
 
-The headshot is Benjamin's BYU-Idaho faculty directory photo.
+The headshot is a square crop of Benjamin's Mistborn portrait (coins and bow tie in frame).
