@@ -153,10 +153,10 @@
     <span class="eyebrow">A chance to contribute</span>
     <h1>Teaching Assistant Application</h1>
     <p>Share what you bring, what you are still learning, and how you would help make this class better for students.</p>
-    <div class="hero-meta"><span>About 25–35 minutes</span><span>Short answers are welcome</span><span>Thoughtful beats perfect</span></div>
+    <div class="hero-meta"><span>Designed for one hour or less</span><span>Short answers are welcome</span><span>Thoughtful beats perfect</span></div>
   </header>
   <nav class="section-nav" aria-label="Application sections">
-    <a href="#basics">Start here</a><a href="#course">Course perspective</a><a href="#ratings">Your strengths</a><a href="#samples">Work samples</a><a href="#reflection">Wrap up</a>
+    <a href="#basics">Start here</a><a href="#gospel-reflection">Spiritual learning</a><a href="#course">Course feedback</a><a href="#ratings">Self-assessment</a><a href="#peer-judgment">Peer judgment</a><a href="#samples">Work samples</a><a href="#reflection">Wrap up</a>
   </nav>
 
   <form id="application">
@@ -164,6 +164,14 @@
       <p class="section-kicker">01 · Start here</p>
       <h2 id="basics-title">A few practical details</h2>
       <p class="section-intro">These help us check course fit and scheduling before reviewing the rest of your application.</p>
+      <div class="ai-note"><strong>Time and role expectations.</strong> This application is designed to take no more than one hour. Concise answers are welcome. TAs are expected to be enrolled in the class they support and to work about five hours each week.</div>
+      <fieldset class="prompt-block">
+        <legend>Please confirm these expectations.</legend>
+        <div class="check-stack">
+          <label class="choice-row"><input type="checkbox" name="enrollment-expectation" required><span>I understand I am expected to be enrolled in the class I TA during the semester I serve.</span></label>
+          <label class="choice-row"><input type="checkbox" name="hours-expectation" required><span>I understand the role requires about five hours of work each week.</span></label>
+        </div>
+      </fieldset>
       <div class="field-grid">
         <div class="field"><label for="applicant-name">Your name</label><input id="applicant-name" name="name" type="text" autocomplete="name" required></div>
         <div class="field"><label for="applicant-email">Email address</label><input id="applicant-email" name="email" type="email" autocomplete="email" required></div>
@@ -196,8 +204,26 @@
       </div>
     </section>
 
+    <section class="section-card" id="gospel-reflection" aria-labelledby="gospel-reflection-title">
+      <p class="section-kicker">02 · Spiritual learning</p>
+      <h2 id="gospel-reflection-title">What helped spiritual learning happen?</h2>
+      <p class="section-intro">Your experience can help shape the spiritual side of the course. Brief, concrete answers are enough.</p>
+      <div class="prompt-block" style="margin-top:0;padding-top:0;border-top:0">
+        <label for="gospel-appreciated">What gospel-related things did the TAs or Brother Pacini do this semester that you appreciated?</label>
+        <textarea id="gospel-appreciated" name="gospel-appreciated" maxlength="500" placeholder="A moment, approach, or small practice is enough." required></textarea>
+      </div>
+      <div class="prompt-block">
+        <label for="gospel-more">What would you like the TAs or Brother Pacini to do more often?</label>
+        <textarea id="gospel-more" name="gospel-more" maxlength="500" placeholder="What might create more room for gospel-related or Holy Ghost-inspired learning?" required></textarea>
+      </div>
+      <div class="prompt-block">
+        <label for="spiritual-learning">What spiritual learning have you experienced this semester, and what helped bring it on?</label>
+        <textarea id="spiritual-learning" name="spiritual-learning" maxlength="700" placeholder="Share a specific experience or insight, if you would like." required></textarea>
+      </div>
+    </section>
+
     <section class="section-card" id="course" aria-labelledby="course-title">
-      <p class="section-kicker">02 · Your course perspective</p>
+      <p class="section-kicker">03 · Your course perspective</p>
       <h2 id="course-title">What should we keep, and what could improve?</h2>
       <p class="section-intro">You have experienced the class as a student. Help me see what is working well and where a change might help.</p>
       <div class="prompt-block" style="margin-top:0;padding-top:0;border-top:0">
@@ -215,7 +241,7 @@
     </section>
 
     <section class="section-card" id="ratings" aria-labelledby="ratings-title">
-      <p class="section-kicker">03 · Your strengths</p>
+      <p class="section-kicker">04 · Your strengths</p>
       <h2 id="ratings-title">Give yourself an honest score</h2>
       <p class="section-intro">For each skill, choose a score from 1 to 10 and give one short example or growth goal. A lower score is not a disqualifier; self-awareness matters.</p>
       <div class="scale-grid">
@@ -232,10 +258,28 @@
       </div>
     </section>
 
+    <section class="section-card" id="peer-judgment" aria-labelledby="peer-judgment-title">
+      <p class="section-kicker">05 · Candor and kindness</p>
+      <h2 id="peer-judgment-title">Make a fair recommendation</h2>
+      <p class="section-intro">Good judgment includes seeing strengths clearly and naming concerns with care. Do not include classmates’ names or identifying details; we want to understand how you think, not collect gossip.</p>
+      <div class="prompt-block" style="margin-top:0;padding-top:0;border-top:0">
+        <label for="self-recommendation">Why would you recommend yourself as a TA? Include a strength you would bring and one area you are still working on.</label>
+        <textarea id="self-recommendation" name="self-recommendation" maxlength="600" placeholder="Be confident and honest." required></textarea>
+      </div>
+      <div class="prompt-block">
+        <label for="peer-one">Think of one classmate. Why would you recommend or hesitate to recommend them as a TA? Name a strength and, if relevant, a concern or support they might need.</label>
+        <textarea id="peer-one" name="peer-one" maxlength="600" placeholder="Describe the person without identifying them. Be candid, specific, and kind." required></textarea>
+      </div>
+      <div class="prompt-block">
+        <label for="peer-two">Now think of a second classmate. Why would you recommend or hesitate to recommend them as a TA?</label>
+        <textarea id="peer-two" name="peer-two" maxlength="600" placeholder="Again, leave out names and identifying details." required></textarea>
+      </div>
+    </section>
+
     <section class="section-card" id="samples" aria-labelledby="samples-title">
-      <p class="section-kicker">04 · Choose work samples</p>
+      <p class="section-kicker">06 · Choose work samples</p>
       <h2 id="samples-title">Pick three ways to show what you would bring</h2>
-      <p class="section-intro">Choose exactly three options across all five categories. The first two categories use examples from your recording. The other categories and their tasks are working drafts.</p>
+      <p class="section-intro">Choose exactly three options across all five categories. The first two categories begin with ideas from your recording. Innovation and Gospeliciousness are new draft buckets; choose the three prompts that best show how you would contribute.</p>
       <div class="menu-intro">
         <p style="margin:0;color:var(--muted)">Select the samples that best show your strengths. You can use AI, and you’ll be asked to briefly explain how.</p>
         <div class="selection-count" id="selection-count" aria-live="polite">0 / 3 selected</div>
@@ -243,7 +287,7 @@
 
       <div class="bucket-list">
         <section class="bucket" aria-labelledby="bucket-vibe"><div class="bucket-header"><h3 id="bucket-vibe">Bring the vibe</h3></div><div class="task-options">
-          <label class="task-option"><input type="checkbox" class="task-choice" data-id="roast" data-title="A kind, accurate roast" data-prompt="Write a funny, accurate, kind roast of Brother Puccini. Keep it brief."><span class="task-copy"><strong>A kind, accurate roast</strong><small>Write a funny, accurate, kind roast of Brother Puccini.</small></span></label>
+          <label class="task-option"><input type="checkbox" class="task-choice" data-id="roast" data-title="A kind, accurate roast" data-prompt="Write a funny, accurate, kind roast of Brother Pacini. Keep it brief."><span class="task-copy"><strong>A kind, accurate roast</strong><small>Write a funny, accurate, kind roast of Brother Pacini.</small></span></label>
           <label class="task-option"><input type="checkbox" class="task-choice" data-id="memes" data-title="Three class memes" data-prompt="Find three memes that would land with students in this class. Add links or describe them, and say briefly why each fits."><span class="task-copy"><strong>Find three class memes</strong><small>Choose memes that would be funny and make sense to this class.</small></span></label>
           <label class="task-option"><input type="checkbox" class="task-choice" data-id="zoom-message" data-title="A first-week Zoom message" data-prompt="Draft a short first-week Zoom message that makes students feel welcome and ready to start."><span class="task-copy"><strong>Draft a first-week Zoom message</strong><small>Help students feel welcome, excited, and ready to start.</small></span></label>
           <label class="task-option"><input type="checkbox" class="task-choice" data-id="vibe-idea" data-title="Your idea for a positive class vibe" data-prompt="Describe one positive, practical way you would help build a welcoming class vibe."><span class="task-copy"><strong>Your idea</strong><small>Suggest another positive way you would help build the class vibe.</small></span></label>
@@ -261,16 +305,16 @@
           <label class="task-option"><input type="checkbox" class="task-choice" data-id="unknown-answer" data-title="Handle a question you cannot answer" data-prompt="A student asks a question you cannot answer. What would you say, and how would you follow up?"><span class="task-copy"><strong>Handle a question you cannot answer</strong><small>Show how you would be helpful and accurate without bluffing.</small></span></label>
         </div></section>
 
-        <section class="bucket" aria-labelledby="bucket-course"><div class="bucket-header"><h3 id="bucket-course">Improve the course thoughtfully</h3><span class="draft-tag">Draft category</span></div><div class="task-options">
-          <label class="task-option"><input type="checkbox" class="task-choice" data-id="activity-review" data-title="Review a course activity" data-prompt="Choose a course activity. Tell me what you would preserve and one change that could help students."><span class="task-copy"><strong>Review a course activity</strong><small>Name what works and one change that could benefit students.</small></span></label>
-          <label class="task-option"><input type="checkbox" class="task-choice" data-id="rewrite-instructions" data-title="Clarify confusing directions" data-prompt="Identify a direction or instruction that could be clearer. Rewrite it and explain what the revision helps students understand."><span class="task-copy"><strong>Clarify confusing directions</strong><small>Rewrite one instruction to make it easier for students to use.</small></span></label>
-          <label class="task-option"><input type="checkbox" class="task-choice" data-id="course-idea" data-title="Suggest a course improvement" data-prompt="Suggest one practical course improvement. Explain which student need it would address."><span class="task-copy"><strong>Suggest an improvement</strong><small>Connect your idea to a specific student need.</small></span></label>
+        <section class="bucket" aria-labelledby="bucket-innovation"><div class="bucket-header"><h3 id="bucket-innovation">Innovation</h3><span class="draft-tag">Draft category</span></div><div class="task-options">
+          <label class="task-option"><input type="checkbox" class="task-choice" data-id="learning-activity" data-title="Invent a small learning activity" data-prompt="Invent a small activity or tool that could help students learn. Describe what students would do, how you would pilot it, and what would tell you whether it helped."><span class="task-copy"><strong>Invent a small learning activity</strong><small>Show the idea, a manageable first try, and how you would learn whether it worked.</small></span></label>
+          <label class="task-option"><input type="checkbox" class="task-choice" data-id="adapt-idea" data-title="Adapt an idea from another class" data-prompt="Think of a useful idea or practice from another class or professor. Adapt it to this course, explain what you would change, and describe how you would tell whether students benefited."><span class="task-copy"><strong>Adapt an idea from another class</strong><small>Borrow thoughtfully and make it fit our students and course.</small></span></label>
+          <label class="task-option"><input type="checkbox" class="task-choice" data-id="small-experiment" data-title="Propose a small course experiment" data-prompt="Choose one student-learning problem and propose a small, easy-to-reverse change we could try. What would you look for to decide whether it helped?"><span class="task-copy"><strong>Propose a small experiment</strong><small>Make a practical change and name the signal that would show whether it helped.</small></span></label>
         </div></section>
 
-        <section class="bucket" aria-labelledby="bucket-operations"><div class="bucket-header"><h3 id="bucket-operations">Make the work run smoothly</h3><span class="draft-tag">Draft category</span></div><div class="task-options">
-          <label class="task-option"><input type="checkbox" class="task-choice" data-id="grading-plan" data-title="Plan a fair grading workflow" data-prompt="Describe a simple workflow for grading one assignment efficiently and consistently."><span class="task-copy"><strong>Plan a grading workflow</strong><small>Show how you would grade efficiently while treating similar work consistently.</small></span></label>
-          <label class="task-option"><input type="checkbox" class="task-choice" data-id="tech-tool" data-title="Sketch a small technical solution" data-prompt="Sketch a small HTML, AI, or technology-supported solution to a course problem. Describe what it would do and how you would check it. Do not include private student information."><span class="task-copy"><strong>Sketch a small technical solution</strong><small>Use HTML, AI, or another tool to address a course need.</small></span></label>
-          <label class="task-option"><input type="checkbox" class="task-choice" data-id="prioritize" data-title="Prioritize a busy week" data-prompt="Imagine you have grading, student questions, and a course task due in the same week. How would you decide what to do first and communicate if you need help?"><span class="task-copy"><strong>Plan for a busy week</strong><small>Show how you would prioritize work and communicate early.</small></span></label>
+        <section class="bucket" aria-labelledby="bucket-gospeliciousness"><div class="bucket-header"><h3 id="bucket-gospeliciousness">Gospeliciousness</h3><span class="draft-tag">Draft category</span></div><div class="task-options">
+          <label class="task-option"><input type="checkbox" class="task-choice" data-id="professor-practice" data-title="Borrow a spiritually powerful practice" data-prompt="Think of something a different professor does that makes gospel-related or Holy Ghost-inspired learning more powerful. Suggest that one thing to Brother Pacini. Explain how it could be easy to implement, authentic, and spiritually powerful."><span class="task-copy"><strong>Borrow a spiritually powerful practice</strong><small>Suggest one thing another professor does that is easy to implement, authentic, and spiritually powerful.</small></span></label>
+          <label class="task-option"><input type="checkbox" class="task-choice" data-id="authentic-connection" data-title="Make an authentic gospel connection" data-prompt="Suggest one small way this course could invite gospel insight without forcing a connection. Explain why it feels authentic and what could make it spiritually meaningful."><span class="task-copy"><strong>Make an authentic gospel connection</strong><small>Keep the connection natural, meaningful, and connected to the course.</small></span></label>
+          <label class="task-option"><input type="checkbox" class="task-choice" data-id="spiritual-moment" data-title="Create room for spiritual learning" data-prompt="Suggest a simple moment in the course that could help students notice or reflect on spiritual learning. Explain how it could be welcoming and practical."><span class="task-copy"><strong>Create room for spiritual learning</strong><small>Offer a concrete practice that respects students and makes reflection possible.</small></span></label>
         </div></section>
       </div>
 
@@ -280,19 +324,19 @@
     </section>
 
     <section class="section-card" id="reflection" aria-labelledby="reflection-title">
-      <p class="section-kicker">05 · Wrap up</p>
+      <p class="section-kicker">07 · Wrap up</p>
       <h2 id="reflection-title">Whatever the outcome, take something with you</h2>
       <p class="section-intro">Applying can be useful practice in its own right.</p>
       <div class="reflection-grid">
         <div class="field"><label for="reflection-answer">What is one thing you learned by applying that you can use in your life?</label><textarea id="reflection-answer" name="reflection" maxlength="700" placeholder="It could be something about your strengths, your goals, or the kind of work you enjoy." required></textarea></div>
         <fieldset><legend>Would you like to hear about other opportunities?</legend><div class="check-stack"><label class="choice-row"><input id="other-jobs" name="other-opportunities" type="checkbox"><span>I’d be interested in hearing about other on-campus, online, or future jobs.</span></label></div></fieldset>
       </div>
-      <div class="agreement"><label class="choice-row"><input id="agreement" name="understanding" type="checkbox" required><span>I understand that an appointment depends on a strong course grade and schedule fit. If I am not selected, Brother Puccini still thinks highly of me, and I can apply again in a future semester.</span></label></div>
+      <div class="agreement"><label class="choice-row"><input id="agreement" name="understanding" type="checkbox" required><span>I understand that an appointment depends on a strong course grade and schedule fit. If I am not selected, Brother Pacini still thinks highly of me, and I can apply again in a future semester.</span></label></div>
       <div class="submit-area"><button class="submit-button" type="submit">Submit preview</button><p class="submit-note">This button only demonstrates the flow. Nothing is transmitted or stored.</p></div>
       <p class="form-message" id="form-message" role="status" aria-live="polite"></p>
     </section>
   </form>
-  <p class="footer-note">A draft application flow · the work-sample categories and prompts are still being refined.</p>
+  <p class="footer-note">A draft application flow · Innovation and Gospeliciousness are new draft buckets.</p>
 </main>
 <script>
   document.querySelectorAll('input[type="range"]').forEach((slider) => {
@@ -331,7 +375,8 @@
       response.id = 'response-' + id;
       response.name = 'response-' + id;
       response.required = true;
-      response.placeholder = 'Write your response or paste a link to your work.';
+      response.maxLength = 1800;
+      response.placeholder = 'Keep it focused; a concise response or shareable link is enough.';
       card.appendChild(response);
       const aiLabel = document.createElement('label');
       aiLabel.htmlFor = 'ai-' + id;
