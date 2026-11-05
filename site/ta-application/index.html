@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teaching Assistant Application | Benjamin Pacini</title>
+<meta name="description" content="Apply to be a teaching assistant for Benjamin Pacini's courses.">
+<meta name="color-scheme" content="light">
+<style>
+  :root {
+    --ink: #273347; --muted: #647185; --blue: #315d82; --blue-dark: #244763;
+    --blue-pale: #edf3f8; --lavender: #f1eef7; --lavender-line: #d9d3e5;
+    --paper: #fff; --canvas: #f5f6f8; --line: #e1e5eb; --green: #315f52;
+    --green-pale: #edf5f1; --amber: #805f2b; --amber-pale: #faf4e8;
+    --radius: 16px; --shadow: 0 12px 32px rgba(37, 54, 76, .08);
+    --serif: Georgia, "Times New Roman", serif;
+    --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: radial-gradient(ellipse at 85% 0%, rgba(219, 213, 232, .36), transparent 36rem), var(--canvas);
+    color: var(--ink); font: 16px/1.58 var(--sans);
+  }
+  a { color: var(--blue); }
+  button, input, select, textarea { font: inherit; }
+  button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible,
+  textarea:focus-visible { outline: 3px solid #91b9d8; outline-offset: 3px; }
+  .page { width: min(100% - 32px, 900px); margin: 28px auto 64px; }
+  .preview-banner {
+    margin-bottom: 16px; padding: 10px 14px; border: 1px solid #cdd9e4; border-radius: 12px;
+    background: var(--blue-pale); color: var(--blue-dark); font-size: .9rem;
+  }
+  .hero {
+    overflow: hidden; position: relative; padding: clamp(24px, 5vw, 44px); border-radius: 20px;
+    color: #fff; background: linear-gradient(125deg, #294b69 0%, #3c6282 72%, #566d85 100%);
+    box-shadow: var(--shadow);
+  }
+  .hero::after {
+    content: ""; position: absolute; width: 250px; height: 250px; right: -92px; top: -126px;
+    border: 1px solid rgba(255,255,255,.18); border-radius: 50%;
+    box-shadow: 0 0 0 28px rgba(255,255,255,.035), 0 0 0 58px rgba(255,255,255,.025);
+    pointer-events: none;
+  }
+  .eyebrow {
+    display: block; margin-bottom: 8px; color: #d9e5ee; font-size: .77rem; font-weight: 750;
+    letter-spacing: .1em; text-transform: uppercase;
+  }
+  h1, h2, h3, p { margin-top: 0; }
+  h1 { max-width: 680px; margin-bottom: 10px; font: 700 clamp(2rem, 5vw, 3rem)/1.12 var(--serif); letter-spacing: -.035em; }
+  .hero p { max-width: 670px; margin-bottom: 0; color: #edf3f7; font-size: 1.05rem; }
+  .hero-meta { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 22px; }
+  .hero-meta span { padding: 5px 10px; border: 1px solid rgba(255,255,255,.28); border-radius: 999px; color: #f3f7fa; font-size: .82rem; }
+  .section-nav {
+    position: sticky; z-index: 3; top: 8px; display: flex; gap: 6px; overflow-x: auto; margin: 14px 0; padding: 8px;
+    border: 1px solid rgba(215, 221, 229, .9); border-radius: 14px; background: rgba(255,255,255,.94);
+    box-shadow: 0 5px 16px rgba(37, 54, 76, .06); scrollbar-width: thin;
+  }
+  .section-nav a { flex: 0 0 auto; padding: 7px 11px; border-radius: 9px; color: #4d5b6f; font-size: .86rem; text-decoration: none; }
+  .section-nav a:hover { background: var(--blue-pale); color: var(--blue-dark); }
+  form { display: grid; gap: 16px; }
+  .section-card {
+    scroll-margin-top: 88px; padding: clamp(20px, 4vw, 30px); border: 1px solid var(--line);
+    border-radius: var(--radius); background: var(--paper); box-shadow: 0 5px 18px rgba(37, 54, 76, .045);
+  }
+  .section-kicker { margin-bottom: 4px; color: #6e6b83; font-size: .76rem; font-weight: 750; letter-spacing: .1em; text-transform: uppercase; }
+  h2 { margin-bottom: 7px; color: var(--blue-dark); font: 700 clamp(1.35rem, 3vw, 1.75rem)/1.22 var(--serif); letter-spacing: -.02em; }
+  .section-intro { max-width: 730px; margin-bottom: 22px; color: var(--muted); }
+  h3 { margin-bottom: 6px; color: #35455b; font-size: 1.06rem; }
+  .field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 17px; }
+  .field, .prompt-block { min-width: 0; }
+  .field label, .prompt-block > label, .sample-response > label { display: block; margin-bottom: 6px; color: #344258; font-weight: 680; }
+  .optional { color: var(--muted); font-size: .83rem; font-weight: 450; }
+  input[type="text"], input[type="email"], select, textarea {
+    width: 100%; min-height: 46px; padding: 10px 12px; border: 1px solid #cfd6df;
+    border-radius: 10px; background: #fff; color: var(--ink);
+  }
+  textarea { min-height: 88px; resize: vertical; }
+  input::placeholder, textarea::placeholder { color: #8791a0; }
+  .helper { margin: 6px 0 0; color: var(--muted); font-size: .86rem; }
+  .prompt-block { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--line); }
+  .three-fields { display: grid; gap: 10px; }
+  fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+  legend { margin-bottom: 8px; color: #344258; font-weight: 680; }
+  .radio-stack, .check-stack { display: grid; gap: 8px; }
+  .choice-row {
+    display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px;
+    border: 1px solid var(--line); border-radius: 10px; background: #fff; cursor: pointer;
+  }
+  .choice-row:hover { border-color: #b7c8d7; background: #fbfdff; }
+  input[type="radio"], input[type="checkbox"] { width: 18px; height: 18px; flex: 0 0 auto; margin: 2px 0 0; accent-color: var(--blue); }
+  .scale-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .rating-card { padding: 15px; border: 1px solid var(--lavender-line); border-radius: 13px; background: #fcfbfe; }
+  .rating-card legend { width: 100%; margin-bottom: 9px; color: #354258; font-weight: 680; line-height: 1.35; }
+  .rating-number {
+    display: inline-grid; width: 25px; height: 25px; place-items: center; margin-right: 6px;
+    border-radius: 8px; background: var(--lavender); color: #55506d; font-size: .8rem; vertical-align: middle;
+  }
+  .slider-line { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 12px; margin: 4px 0 8px; }
+  input[type="range"] { width: 100%; accent-color: var(--blue); }
+  output { min-width: 54px; padding: 3px 7px; border-radius: 8px; background: var(--blue-pale); color: var(--blue-dark); font-weight: 750; text-align: center; }
+  .scale-labels { display: flex; justify-content: space-between; margin-top: -4px; color: var(--muted); font-size: .75rem; }
+  .evidence-label { display: block; margin: 11px 0 5px; color: #4d596a; font-size: .84rem; font-weight: 650; }
+  .rating-card input[type="text"] { min-height: 40px; font-size: .9rem; }
+  .ai-note { margin-top: 18px; padding: 14px 16px; border-left: 4px solid #829bb2; border-radius: 0 10px 10px 0; background: #f5f8fa; color: #46576a; font-size: .91rem; }
+  .menu-intro { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 18px; }
+  .selection-count { padding: 7px 11px; border-radius: 999px; background: var(--blue-pale); color: var(--blue-dark); font-size: .9rem; font-weight: 750; white-space: nowrap; }
+  .bucket-list { display: grid; gap: 12px; }
+  .bucket { padding: 16px; border: 1px solid var(--line); border-radius: 13px; background: #fff; }
+  .bucket-header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; margin-bottom: 10px; }
+  .bucket-header h3 { margin: 0; }
+  .draft-tag { padding: 2px 7px; border-radius: 999px; background: var(--amber-pale); color: var(--amber); font-size: .72rem; font-weight: 750; letter-spacing: .035em; text-transform: uppercase; }
+  .task-options { display: grid; gap: 8px; }
+  .task-option { display: flex; align-items: flex-start; gap: 10px; padding: 11px 12px; border: 1px solid #e3e7ec; border-radius: 10px; background: #fbfcfd; cursor: pointer; transition: border-color .15s ease, background .15s ease; }
+  .task-option:has(input:checked) { border-color: #91adc4; background: #f0f6fa; }
+  .task-option input { margin-top: 3px; }
+  .task-copy { display: grid; gap: 2px; }
+  .task-copy strong { color: #344258; font-size: .94rem; font-weight: 670; }
+  .task-copy small { color: var(--muted); line-height: 1.42; }
+  .selection-message { min-height: 24px; margin: 10px 0 0; color: var(--muted); font-size: .88rem; }
+  .selected-work { display: grid; gap: 12px; margin-top: 18px; }
+  .sample-response { padding: 16px; border: 1px solid #cbd8e3; border-radius: 13px; background: #f8fbfd; }
+  .sample-response h3 { margin-bottom: 5px; }
+  .sample-response .prompt-text { margin: 0 0 12px; color: #566579; font-size: .92rem; }
+  .sample-response textarea { min-height: 110px; }
+  .reflection-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 18px; }
+  .agreement { margin-top: 18px; padding: 15px; border: 1px solid #d9e5df; border-radius: 12px; background: var(--green-pale); }
+  .agreement .choice-row { border-color: transparent; background: transparent; padding: 2px; }
+  .submit-area { display: grid; justify-items: start; gap: 9px; margin-top: 20px; }
+  .submit-button { min-height: 48px; padding: 11px 20px; border: 0; border-radius: 11px; background: var(--blue); color: #fff; font-weight: 750; cursor: pointer; box-shadow: 0 5px 14px rgba(49, 93, 130, .2); }
+  .submit-button:hover { background: var(--blue-dark); }
+  .submit-note { margin: 0; color: var(--muted); font-size: .84rem; }
+  .form-message { min-height: 0; margin: 0; padding: 0; color: var(--green); font-weight: 680; }
+  .form-message:not(:empty) { margin-top: 13px; padding: 13px 15px; border: 1px solid #c9ded3; border-radius: 10px; background: var(--green-pale); }
+  .footer-note { margin: 18px 4px 0; color: #778191; font-size: .82rem; text-align: center; }
+  @media (max-width: 700px) {
+    .page { width: min(100% - 20px, 900px); margin-top: 12px; }
+    .field-grid, .scale-grid, .reflection-grid { grid-template-columns: 1fr; }
+    .section-nav { top: 4px; }
+    .hero { border-radius: 16px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { transition-duration: .01ms !important; }
+  }
+</style>
+</head>
+<body>
+<main class="page">
+  <div class="preview-banner"><strong>Preview only.</strong> This form does not collect or send responses yet.</div>
+  <header class="hero">
+    <span class="eyebrow">A chance to contribute</span>
+    <h1>Teaching Assistant Application</h1>
+    <p>Share what you bring, what you are still learning, and how you would help make this class better for students.</p>
+    <div class="hero-meta"><span>Designed for one hour or less</span><span>Short answers are welcome</span><span>Thoughtful beats perfect</span></div>
+  </header>
+  <nav class="section-nav" aria-label="Application sections">
+    <a href="#basics">Start here</a><a href="#gospel-reflection">Spiritual learning</a><a href="#course">Course feedback</a><a href="#ratings">Self-assessment</a><a href="#peer-judgment">Peer judgment</a><a href="#samples">Work samples</a><a href="#reflection">Wrap up</a>
+  </nav>
+
+  <form id="application">
+    <section class="section-card" id="basics" aria-labelledby="basics-title">
+      <p class="section-kicker">01 · Start here</p>
+      <h2 id="basics-title">A few practical details</h2>
+      <p class="section-intro">These help us check course fit and scheduling before reviewing the rest of your application.</p>
+      <div class="ai-note"><strong>Time and role expectations.</strong> This application is designed to take no more than one hour. Concise answers are welcome. TAs are expected to be enrolled in the class they support and to work about five hours each week.</div>
+      <fieldset class="prompt-block">
+        <legend>Please confirm these expectations.</legend>
+        <div class="check-stack">
+          <label class="choice-row"><input type="checkbox" name="enrollment-expectation" required><span>I understand I am expected to be enrolled in the class I TA during the semester I serve.</span></label>
+          <label class="choice-row"><input type="checkbox" name="hours-expectation" required><span>I understand the role requires about five hours of work each week.</span></label>
+        </div>
+      </fieldset>
+      <div class="field-grid">
+        <div class="field"><label for="applicant-name">Your name</label><input id="applicant-name" name="name" type="text" autocomplete="name" required></div>
+        <div class="field"><label for="applicant-email">Email address</label><input id="applicant-email" name="email" type="email" autocomplete="email" required></div>
+        <div class="field"><label for="course-name">Which class are you applying to TA for?</label><input id="course-name" name="course" type="text" placeholder="Course number or name" required></div>
+      </div>
+      <fieldset class="prompt-block">
+        <legend>Have you checked the online schedule and confirmed that the TA times work for you?</legend>
+        <div class="radio-stack">
+          <label class="choice-row"><input type="radio" name="schedule" value="yes" required><span>Yes, I checked and the times work.</span></label>
+          <label class="choice-row"><input type="radio" name="schedule" value="not-yet"><span>Not yet; I still need to check.</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="prompt-block">
+        <legend>Which best describes your grade in this class?</legend>
+        <div class="radio-stack">
+          <label class="choice-row"><input type="radio" name="grade" value="current-a" required><span>I currently have an A.</span></label>
+          <label class="choice-row"><input type="radio" name="grade" value="prior-a"><span>I earned an A in this class before.</span></label>
+          <label class="choice-row"><input type="radio" name="grade" value="both"><span>Both of these apply.</span></label>
+          <label class="choice-row"><input type="radio" name="grade" value="neither"><span>Neither applies yet.</span></label>
+        </div>
+        <p class="helper">A strong course grade is part of appointment decisions. An honest answer helps us have a clear conversation.</p>
+      </fieldset>
+      <div class="prompt-block">
+        <label for="why-1">Why do you want this job? Give me three brief points.</label>
+        <div class="three-fields">
+          <input id="why-1" name="why-1" type="text" maxlength="220" placeholder="1. A reason that matters to you" required>
+          <input name="why-2" type="text" maxlength="220" placeholder="2. Another reason" aria-label="Second reason you want the job" required>
+          <input name="why-3" type="text" maxlength="220" placeholder="3. One more reason" aria-label="Third reason you want the job" required>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card" id="gospel-reflection" aria-labelledby="gospel-reflection-title">
+      <p class="section-kicker">02 · Spiritual learning</p>
+      <h2 id="gospel-reflection-title">What helped spiritual learning happen?</h2>
+      <p class="section-intro">Your experience can help shape the spiritual side of the course. Brief, concrete answers are enough.</p>
+      <div class="prompt-block" style="margin-top:0;padding-top:0;border-top:0">
+        <label for="gospel-appreciated">What gospel-related things did the TAs or Brother Pacini do this semester that you appreciated?</label>
+        <textarea id="gospel-appreciated" name="gospel-appreciated" maxlength="500" placeholder="A moment, approach, or small practice is enough." required></textarea>
+      </div>
+      <div class="prompt-block">
+        <label for="gospel-more">What would you like the TAs or Brother Pacini to do more often?</label>
+        <textarea id="gospel-more" name="gospel-more" maxlength="500" placeholder="What might create more room for gospel-related or Holy Ghost-inspired learning?" required></textarea>
+      </div>
+      <div class="prompt-block">
+        <label for="spiritual-learning">What spiritual learning have you experienced this semester, and what helped bring it on?</label>
+        <textarea id="spiritual-learning" name="spiritual-learning" maxlength="700" placeholder="Share a specific experience or insight, if you would like." required></textarea>
+      </div>
+    </section>
+
+    <section class="section-card" id="course" aria-labelledby="course-title">
+      <p class="section-kicker">03 · Your course perspective</p>
+      <h2 id="course-title">What should we keep, and what could improve?</h2>
+      <p class="section-intro">You have experienced the class as a student. Help me see what is working well and where a change might help.</p>
+      <div class="prompt-block" style="margin-top:0;padding-top:0;border-top:0">
+        <label for="keep-1">What are three things about the class that are working well and should stay?</label>
+        <div class="three-fields">
+          <input id="keep-1" name="keep-1" type="text" maxlength="220" placeholder="1. Something worth keeping" required>
+          <input name="keep-2" type="text" maxlength="220" placeholder="2. Another thing that works" aria-label="Second thing about the class to keep" required>
+          <input name="keep-3" type="text" maxlength="220" placeholder="3. One more thing that works" aria-label="Third thing about the class to keep" required>
+        </div>
+      </div>
+      <div class="prompt-block">
+        <label for="change-one">What is one thing I could change or remove that would benefit students?</label>
+        <textarea id="change-one" name="change" maxlength="700" placeholder="Be specific. A small, practical suggestion is useful." required></textarea>
+      </div>
+    </section>
+
+    <section class="section-card" id="ratings" aria-labelledby="ratings-title">
+      <p class="section-kicker">04 · Your strengths</p>
+      <h2 id="ratings-title">Give yourself an honest score</h2>
+      <p class="section-intro">For each skill, choose a score from 1 to 10 and give one short example or growth goal. A lower score is not a disqualifier; self-awareness matters.</p>
+      <div class="scale-grid">
+        <fieldset class="rating-card"><legend><span class="rating-number">1</span>How confident are you with this course’s content?</legend><div class="slider-line"><input id="r1" name="rating-content" type="range" min="1" max="10" value="5"><output for="r1">5 / 10</output></div><div class="scale-labels"><span>Still learning</span><span>Ready to teach it</span></div><label class="evidence-label" for="e1">What makes that score fair?</label><input id="e1" name="evidence-content" type="text" maxlength="180" placeholder="One example or growth goal" required></fieldset>
+        <fieldset class="rating-card"><legend><span class="rating-number">2</span>How well can you help a student who has fallen behind?</legend><div class="slider-line"><input id="r2" name="rating-support" type="range" min="1" max="10" value="5"><output for="r2">5 / 10</output></div><div class="scale-labels"><span>Still learning</span><span>Ready to model it</span></div><label class="evidence-label" for="e2">What makes that score fair?</label><input id="e2" name="evidence-support" type="text" maxlength="180" placeholder="One example or growth goal" required></fieldset>
+        <fieldset class="rating-card"><legend><span class="rating-number">3</span>How well do you notice what needs doing and act before being asked?</legend><div class="slider-line"><input id="r3" name="rating-notice" type="range" min="1" max="10" value="5"><output for="r3">5 / 10</output></div><div class="scale-labels"><span>Usually need direction</span><span>Often anticipate needs</span></div><label class="evidence-label" for="e3">What makes that score fair?</label><input id="e3" name="evidence-notice" type="text" maxlength="180" placeholder="One example or growth goal" required></fieldset>
+        <fieldset class="rating-card"><legend><span class="rating-number">4</span>How well do you work independently and use good judgment?</legend><div class="slider-line"><input id="r4" name="rating-judgment" type="range" min="1" max="10" value="5"><output for="r4">5 / 10</output></div><div class="scale-labels"><span>Still building confidence</span><span>Dependable judgment</span></div><label class="evidence-label" for="e4">What makes that score fair?</label><input id="e4" name="evidence-judgment" type="text" maxlength="180" placeholder="One example or growth goal" required></fieldset>
+        <fieldset class="rating-card"><legend><span class="rating-number">5</span>How efficiently and consistently can you grade student work?</legend><div class="slider-line"><input id="r5" name="rating-grading" type="range" min="1" max="10" value="5"><output for="r5">5 / 10</output></div><div class="scale-labels"><span>Still learning</span><span>Fast and consistent</span></div><label class="evidence-label" for="e5">What makes that score fair?</label><input id="e5" name="evidence-grading" type="text" maxlength="180" placeholder="One example or growth goal" required></fieldset>
+        <fieldset class="rating-card"><legend><span class="rating-number">6</span>How comfortable are you with HTML, AI, and course technology?</legend><div class="slider-line"><input id="r6" name="rating-tech" type="range" min="1" max="10" value="5"><output for="r6">5 / 10</output></div><div class="scale-labels"><span>New to me</span><span>Can troubleshoot or build</span></div><label class="evidence-label" for="e6">What makes that score fair?</label><input id="e6" name="evidence-tech" type="text" maxlength="180" placeholder="One example or growth goal" required></fieldset>
+        <fieldset class="rating-card"><legend><span class="rating-number">7</span>How would you contribute to a positive class vibe?</legend><div class="slider-line"><input id="r7" name="rating-vibe" type="range" min="1" max="10" value="5"><output for="r7">5 / 10</output></div><div class="scale-labels"><span>Quiet contributor</span><span>Can lift the room</span></div><label class="evidence-label" for="e7">What makes that score fair?</label><input id="e7" name="evidence-vibe" type="text" maxlength="180" placeholder="One example or growth goal" required></fieldset>
+        <fieldset class="rating-card"><legend><span class="rating-number">8</span>How well can you suggest improvements while protecting what already works?</legend><div class="slider-line"><input id="r8" name="rating-improvement" type="range" min="1" max="10" value="5"><output for="r8">5 / 10</output></div><div class="scale-labels"><span>Still learning</span><span>Thoughtful reviewer</span></div><label class="evidence-label" for="e8">What makes that score fair?</label><input id="e8" name="evidence-improvement" type="text" maxlength="180" placeholder="One example or growth goal" required></fieldset>
+        <fieldset class="rating-card"><legend><span class="rating-number">9</span>How willing are you to learn unfamiliar things and try useful ideas?</legend><div class="slider-line"><input id="r9" name="rating-learning" type="range" min="1" max="10" value="5"><output for="r9">5 / 10</output></div><div class="scale-labels"><span>Prefer what I know</span><span>Ready to experiment</span></div><label class="evidence-label" for="e9">What makes that score fair?</label><input id="e9" name="evidence-learning" type="text" maxlength="180" placeholder="One example or growth goal" required></fieldset>
+        <fieldset class="rating-card"><legend><span class="rating-number">10</span>How comfortable are you setting a boundary or respectfully saying no when needed?</legend><div class="slider-line"><input id="r10" name="rating-boundaries" type="range" min="1" max="10" value="5"><output for="r10">5 / 10</output></div><div class="scale-labels"><span>Still practicing</span><span>Clear and respectful</span></div><label class="evidence-label" for="e10">What makes that score fair?</label><input id="e10" name="evidence-boundaries" type="text" maxlength="180" placeholder="One example or growth goal" required></fieldset>
+      </div>
+    </section>
+
+    <section class="section-card" id="peer-judgment" aria-labelledby="peer-judgment-title">
+      <p class="section-kicker">05 · Candor and kindness</p>
+      <h2 id="peer-judgment-title">Make a fair recommendation</h2>
+      <p class="section-intro">Good judgment includes seeing strengths clearly and naming concerns with care. Do not include classmates’ names or identifying details; we want to understand how you think, not collect gossip.</p>
+      <div class="prompt-block" style="margin-top:0;padding-top:0;border-top:0">
+        <label for="self-recommendation">Why would you recommend yourself as a TA? Include a strength you would bring and one area you are still working on.</label>
+        <textarea id="self-recommendation" name="self-recommendation" maxlength="600" placeholder="Be confident and honest." required></textarea>
+      </div>
+      <div class="prompt-block">
+        <label for="peer-one">Think of one classmate. Why would you recommend or hesitate to recommend them as a TA? Name a strength and, if relevant, a concern or support they might need.</label>
+        <textarea id="peer-one" name="peer-one" maxlength="600" placeholder="Describe the person without identifying them. Be candid, specific, and kind." required></textarea>
+      </div>
+      <div class="prompt-block">
+        <label for="peer-two">Now think of a second classmate. Why would you recommend or hesitate to recommend them as a TA?</label>
+        <textarea id="peer-two" name="peer-two" maxlength="600" placeholder="Again, leave out names and identifying details." required></textarea>
+      </div>
+    </section>
+
+    <section class="section-card" id="samples" aria-labelledby="samples-title">
+      <p class="section-kicker">06 · Choose work samples</p>
+      <h2 id="samples-title">Pick three ways to show what you would bring</h2>
+      <p class="section-intro">Choose exactly three options across all five categories. The first two categories begin with ideas from your recording. Innovation and Gospeliciousness are new draft buckets; choose the three prompts that best show how you would contribute.</p>
+      <div class="menu-intro">
+        <p style="margin:0;color:var(--muted)">Select the samples that best show your strengths. You can use AI, and you’ll be asked to briefly explain how.</p>
+        <div class="selection-count" id="selection-count" aria-live="polite">0 / 3 selected</div>
+      </div>
+
+      <div class="bucket-list">
+        <section class="bucket" aria-labelledby="bucket-vibe"><div class="bucket-header"><h3 id="bucket-vibe">Bring the vibe</h3></div><div class="task-options">
+          <label class="task-option"><input type="checkbox" class="task-choice" data-id="roast" data-title="A kind, accurate roast" data-prompt="Write a funny, accurate, kind roast of Brother Pacini. Keep it brief."><span class="task-copy"><strong>A kind, accurate roast</strong><small>Write a funny, accurate, kind roast of Brother Pacini.</small></span></label>
+          <label class="task-option"><input type="checkbox" class="task-choice" data-id="memes" data-title="Three class memes" data-prompt="Find three memes that would land with students in this class. Add links or describe them, and say briefly why each fits."><span class="task-copy"><strong>Find three class memes</strong><small>Choose memes that would be funny and make sense to this class.</small></span></label>
+          <label class="task-option"><input type="checkbox" class="task-choice" data-id="zoom-message" data-title="A first-week Zoom message" data-prompt="Draft a short first-week Zoom message that makes students feel welcome and ready to start."><span class="task-copy"><strong>Draft a first-week Zoom message</strong><small>Help students feel welcome, excited, and ready to start.</small></span></label>
+          <label class="task-option"><input type="checkbox" class="task-choice" data-id="vibe-idea" data-title="Your idea for a positive class vibe" data-prompt="Describe one positive, practical way you would help build a welcoming class vibe."><span class="task-copy"><strong>Your idea</strong><small>Suggest another positive way you would help build the class vibe.</small></span></label>
+        </div></section>
+
+        <section class="bucket" aria-labelledby="bucket-content"><div class="bucket-header"><h3 id="bucket-content">Explain course ideas</h3></div><div class="task-options">
+          <label class="task-option"><input type="checkbox" class="task-choice" data-id="video" data-title="A five-minute topic explanation" data-prompt="Choose a difficult topic and record a five-minute explanation with little or no preparation. Paste a shareable video link and tell me which topic you chose."><span class="task-copy"><strong>Teach a difficult topic in five minutes</strong><small>Record a brief, no-prep explanation and share a link.</small></span></label>
+          <label class="task-option"><input type="checkbox" class="task-choice" data-id="quiz-review" data-title="Improve five quiz questions" data-prompt="Review five quiz questions. Which would you improve, how would you improve them, and why?"><span class="task-copy"><strong>Review five quiz questions</strong><small>Point out what you would improve, how, and why.</small></span></label>
+          <label class="task-option"><input type="checkbox" class="task-choice" data-id="new-example" data-title="Make a hard idea clearer" data-prompt="Choose a hard course idea and explain it using a clear example a student could follow."><span class="task-copy"><strong>Make a hard idea clearer</strong><small>Use a student-friendly example to explain a difficult concept.</small></span></label>
+        </div></section>
+
+        <section class="bucket" aria-labelledby="bucket-mentor"><div class="bucket-header"><h3 id="bucket-mentor">Support student learning</h3><span class="draft-tag">Draft category</span></div><div class="task-options">
+          <label class="task-option"><input type="checkbox" class="task-choice" data-id="behind" data-title="Help a student who is falling behind" data-prompt="Draft a short, supportive response to a student who has fallen behind. Suggest a useful next step without making promises you cannot keep."><span class="task-copy"><strong>Help a student who is falling behind</strong><small>Draft a supportive response and identify a realistic next step.</small></span></label>
+          <label class="task-option"><input type="checkbox" class="task-choice" data-id="poor-quiz" data-title="Help after a disappointing quiz" data-prompt="A student did poorly on a quiz and feels discouraged. What would you say and do next?"><span class="task-copy"><strong>Respond after a disappointing quiz</strong><small>Show how you would support the student and help them move forward.</small></span></label>
+          <label class="task-option"><input type="checkbox" class="task-choice" data-id="unknown-answer" data-title="Handle a question you cannot answer" data-prompt="A student asks a question you cannot answer. What would you say, and how would you follow up?"><span class="task-copy"><strong>Handle a question you cannot answer</strong><small>Show how you would be helpful and accurate without bluffing.</small></span></label>
+        </div></section>
+
+        <section class="bucket" aria-labelledby="bucket-innovation"><div class="bucket-header"><h3 id="bucket-innovation">Innovation</h3><span class="draft-tag">Draft category</span></div><div class="task-options">
+          <label class="task-option"><input type="checkbox" class="task-choice" data-id="learning-activity" data-title="Invent a small learning activity" data-prompt="Invent a small activity or tool that could help students learn. Describe what students would do, how you would pilot it, and what would tell you whether it helped."><span class="task-copy"><strong>Invent a small learning activity</strong><small>Show the idea, a manageable first try, and how you would learn whether it worked.</small></span></label>
+          <label class="task-option"><input type="checkbox" class="task-choice" data-id="adapt-idea" data-title="Adapt an idea from another class" data-prompt="Think of a useful idea or practice from another class or professor. Adapt it to this course, explain what you would change, and describe how you would tell whether students benefited."><span class="task-copy"><strong>Adapt an idea from another class</strong><small>Borrow thoughtfully and make it fit our students and course.</small></span></label>
+          <label class="task-option"><input type="checkbox" class="task-choice" data-id="small-experiment" data-title="Propose a small course experiment" data-prompt="Choose one student-learning problem and propose a small, easy-to-reverse change we could try. What would you look for to decide whether it helped?"><span class="task-copy"><strong>Propose a small experiment</strong><small>Make a practical change and name the signal that would show whether it helped.</small></span></label>
+        </div></section>
+
+        <section class="bucket" aria-labelledby="bucket-gospeliciousness"><div class="bucket-header"><h3 id="bucket-gospeliciousness">Gospeliciousness</h3><span class="draft-tag">Draft category</span></div><div class="task-options">
+          <label class="task-option"><input type="checkbox" class="task-choice" data-id="professor-practice" data-title="Borrow a spiritually powerful practice" data-prompt="Think of something a different professor does that makes gospel-related or Holy Ghost-inspired learning more powerful. Suggest that one thing to Brother Pacini. Explain how it could be easy to implement, authentic, and spiritually powerful."><span class="task-copy"><strong>Borrow a spiritually powerful practice</strong><small>Suggest one thing another professor does that is easy to implement, authentic, and spiritually powerful.</small></span></label>
+          <label class="task-option"><input type="checkbox" class="task-choice" data-id="authentic-connection" data-title="Make an authentic gospel connection" data-prompt="Suggest one small way this course could invite gospel insight without forcing a connection. Explain why it feels authentic and what could make it spiritually meaningful."><span class="task-copy"><strong>Make an authentic gospel connection</strong><small>Keep the connection natural, meaningful, and connected to the course.</small></span></label>
+          <label class="task-option"><input type="checkbox" class="task-choice" data-id="spiritual-moment" data-title="Create room for spiritual learning" data-prompt="Suggest a simple moment in the course that could help students notice or reflect on spiritual learning. Explain how it could be welcoming and practical."><span class="task-copy"><strong>Create room for spiritual learning</strong><small>Offer a concrete practice that respects students and makes reflection possible.</small></span></label>
+        </div></section>
+      </div>
+
+      <p class="selection-message" id="selection-message" aria-live="polite">Choose three options. Your response spaces will appear below.</p>
+      <div class="selected-work" id="selected-work"></div>
+      <div class="ai-note"><strong>AI is allowed.</strong> If you use it on a work sample, note the tool, what you used it for, and what you changed, rejected, or checked. Do not include private student information.</div>
+    </section>
+
+    <section class="section-card" id="reflection" aria-labelledby="reflection-title">
+      <p class="section-kicker">07 · Wrap up</p>
+      <h2 id="reflection-title">Whatever the outcome, take something with you</h2>
+      <p class="section-intro">Applying can be useful practice in its own right.</p>
+      <div class="reflection-grid">
+        <div class="field"><label for="reflection-answer">What is one thing you learned by applying that you can use in your life?</label><textarea id="reflection-answer" name="reflection" maxlength="700" placeholder="It could be something about your strengths, your goals, or the kind of work you enjoy." required></textarea></div>
+        <fieldset><legend>Would you like to hear about other opportunities?</legend><div class="check-stack"><label class="choice-row"><input id="other-jobs" name="other-opportunities" type="checkbox"><span>I’d be interested in hearing about other on-campus, online, or future jobs.</span></label></div></fieldset>
+      </div>
+      <div class="agreement"><label class="choice-row"><input id="agreement" name="understanding" type="checkbox" required><span>I understand that an appointment depends on a strong course grade and schedule fit. If I am not selected, Brother Pacini still thinks highly of me, and I can apply again in a future semester.</span></label></div>
+      <div class="submit-area"><button class="submit-button" type="submit">Submit preview</button><p class="submit-note">This button only demonstrates the flow. Nothing is transmitted or stored.</p></div>
+      <p class="form-message" id="form-message" role="status" aria-live="polite"></p>
+    </section>
+  </form>
+  <p class="footer-note">A draft application flow · Innovation and Gospeliciousness are new draft buckets.</p>
+</main>
+<script>
+  document.querySelectorAll('input[type="range"]').forEach((slider) => {
+    const output = slider.parentElement.querySelector('output');
+    const update = () => { output.value = slider.value + ' / 10'; };
+    slider.addEventListener('input', update);
+    update();
+  });
+  const choices = Array.from(document.querySelectorAll('.task-choice'));
+  const selectedWork = document.getElementById('selected-work');
+  const selectionCount = document.getElementById('selection-count');
+  const selectionMessage = document.getElementById('selection-message');
+  function renderSelectedWork() {
+    const selected = choices.filter((choice) => choice.checked);
+    selectionCount.textContent = selected.length + ' / 3 selected';
+    selectedWork.replaceChildren();
+    if (selected.length === 3) selectionMessage.textContent = 'Three selected. Add your response or a link for each sample.';
+    else if (selected.length > 0) selectionMessage.textContent = 'Choose ' + (3 - selected.length) + ' more option' + (selected.length === 2 ? '' : 's') + '.';
+    else selectionMessage.textContent = 'Choose three options. Your response spaces will appear below.';
+    selected.forEach((choice, index) => {
+      const id = choice.dataset.id;
+      const card = document.createElement('section');
+      card.className = 'sample-response';
+      const heading = document.createElement('h3');
+      heading.textContent = 'Work sample ' + (index + 1) + ': ' + choice.dataset.title;
+      card.appendChild(heading);
+      const prompt = document.createElement('p');
+      prompt.className = 'prompt-text';
+      prompt.textContent = choice.dataset.prompt;
+      card.appendChild(prompt);
+      const responseLabel = document.createElement('label');
+      responseLabel.htmlFor = 'response-' + id;
+      responseLabel.textContent = 'Your response or shareable link';
+      card.appendChild(responseLabel);
+      const response = document.createElement('textarea');
+      response.id = 'response-' + id;
+      response.name = 'response-' + id;
+      response.required = true;
+      response.maxLength = 1800;
+      response.placeholder = 'Keep it focused; a concise response or shareable link is enough.';
+      card.appendChild(response);
+      const aiLabel = document.createElement('label');
+      aiLabel.htmlFor = 'ai-' + id;
+      aiLabel.style.display = 'block';
+      aiLabel.style.margin = '12px 0 5px';
+      aiLabel.style.color = '#4d596a';
+      aiLabel.style.fontSize = '.87rem';
+      aiLabel.style.fontWeight = '650';
+      aiLabel.textContent = 'If you used AI: tool, purpose, and how you checked or changed the result';
+      card.appendChild(aiLabel);
+      const ai = document.createElement('input');
+      ai.type = 'text';
+      ai.id = 'ai-' + id;
+      ai.name = 'ai-' + id;
+      ai.maxLength = 240;
+      ai.placeholder = 'Optional unless you used AI';
+      card.appendChild(ai);
+      selectedWork.appendChild(card);
+    });
+  }
+  choices.forEach((choice) => {
+    choice.addEventListener('change', () => {
+      if (choices.filter((item) => item.checked).length > 3) {
+        choice.checked = false;
+        selectionMessage.textContent = 'You can choose three total. Uncheck one before choosing another.';
+        return;
+      }
+      renderSelectedWork();
+    });
+  });
+  document.getElementById('application').addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (choices.filter((choice) => choice.checked).length !== 3) {
+      selectionMessage.textContent = 'Choose exactly three work samples before submitting.';
+      document.getElementById('samples').scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+    document.getElementById('form-message').textContent = 'Preview complete. No information was sent or saved. The real application will need a secure submission and notification workflow.';
+  });
+</script>
+</body>
+</html>
