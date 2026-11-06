@@ -144,13 +144,18 @@
     html { scroll-behavior: auto; }
     *, *::before, *::after { transition-duration: .01ms !important; }
   }
-  .step-list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 7px; margin: 0; padding: 0; list-style: none; }
-  .step-list li { min-width: 0; }
-  .step-tab { display: flex; width: 100%; align-items: center; gap: 8px; padding: 8px 10px; border: 0; border-radius: 9px; background: transparent; color: #4d5b6f; font-size: .84rem; text-align: left; cursor: pointer; }
-  .step-tab[aria-current="step"] { background: var(--blue-pale); color: var(--blue-dark); font-weight: 750; }
-  .step-tab:disabled { opacity: .55; cursor: not-allowed; }
-  .step-number { display: grid; width: 25px; height: 25px; flex: 0 0 25px; place-items: center; border-radius: 50%; background: #e8ebef; font-size: .78rem; font-weight: 750; }
-  .step-tab[aria-current="step"] .step-number { background: var(--blue); color: #fff; }
+  .wizard-tabs { display: block; width: 100%; overflow: visible; }
+  .step-list { display: grid; width: 100%; grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: stretch; gap: 10px; margin: 0; padding: 0; }
+  .step-tab { display: flex; width: 100%; min-width: 0; min-height: 76px; align-items: center; justify-content: flex-start; gap: 11px; padding: 12px 15px; border: 1px solid var(--line); border-radius: 12px; background: #fff; color: #4d5b6f; font-size: .9rem; text-align: left; cursor: pointer; transition: border-color .15s ease, background .15s ease, box-shadow .15s ease; }
+  .step-tab:hover { border-color: #b7c8d7; background: #fbfdff; }
+  .step-tab[aria-selected="true"] { border-color: #91adc4; background: var(--blue-pale); color: var(--blue-dark); box-shadow: 0 2px 8px rgba(37, 54, 76, .08); }
+  .step-copy { display: grid; min-width: 0; gap: 2px; }
+  .step-copy strong { overflow-wrap: anywhere; font-size: .9rem; font-weight: 750; line-height: 1.25; }
+  .step-copy small { color: var(--muted); font-size: .77rem; line-height: 1.25; }
+  .step-number { display: grid; width: 30px; height: 30px; flex: 0 0 30px; place-items: center; border-radius: 50%; background: #e8ebef; color: #536175; font-size: .8rem; font-weight: 750; }
+  .step-tab[aria-selected="true"] .step-number { background: var(--blue); color: #fff; }
+  .rating-block { margin-top: 30px; padding-top: 24px; border-top: 1px solid var(--line); }
+  .rating-block h3 { margin-bottom: 8px; font: 700 1.25rem/1.25 var(--serif); }
   .step-status { margin: 4px 0 12px; color: var(--muted); font-size: .87rem; font-weight: 650; }
   .wizard-panel[hidden] { display: none; }
   .wizard-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 24px; }
@@ -163,12 +168,17 @@
   .wizard-panel .three-fields textarea { min-height: 78px; }
   .wizard-finish { background: var(--green); }
   .wizard-finish:hover { background: #274c41; }
-  @media (max-width: 600px) {
-    .step-list { grid-template-columns: repeat(4, max-content); }
-    .step-tab { padding: 7px 8px; }
-    .step-tab > span:last-child { font-size: .78rem; }
+  @media (max-width: 700px) {
+    .step-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .step-tab { min-height: 68px; padding: 10px 12px; }
     .wizard-actions { align-items: stretch; }
     .wizard-actions button { flex: 1; }
+  }
+  @media (max-width: 420px) {
+    .step-tab { gap: 8px; padding: 9px; }
+    .step-number { width: 26px; height: 26px; flex-basis: 26px; }
+    .step-copy strong { font-size: .82rem; }
+    .step-copy small { font-size: .72rem; }
   }
 </style>
 </head>
@@ -179,31 +189,56 @@
     <span class="eyebrow">A chance to contribute</span>
     <h1>Teaching Assistant Application</h1>
     <p>Share what you bring, what you are still learning, and how you would help make this class better for students.</p>
-    <div class="hero-meta"><span>Designed for one hour or less</span><span>Short answers are welcome</span><span>Thoughtful beats perfect</span></div>
+    <div class="hero-meta"><span>Basics · ≤ 5 minutes</span><span>Questions · 30 minutes</span><span>Work samples · 1 hour total</span></div>
   </header>
-  <nav class="section-nav wizard-tabs" aria-label="Application steps">
-    <ol class="step-list">
-      <li><button type="button" class="step-tab" data-step-tab="0" aria-current="step"><span class="step-number">1</span><span>Basics</span></button></li>
-      <li><button type="button" class="step-tab" data-step-tab="1" disabled><span class="step-  <form id="application" novalidate>
+  <nav class="wizard-tabs" aria-label="Application steps">
+    <div class="step-list" role="tablist" aria-label="Four application steps">
+      <button type="button" class="step-tab" id="tab-basics" role="tab" data-step-tab="0" aria-controls="step-basics" aria-selected="true" tabindex="0"><span class="step-number">1</span><span class="step-copy"><strong>Basics</strong><small>≤ 5 min</small></span></button>
+      <button type="button" class="step-tab" id="tab-questions" role="tab" data-step-tab="1" aria-controls="step-questions" aria-selected="false" tabindex="-1"><span class="step-number">2</span><span class="step-copy"><strong>Common questions</strong><small>30 min</small></span></button>
+      <button type="button" class="step-tab" id="tab-work" role="tab" data-step-tab="2" aria-controls="step-work" aria-selected="false" tabindex="-1"><span class="step-number">3</span><span class="step-copy"><strong>What you’ll bring</strong><small>1 hour total</small></span></button>
+      <button type="button" class="step-tab" id="tab-reflection" role="tab" data-step-tab="3" aria-controls="step-reflection" aria-selected="false" tabindex="-1"><span class="step-number">4</span><span class="step-copy"><strong>Reflection</strong><small>Final step</small></span></button>
+    </div>
+  </nav>
+
+  <form id="application" novalidate>
     <p class="step-status" id="step-status" aria-live="polite">Step 1 of 4 · Basic application information</p>
 
-    <section class="section-card wizard-panel" id="step-basics" data-step-panel="0" aria-labelledby="basics-title">
+    <section class="section-card wizard-panel" id="step-basics" data-step-panel="0" role="tabpanel" aria-labelledby="tab-basics" tabindex="0">
       <p class="section-kicker">01 · Basic application information</p>
       <h2 id="basics-title">A few details before you begin</h2>
-      <p class="section-intro">This application should take no more than one hour. Keep your answers concise. We’re looking for thoughtful students who can contribute to learning, support classmates, and help the course grow.</p>
+      <p class="section-intro">This tab should take no more than five minutes. The steps have their own time targets. We want to see that you can work effectively and efficiently, so concise answers are welcome.</p>
       <div class="field-grid">
         <div class="field"><label for="applicant-name">Your name</label><input id="applicant-name" name="name" type="text" autocomplete="name" required></div>
         <div class="field"><label for="applicant-email">Email address</label><input id="applicant-email" name="email" type="email" autocomplete="email" required></div>
         <div class="field"><label for="course-name">Which class are you applying to TA for?</label><input id="course-name" name="course" type="text" placeholder="Course number or name" required></div>
       </div>
 
+      <fieldset class="prompt-block">
+        <legend>Have you checked the TA schedule and confirmed the times work for you?</legend>
+        <div class="radio-stack">
+          <label class="choice-row"><input type="radio" name="schedule" value="yes" required><span>Yes, I checked and the times work.</span></label>
+          <label class="choice-row"><input type="radio" name="schedule" value="not-yet"><span>Not yet; I still need to check.</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="prompt-block">
+        <legend>Which best describes your grade in this class?</legend>
+        <div class="radio-stack">
+          <label class="choice-row"><input type="radio" name="grade" value="current-a" required><span>I currently have an A.</span></label>
+          <label class="choice-row"><input type="radio" name="grade" value="prior-a"><span>I earned an A in this class before.</span></label>
+          <label class="choice-row"><input type="radio" name="grade" value="both"><span>Both of these apply.</span></label>
+          <label class="choice-row"><input type="radio" name="grade" value="neither"><span>Neither applies yet.</span></label>
+        </div>
+        <p class="helper">A strong course grade is part of appointment decisions. An honest answer helps us have a clear conversation.</p>
+      </fieldset>
+
       <fieldset class="prompt-block expectations">
         <legend>Before continuing, please confirm these five things.</legend>
         <div class="check-stack">
-          <label class="choice-row"><input type="checkbox" name="ack-time" required><span>I understand this application is designed to take no more than one hour.</span></label>
+          <label class="choice-row"><input type="checkbox" name="ack-time" required><span>I understand Tab 1 should take no more than five minutes.</span></label>
           <label class="choice-row"><input type="checkbox" name="ack-enrollment" required><span>I understand I’m expected to be enrolled in the class I TA during the semester I serve.</span></label>
           <label class="choice-row"><input type="checkbox" name="ack-hours" required><span>I can plan for about five hours of TA work each week.</span></label>
-          <label class="choice-row"><input type="checkbox" name="ack-schedule" required><span>I have checked the TA schedule, and the required times work for me.</span></label>
+          <label class="choice-row"><input type="checkbox" name="ack-schedule" required><span>I understand that schedule fit is part of appointment decisions.</span></label>
           <label class="choice-row"><input type="checkbox" name="ack-grade" required><span>I understand that a strong grade in the course is part of appointment decisions.</span></label>
         </div>
       </fieldset>
@@ -214,35 +249,51 @@
       </div>
     </section>
 
-    <section class="section-card wizard-panel" id="step-questions" data-step-panel="1" aria-labelledby="questions-title" hidden>
-      <p class="section-kicker">02 · Common questions</p>
+    <section class="section-card wizard-panel" id="step-questions" data-step-panel="1" role="tabpanel" aria-labelledby="tab-questions" tabindex="0" hidden>
+      <p class="section-kicker">02 · Common questions · about 30 minutes</p>
       <h2 id="questions-title">Show me how you think</h2>
-      <p class="section-intro">Everyone answers these four questions. Short, specific answers are more useful than polished essays.</p>
+      <p class="section-intro">Answer all five prompts, then complete the quick self-assessment. I want to see thoughtful work done effectively and efficiently; concise, specific answers are welcome.</p>
 
       <div class="prompt-block" style="margin-top:0;padding-top:0;border-top:0">
-        <label for="why-ta">Why do you want to be a TA? Give three brief reasons.</label>
-        <textarea id="why-ta" name="why-ta" maxlength="700" placeholder="A few sentences or three short points are enough." required></textarea>
+        <label for="course-magic">What are three things from the class that are magical and that we should not touch? What is one thing we should change, and why is it the highest-priority fix for students?</label>
+        <textarea id="course-magic" name="course-magic" maxlength="1400" placeholder="Protect what is working, then make the strongest case for one priority change." required></textarea>
       </div>
 
       <div class="prompt-block">
-        <label for="gospel-reflection">What gospel-related things did the TAs or Brother Pacini do this semester that you appreciated? What would you like them to do more often? What spiritual learning have you experienced, and what helped bring it on?</label>
-        <textarea id="gospel-reflection" name="gospel-reflection" maxlength="1400" placeholder="You can answer each part briefly; a specific moment or practice is helpful." required></textarea>
+        <label for="manage-up">A great TA knows how to “manage up.” Look up that phrase if you need to. Explain what it means in this context, then convince me you can do it effectively as a TA.</label>
+        <textarea id="manage-up" name="manage-up" maxlength="1200" placeholder="Think about communication, initiative, and helping the person you report to do their job well." required></textarea>
       </div>
 
       <div class="prompt-block">
-        <label for="course-perspective">What is one thing about the course that is working well and should stay? What is one change you would recommend, and why might it help students?</label>
-        <textarea id="course-perspective" name="course-perspective" maxlength="1000" placeholder="Be concrete. Small, practical suggestions are welcome." required></textarea>
+        <label for="holy-ghost-action">What is the single highest-leverage action we could take to increase the presence of and teaching of the Holy Ghost in our class?</label>
+        <textarea id="holy-ghost-action" name="holy-ghost-action" maxlength="1200" placeholder="You may borrow a practice from another class or suggest an original idea." required></textarea>
       </div>
 
-      <fieldset class="prompt-block">
-        <legend>Why would you recommend yourself as a TA? Then think of two classmates: why would you recommend or hesitate to recommend each of them?</legend>
-        <p class="helper">Be honest and kind. Describe classmates without names or details that would identify them.</p>
-        <div class="three-fields">
-          <div class="field"><label for="self-recommendation">Your recommendation of yourself</label><textarea id="self-recommendation" name="self-recommendation" maxlength="700" placeholder="Name a strength you would bring and an area you are still working on." required></textarea></div>
-          <div class="field"><label for="peer-one">First classmate</label><textarea id="peer-one" name="peer-one" maxlength="700" placeholder="What would you trust them to do well? Is there a concern or support need?" required></textarea></div>
-          <div class="field"><label for="peer-two">Second classmate</label><textarea id="peer-two" name="peer-two" maxlength="700" placeholder="Again, be candid, specific, and helpful." required></textarea></div>
+      <div class="prompt-block">
+        <label for="excellent-ta">Describe what makes an excellent TA. Think of someone you know in real life and privately consider why they might or might not make a good TA, including the rating you would give them. Do not enter anything about that person or their rating. Then do the same for yourself: why would you make a great TA, and what overall rating would you give yourself?</label>
+        <textarea id="excellent-ta" name="excellent-ta" maxlength="1400" placeholder="Keep the other person’s identity, details, and rating private. Explain your own case honestly." required></textarea>
+      </div>
+
+      <div class="prompt-block">
+        <label for="unique-contribution">TA work includes grading, administration, peer mentoring, and more. I also hope it can be a life-changing experience where each TA builds something unique to leave behind. Why do you want this job? Give three brief reasons, then describe what you would uniquely bring or build for the class.</label>
+        <textarea id="unique-contribution" name="unique-contribution" maxlength="1600" placeholder="Past examples include contributing to the textbook, teaching a class, improving quizzes, or researching a topic that changes how I teach. Your idea can be small or ambitious." required></textarea>
+      </div>
+
+      <div class="rating-block" aria-labelledby="ratings-title">
+        <p class="section-kicker">Quick self-assessment</p>
+        <h3 id="ratings-title">Rate the skills you would bring</h3>
+        <p class="section-intro">For each skill, choose a score from 1 to 10 and add one brief example or growth goal. I combined overlapping areas while keeping the original dimensions.</p>
+        <div class="scale-grid">
+          <fieldset class="rating-card"><legend><span class="rating-number">1</span>How confident are you with this course’s content?</legend><div class="slider-line"><input id="r1" name="rating-content" type="range" min="1" max="10" value="5"><output for="r1">5 / 10</output></div><div class="scale-labels"><span>Still learning</span><span>Ready to teach it</span></div><label class="evidence-label" for="e1">One reason for that score, or a growth goal</label><input id="e1" name="evidence-content" type="text" maxlength="180" placeholder="A brief example or goal" required></fieldset>
+          <fieldset class="rating-card"><legend><span class="rating-number">2</span>How well could you help a student who has fallen behind?</legend><div class="slider-line"><input id="r2" name="rating-support" type="range" min="1" max="10" value="5"><output for="r2">5 / 10</output></div><div class="scale-labels"><span>Still learning</span><span>Ready to model it</span></div><label class="evidence-label" for="e2">One reason for that score, or a growth goal</label><input id="e2" name="evidence-support" type="text" maxlength="180" placeholder="A brief example or goal" required></fieldset>
+          <fieldset class="rating-card"><legend><span class="rating-number">3</span>How well do you notice what needs doing and act independently with good judgment?</legend><div class="slider-line"><input id="r3" name="rating-initiative" type="range" min="1" max="10" value="5"><output for="r3">5 / 10</output></div><div class="scale-labels"><span>Usually need direction</span><span>Anticipate and handle needs</span></div><label class="evidence-label" for="e3">One reason for that score, or a growth goal</label><input id="e3" name="evidence-initiative" type="text" maxlength="180" placeholder="A brief example or goal" required></fieldset>
+          <fieldset class="rating-card"><legend><span class="rating-number">4</span>How efficiently and consistently could you grade student work?</legend><div class="slider-line"><input id="r4" name="rating-grading" type="range" min="1" max="10" value="5"><output for="r4">5 / 10</output></div><div class="scale-labels"><span>Still learning</span><span>Fast and consistent</span></div><label class="evidence-label" for="e4">One reason for that score, or a growth goal</label><input id="e4" name="evidence-grading" type="text" maxlength="180" placeholder="A brief example or goal" required></fieldset>
+          <fieldset class="rating-card"><legend><span class="rating-number">5</span>How comfortable are you with HTML, AI, and course technology?</legend><div class="slider-line"><input id="r5" name="rating-tech" type="range" min="1" max="10" value="5"><output for="r5">5 / 10</output></div><div class="scale-labels"><span>New to me</span><span>Can troubleshoot or build</span></div><label class="evidence-label" for="e5">One reason for that score, or a growth goal</label><input id="e5" name="evidence-tech" type="text" maxlength="180" placeholder="A brief example or goal" required></fieldset>
+          <fieldset class="rating-card"><legend><span class="rating-number">6</span>How would you contribute to a positive class vibe?</legend><div class="slider-line"><input id="r6" name="rating-vibe" type="range" min="1" max="10" value="5"><output for="r6">5 / 10</output></div><div class="scale-labels"><span>Quiet contributor</span><span>Can lift the room</span></div><label class="evidence-label" for="e6">One reason for that score, or a growth goal</label><input id="e6" name="evidence-vibe" type="text" maxlength="180" placeholder="A brief example or goal" required></fieldset>
+          <fieldset class="rating-card"><legend><span class="rating-number">7</span>How ready are you to learn what you need, propose a useful innovation, and test it while protecting what already works?</legend><div class="slider-line"><input id="r7" name="rating-innovation" type="range" min="1" max="10" value="5"><output for="r7">5 / 10</output></div><div class="scale-labels"><span>Prefer familiar routines</span><span>Propose, test, and learn</span></div><label class="evidence-label" for="e7">One reason for that score, or a growth goal</label><input id="e7" name="evidence-innovation" type="text" maxlength="180" placeholder="A brief example or goal" required></fieldset>
+          <fieldset class="rating-card"><legend><span class="rating-number">8</span>How comfortable are you advocating for students, speaking up to me, clarifying priorities, and setting a respectful boundary when needed?</legend><div class="slider-line"><input id="r8" name="rating-manage-up" type="range" min="1" max="10" value="5"><output for="r8">5 / 10</output></div><div class="scale-labels"><span>Would hesitate to raise it</span><span>Can speak up constructively</span></div><label class="evidence-label" for="e8">One reason for that score, or a growth goal</label><input id="e8" name="evidence-manage-up" type="text" maxlength="180" placeholder="A brief example or goal" required></fieldset>
         </div>
-      </fieldset>
+      </div>
 
       <div class="wizard-actions">
         <button class="back-button" type="button" data-back>Back</button>
@@ -250,10 +301,10 @@
       </div>
     </section>
 
-    <section class="section-card wizard-panel" id="step-work" data-step-panel="2" aria-labelledby="samples-title" hidden>
-      <p class="section-kicker">03 · What you’ll bring</p>
+    <section class="section-card wizard-panel" id="step-work" data-step-panel="2" role="tabpanel" aria-labelledby="tab-work" tabindex="0" hidden>
+      <p class="section-kicker">03 · What you’ll bring · up to one hour total</p>
       <h2 id="samples-title">Choose three ways to show what you can contribute</h2>
-      <p class="section-intro">Choose exactly three prompts across the five buckets. Short responses, links, and focused examples are welcome. If you use AI, briefly note what you used and how you checked or changed its work.</p>
+      <p class="section-intro">Plan up to one hour total for this tab. Choose exactly three prompts across the five buckets. Keep the work focused: I want to see that you can contribute effectively and efficiently, not that you can over-polish an answer. Short responses, links, and focused examples are welcome.</p>
       <div class="menu-intro">
         <p style="margin:0;color:var(--muted)">Pick the samples that best show your strengths and interests.</p>
         <div class="selection-count" id="selection-count" aria-live="polite">0 / 3 selected</div>
@@ -302,7 +353,7 @@
       </div>
     </section>
 
-    <section class="section-card wizard-panel" id="step-reflection" data-step-panel="3" aria-labelledby="reflection-title" hidden>
+    <section class="section-card wizard-panel" id="step-reflection" data-step-panel="3" role="tabpanel" aria-labelledby="tab-reflection" tabindex="0" hidden>
       <p class="section-kicker">04 · Reflection</p>
       <h2 id="reflection-title">What will you take with you?</h2>
       <p class="section-intro">Whether or not you get the job, the application can help you notice what you value and what you want to build.</p>
@@ -315,6 +366,11 @@
         <label class="choice-row"><input id="relationship-acknowledgment" name="relationship-acknowledgment" type="checkbox" required><span>I know that if Brother Pacini chooses someone else this semester, he still loves me. I’m welcome to visit his office, join the PACPAC Zoom channel, and keep hanging out. The decision is about what is right for the semester; it doesn’t change that I’m valued and welcome.</span></label>
       </div>
 
+      <fieldset class="prompt-block">
+        <legend>Would you like to hear about other opportunities?</legend>
+        <div class="check-stack"><label class="choice-row"><input id="other-jobs" name="other-opportunities" type="checkbox"><span>I’d be interested in hearing about other on-campus, online, or future jobs.</span></label></div>
+      </fieldset>
+
       <div class="wizard-actions">
         <button class="back-button" type="button" data-back>Back</button>
         <button class="submit-button wizard-finish" type="button" id="finish-preview">Finish preview</button>
@@ -322,14 +378,17 @@
       <p class="form-message" id="form-message" role="status" aria-live="polite"></p>
       <p class="submit-note">This preview does not send or save your answers.</p>
     </section>
-  </form>f me, and I can apply again in a future semester.</span></label></div>
-      <div class="submit-area"><button class="submit-button" type="submit">Submit preview</button><p class="submit-note">This button only demonstrates the flow. Nothing is transmitted or stored.</p></div>
-      <p class="form-message" id="form-message" role="status" aria-live="polite"></p>
-    </section>
   </form>
   <p class="footer-note">A four-step TA application prototype · work-sample buckets and prompts remain open for feedback.</p>
 </main>
 <script>
+  document.querySelectorAll('input[type="range"]').forEach((slider) => {
+    const output = slider.parentElement.querySelector('output');
+    const update = () => { output.value = slider.value + ' / 10'; };
+    slider.addEventListener('input', update);
+    update();
+  });
+
   const panels = Array.from(document.querySelectorAll('[data-step-panel]'));
   const tabs = Array.from(document.querySelectorAll('[data-step-tab]'));
   const stepStatus = document.getElementById('step-status');
@@ -339,37 +398,60 @@
   const selectionMessage = document.getElementById('selection-message');
   const formMessage = document.getElementById('form-message');
   let currentStep = 0;
-  let unlockedStep = 0;
   const stepNames = ['Basic application information', 'Common questions', 'What you’ll bring', 'Reflection'];
 
-  function showStep(index) {
+  function showStep(index, focusPanel = true) {
     currentStep = index;
     panels.forEach((panel, panelIndex) => { panel.hidden = panelIndex !== index; });
     tabs.forEach((tab, tabIndex) => {
-      tab.disabled = tabIndex > unlockedStep;
-      if (tabIndex === index) tab.setAttribute('aria-current', 'step');
-      else tab.removeAttribute('aria-current');
+      const active = tabIndex === index;
+      tab.setAttribute('aria-selected', String(active));
+      tab.tabIndex = active ? 0 : -1;
     });
     stepStatus.textContent = 'Step ' + (index + 1) + ' of 4 · ' + stepNames[index];
     formMessage.textContent = '';
-    const heading = panels[index].querySelector('h2');
-    if (heading) heading.setAttribute('tabindex', '-1'), heading.focus();
+    if (focusPanel) {
+      const heading = panels[index].querySelector('h2');
+      if (heading) {
+        heading.setAttribute('tabindex', '-1');
+        heading.focus();
+      }
+    }
   }
 
-  function validateCurrentStep() {
-    const panel = panels[currentStep];
+  function validatePanel(index) {
+    const panel = panels[index];
     const fields = Array.from(panel.querySelectorAll('input[required], textarea[required], select[required]'));
     for (const field of fields) {
       if (!field.checkValidity()) {
-        field.reportValidity();
-        field.focus();
+        if (index === currentStep) {
+          field.reportValidity();
+          field.focus();
+        }
         return false;
       }
     }
-    if (currentStep === 2 && choices.filter((choice) => choice.checked).length !== 3) {
-      selectionMessage.textContent = 'Choose exactly three work samples before continuing.';
-      document.getElementById('samples-title').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (index === 2 && choices.filter((choice) => choice.checked).length !== 3) {
+      if (index === currentStep) {
+        selectionMessage.textContent = 'Choose exactly three work samples before continuing.';
+        document.getElementById('samples-title').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
       return false;
+    }
+    return true;
+  }
+
+  function validateCurrentStep() {
+    return validatePanel(currentStep);
+  }
+
+  function validateWholeApplication() {
+    for (let index = 0; index < panels.length; index += 1) {
+      if (!validatePanel(index)) {
+        showStep(index);
+        validatePanel(index);
+        return false;
+      }
     }
     return true;
   }
@@ -426,17 +508,25 @@
     });
   }
 
-  tabs.forEach((tab) => {
-    tab.addEventListener('click', () => {
-      const index = Number(tab.dataset.stepTab);
-      if (index <= unlockedStep) showStep(index);
+  tabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => showStep(index, false));
+    tab.addEventListener('keydown', (event) => {
+      let nextIndex = null;
+      if (event.key === 'ArrowRight') nextIndex = (index + 1) % tabs.length;
+      else if (event.key === 'ArrowLeft') nextIndex = (index - 1 + tabs.length) % tabs.length;
+      else if (event.key === 'Home') nextIndex = 0;
+      else if (event.key === 'End') nextIndex = tabs.length - 1;
+      if (nextIndex !== null) {
+        event.preventDefault();
+        showStep(nextIndex, false);
+        tabs[nextIndex].focus();
+      }
     });
   });
 
   document.querySelectorAll('[data-next]').forEach((button) => {
     button.addEventListener('click', () => {
       if (!validateCurrentStep()) return;
-      unlockedStep = Math.max(unlockedStep, currentStep + 1);
       showStep(Math.min(currentStep + 1, panels.length - 1));
     });
   });
@@ -456,12 +546,12 @@
   });
 
   document.getElementById('finish-preview').addEventListener('click', () => {
-    if (!validateCurrentStep()) return;
+    if (!validateWholeApplication()) return;
     formMessage.textContent = 'Preview complete. No information was sent or saved; this is still a prototype.';
     formMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   });
 
-  showStep(0);
+  showStep(0, false);
 </script>
 </body>
 </html>
