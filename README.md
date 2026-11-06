@@ -3,8 +3,9 @@
 Source for Benjamin Pacini's website.
 
 - `site/` is the website. Cloudflare serves this folder at benjaminpacini.com (see `wrangler.jsonc`).
-  - `site/index.html` is the landing page: a card for each textbook, then a short "More from me" list.
+  - `site/index.html` is the landing page: a card for each textbook, a "Course resources" list, then a short "More from me" list.
   - `site/assets/` holds the headshot and the two cover thumbnails.
+  - `site/edcor200/` is the EDCOR 200 course page (benjaminpacini.com/edcor200/). Each activity gets its own folder under it, such as `danielson/` for the Teaching Practice Sort & Match Lab. To add one, make a new folder with an `index.html` and add a card to `site/edcor200/index.html`.
 - `archive/` holds the original Google Site, preserved before the migration. It is never published.
 
 The textbooks live in their own repositories and on their own subdomains:
