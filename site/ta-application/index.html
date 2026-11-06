@@ -145,7 +145,7 @@
     *, *::before, *::after { transition-duration: .01ms !important; }
   }
   .wizard-tabs { display: block; width: 100%; overflow: visible; }
-  .step-list { display: grid; width: 100%; grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: stretch; gap: 10px; margin: 0; padding: 0; }
+  .step-list { display: grid; width: 100%; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: stretch; gap: 10px; margin: 0; padding: 0; }
   .step-tab { display: flex; width: 100%; min-width: 0; min-height: 76px; align-items: center; justify-content: flex-start; gap: 11px; padding: 12px 15px; border: 1px solid var(--line); border-radius: 12px; background: #fff; color: #4d5b6f; font-size: .9rem; text-align: left; cursor: pointer; transition: border-color .15s ease, background .15s ease, box-shadow .15s ease; }
   .step-tab:hover { border-color: #b7c8d7; background: #fbfdff; }
   .step-tab[aria-selected="true"] { border-color: #91adc4; background: var(--blue-pale); color: var(--blue-dark); box-shadow: 0 2px 8px rgba(37, 54, 76, .08); }
@@ -154,6 +154,40 @@
   .step-copy small { color: var(--muted); font-size: .77rem; line-height: 1.25; }
   .step-number { display: grid; width: 30px; height: 30px; flex: 0 0 30px; place-items: center; border-radius: 50%; background: #e8ebef; color: #536175; font-size: .8rem; font-weight: 750; }
   .step-tab[aria-selected="true"] .step-number { background: var(--blue); color: #fff; }
+  .rating-card { display: grid; grid-template-rows: minmax(4.2rem, 1fr) auto auto; align-content: stretch; }
+  .rating-card legend { min-height: 4.2em; margin-bottom: 12px; }
+  .rating-card legend strong { font-weight: 800; }
+  .slider-followup { display: block; margin-top: 4px; color: var(--muted); font-weight: 550; }
+  .questions-list { display: grid; gap: 14px; margin-top: 18px; }
+  .questions-list .question-card { margin: 0; padding: 16px; border: 1px solid var(--line); border-radius: 13px; background: #fff; }
+  .questions-list .question-card textarea { min-height: 110px; }
+  .responsibility-sort { margin-top: 28px; padding: 22px; border: 1px solid #d7dfe8; border-radius: 16px; background: #f7f9fb; }
+  .job-sort-heading { margin-bottom: 16px; }
+  .job-sort-heading .section-kicker { margin-bottom: 5px; }
+  .job-sort-heading h3 { margin: 0 0 6px; font: 700 1.25rem/1.25 var(--serif); }
+  .job-sort-heading > p:last-child { margin: 0; color: var(--muted); }
+  .job-sort-board { display: grid; gap: 14px; }
+  .job-task-bank { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; padding: 12px; border: 1px dashed #c6d0dc; border-radius: 12px; background: rgba(255, 255, 255, .72); }
+  .job-task { width: 100%; min-height: 58px; padding: 11px 12px; border: 1px solid #d7dee7; border-radius: 10px; background: #fff; color: #344258; font: 600 .9rem/1.4 var(--sans); text-align: left; cursor: grab; transition: border-color .15s ease, background .15s ease, box-shadow .15s ease; }
+  .job-task:hover { border-color: #aebfd0; background: #fbfdff; }
+  .job-task:active { cursor: grabbing; }
+  .job-task.is-selected { border-color: #6f96b7; background: var(--blue-pale); box-shadow: 0 0 0 2px rgba(49, 93, 130, .13); }
+  .job-task.is-dragging { opacity: .45; }
+  .job-bucket-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .job-bucket { min-width: 0; min-height: 142px; padding: 14px; border: 1px solid #d9e0e8; border-radius: 12px; background: #fff; transition: border-color .15s ease, background .15s ease, box-shadow .15s ease; }
+  .job-bucket h4 { margin: 0 0 10px; color: #344258; font-size: 1rem; }
+  .job-bucket-items { display: grid; min-height: 66px; align-content: start; gap: 8px; }
+  .job-bucket .job-task { min-height: 0; cursor: grab; }
+  .job-empty, .job-bank-empty { margin: 0; padding: 10px; border: 1px dashed #d6dde5; border-radius: 9px; color: var(--muted); font-size: .86rem; text-align: center; }
+  .job-bucket.is-over, .job-bucket:focus, .job-bucket.is-selected-target { border-color: #779bb8; background: #f1f6fa; box-shadow: 0 0 0 2px rgba(49, 93, 130, .1); outline: none; }
+  .job-sort-status { min-height: 24px; margin: 10px 0 0; color: var(--muted); font-size: .88rem; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+  @media (max-width: 760px) {
+    .step-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .step-tab { min-height: 68px; padding: 10px 12px; }
+    .job-task-bank, .job-bucket-grid { grid-template-columns: 1fr; }
+    .job-bucket { min-height: 112px; }
+  }
   .rating-block { margin-top: 30px; padding-top: 24px; border-top: 1px solid var(--line); }
   .rating-block h3 { margin-bottom: 8px; font: 700 1.25rem/1.25 var(--serif); }
   .step-status { margin: 4px 0 12px; color: var(--muted); font-size: .87rem; font-weight: 650; }
@@ -180,6 +214,9 @@
     .step-copy strong { font-size: .82rem; }
     .step-copy small { font-size: .72rem; }
   }
+  .wizard-panel .questions-list .question-card textarea { min-height: 110px; }
+  .job-bucket { cursor: pointer; }
+  .job-bucket:hover { border-color: #b7c8d7; }
 </style>
 </head>
 <body>
@@ -189,19 +226,19 @@
     <span class="eyebrow">A chance to contribute</span>
     <h1>Teaching Assistant Application</h1>
     <p>Share what you bring, what you are still learning, and how you would help make this class better for students.</p>
-    <div class="hero-meta"><span>Basics · ≤ 5 minutes</span><span>Questions · 30 minutes</span><span>Work samples · 1 hour total</span></div>
+    <div class="hero-meta"><span>Basics · ≤ 5 minutes</span><span>Sliders + questions · 30 minutes total</span><span>Work samples · up to 1 hour</span></div>
   </header>
   <nav class="wizard-tabs" aria-label="Application steps">
-    <div class="step-list" role="tablist" aria-label="Four application steps">
+    <div class="step-list" role="tablist" aria-label="Five application steps">
       <button type="button" class="step-tab" id="tab-basics" role="tab" data-step-tab="0" aria-controls="step-basics" aria-selected="true" tabindex="0"><span class="step-number">1</span><span class="step-copy"><strong>Basics</strong><small>≤ 5 min</small></span></button>
-      <button type="button" class="step-tab" id="tab-questions" role="tab" data-step-tab="1" aria-controls="step-questions" aria-selected="false" tabindex="-1"><span class="step-number">2</span><span class="step-copy"><strong>Common questions</strong><small>30 min</small></span></button>
-      <button type="button" class="step-tab" id="tab-work" role="tab" data-step-tab="2" aria-controls="step-work" aria-selected="false" tabindex="-1"><span class="step-number">3</span><span class="step-copy"><strong>What you’ll bring</strong><small>1 hour total</small></span></button>
-      <button type="button" class="step-tab" id="tab-reflection" role="tab" data-step-tab="3" aria-controls="step-reflection" aria-selected="false" tabindex="-1"><span class="step-number">4</span><span class="step-copy"><strong>Reflection</strong><small>Final step</small></span></button>
+      <button type="button" class="step-tab" id="tab-sliders" role="tab" data-step-tab="1" aria-controls="step-sliders" aria-selected="false" tabindex="-1"><span class="step-number">2</span><span class="step-copy"><strong>Sliders</strong><small>30 min total</small></span></button>
+      <button type="button" class="step-tab" id="tab-questions" role="tab" data-step-tab="2" aria-controls="step-questions" aria-selected="false" tabindex="-1"><span class="step-number">3</span><span class="step-copy"><strong>Questions</strong><small>same timer</small></span></button>
+      <button type="button" class="step-tab" id="tab-work" role="tab" data-step-tab="3" aria-controls="step-work" aria-selected="false" tabindex="-1"><span class="step-number">4</span><span class="step-copy"><strong>Work samples</strong><small>up to 1 hour</small></span></button>
+      <button type="button" class="step-tab" id="tab-reflection" role="tab" data-step-tab="4" aria-controls="step-reflection" aria-selected="false" tabindex="-1"><span class="step-number">5</span><span class="step-copy"><strong>Reflection</strong><small>Final step</small></span></button>
     </div>
   </nav>
-
   <form id="application" novalidate>
-    <p class="step-status" id="step-status" aria-live="polite">Step 1 of 4 · Basic application information</p>
+    <p class="step-status" id="step-status" aria-live="polite">Step 1 of 5 · Basic application information</p>
 
     <section class="section-card wizard-panel" id="step-basics" data-step-panel="0" role="tabpanel" aria-labelledby="tab-basics" tabindex="0">
       <p class="section-kicker">01 · Basic application information</p>
@@ -224,62 +261,99 @@
 
       <div class="wizard-actions">
         <span></span>
-        <button class="submit-button wizard-next" type="button" data-next>Continue to common questions</button>
+        <button class="submit-button wizard-next" type="button" data-next>Continue to sliders</button>
       </div>
     </section>
 
-    <section class="section-card wizard-panel" id="step-questions" data-step-panel="1" role="tabpanel" aria-labelledby="tab-questions" tabindex="0" hidden>
-      <p class="section-kicker">02 · Common questions · 30 minutes</p>
-      <h2 id="questions-title">Show me how you think</h2>
-      <p class="section-intro">Set a 30-minute timer and be done when it goes off. You are welcome to use any tech tools (AI, voice-to-text, etc.) that will help. Short bullets are just fine: I care about content, not format. Work efficiently and stop when time is up.</p>
+    <section class="section-card wizard-panel" id="step-sliders" data-step-panel="1" role="tabpanel" aria-labelledby="tab-sliders" tabindex="0" hidden>
+      <p class="section-kicker">02 · Self-assessment · part of 30 minutes</p>
+      <h2 id="ratings-title">Rate the skills you would bring</h2>
+      <p class="section-intro">Set one 30-minute timer for this tab and the Common Questions tab that follows. Finish both steps when the timer ends. You are welcome to use any tech tools (AI, voice-to-text, etc.) that will help. Short bullets are fine; I care about content, not format.</p>
 
-      <div class="rating-block" aria-labelledby="ratings-title">
-        <p class="section-kicker">Self-assessment sliders</p>
-        <h3 id="ratings-title">Rate the skills you would bring</h3>
-        <p class="section-intro">Rate each area from 1 to 10. I care more about self-awareness than high scores: tell me what you are good at, and show me that you understand your weaknesses and where you can grow.</p>
+      <div class="rating-block" aria-labelledby="slider-guidance-title">
+        <p class="section-kicker">Self-awareness matters most</p>
+        <h3 id="slider-guidance-title">Rate each area from 1 to 10</h3>
+        <p class="section-intro">I care more about self-awareness than high scores. Tell me what you are good at, and show me that you understand your weaknesses and where you can grow.</p>
         <div class="scale-grid">
-          <fieldset class="rating-card"><legend><span class="rating-number">1</span><strong>Class vibe:</strong> How would you help create a positive, welcoming class atmosphere?</legend><div class="slider-line"><input id="r1" name="rating-vibe" type="range" min="1" max="10" value="5"><output for="r1">5 / 10</output></div><div class="scale-labels"><span>Quiet contributor</span><span>Can lift the room</span></div></fieldset>
-          <fieldset class="rating-card"><legend><span class="rating-number">2</span><strong>Technology flexibility:</strong> How comfortable are you with HTML, AI, and course technology, and are you willing to learn new tools where you have gaps?</legend><div class="slider-line"><input id="r2" name="rating-tech" type="range" min="1" max="10" value="5"><output for="r2">5 / 10</output></div><div class="scale-labels"><span>New to me</span><span>Comfortable and willing to learn</span></div></fieldset>
-          <fieldset class="rating-card"><legend><span class="rating-number">3</span><strong>Student mentorship:</strong> How effective do you feel you will be at mentoring students, especially those who have fallen behind?</legend><div class="slider-line"><input id="r3" name="rating-support" type="range" min="1" max="10" value="5"><output for="r3">5 / 10</output></div><div class="scale-labels"><span>Still developing</span><span>Strong mentor</span></div></fieldset>
+          <fieldset class="rating-card"><legend><span class="rating-number">1</span><strong>Class vibe:</strong> How effectively can you help create a positive, welcoming, joyous, slightly unhinged class atmosphere?</legend><div class="slider-line"><input id="r1" name="rating-vibe" type="range" min="1" max="10" value="5"><output for="r1">5 / 10</output></div><div class="scale-labels"><span>Quiet contributor</span><span>Adds joyful energy</span></div></fieldset>
+          <fieldset class="rating-card"><legend><span class="rating-number">2</span><strong>Technology:</strong> How comfortable are you with HTML, AI, and course technology?<span class="slider-followup">If not, how comfortable are you learning those skills?</span></legend><div class="slider-line"><input id="r2" name="rating-tech" type="range" min="1" max="10" value="5"><output for="r2">5 / 10</output></div><div class="scale-labels"><span>New to these tools</span><span>Comfortable or willing to learn</span></div></fieldset>
+          <fieldset class="rating-card"><legend><span class="rating-number">3</span><strong>Student mentorship:</strong> How effectively will you be able to mentor students—for example, by recognizing top students, developing professional relationships, and working with struggling students?</legend><div class="slider-line"><input id="r3" name="rating-mentorship" type="range" min="1" max="10" value="5"><output for="r3">5 / 10</output></div><div class="scale-labels"><span>Still developing</span><span>Strong mentor</span></div></fieldset>
           <fieldset class="rating-card"><legend><span class="rating-number">4</span><strong>Course knowledge:</strong> How confident are you with this course’s content?</legend><div class="slider-line"><input id="r4" name="rating-content" type="range" min="1" max="10" value="5"><output for="r4">5 / 10</output></div><div class="scale-labels"><span>Still learning</span><span>Ready to teach it</span></div></fieldset>
-          <fieldset class="rating-card"><legend><span class="rating-number">5</span><strong>Managing up:</strong> How comfortable are you managing up, advocating for students, clarifying priorities, and setting boundaries with me?</legend><div class="slider-line"><input id="r5" name="rating-manage-up" type="range" min="1" max="10" value="5"><output for="r5">5 / 10</output></div><div class="scale-labels"><span>Would hesitate to raise it</span><span>Can speak up constructively</span></div></fieldset>
+          <fieldset class="rating-card"><legend><span class="rating-number">5</span><strong>Assertiveness:</strong> How comfortable are you being assertive—saying no, drawing boundaries, and doing what is right even when it is unpopular?</legend><div class="slider-line"><input id="r5" name="rating-assertiveness" type="range" min="1" max="10" value="5"><output for="r5">5 / 10</output></div><div class="scale-labels"><span>Hard to speak up</span><span>Can be respectfully firm</span></div></fieldset>
           <fieldset class="rating-card"><legend><span class="rating-number">6</span><strong>Reliable grading:</strong> How efficiently and consistently could you grade student work?</legend><div class="slider-line"><input id="r6" name="rating-grading" type="range" min="1" max="10" value="5"><output for="r6">5 / 10</output></div><div class="scale-labels"><span>Still learning</span><span>Fast and consistent</span></div></fieldset>
           <fieldset class="rating-card"><legend><span class="rating-number">7</span><strong>Innovative:</strong> How capable are you at brainstorming new ideas, piloting the best ones, scaling when an idea works, and protecting what already works?</legend><div class="slider-line"><input id="r7" name="rating-innovation" type="range" min="1" max="10" value="5"><output for="r7">5 / 10</output></div><div class="scale-labels"><span>Prefer familiar routines</span><span>Can test and scale ideas</span></div></fieldset>
           <fieldset class="rating-card"><legend><span class="rating-number">8</span><strong>Proactive:</strong> How well do you see issues and address them as they come up?</legend><div class="slider-line"><input id="r8" name="rating-initiative" type="range" min="1" max="10" value="5"><output for="r8">5 / 10</output></div><div class="scale-labels"><span>Usually need direction</span><span>Anticipate and handle needs</span></div></fieldset>
         </div>
 
-        <div class="prompt-block">
+        <div class="prompt-block slider-context">
           <label for="slider-context">Which of the sliders would you add a little more context to? Add that context, then tell us why.</label>
           <textarea id="slider-context" name="slider-context" maxlength="1200" placeholder="Name any slider or sliders that need context. If none need clarification, say so and explain which rating best represents a strength or an area for growth." required></textarea>
         </div>
       </div>
 
-      <div class="questions-block" aria-labelledby="common-questions-title">
-        <p class="section-kicker">Common questions</p>
-        <h3 id="common-questions-title">Answer each prompt</h3>
-        <p class="section-intro">Short, thoughtful answers are enough. Bullets are welcome.</p>
+      <section class="responsibility-sort" aria-labelledby="job-sort-title">
+        <div class="job-sort-heading">
+          <p class="section-kicker">Whose job is this?</p>
+          <h3 id="job-sort-title">Sort the responsibilities</h3>
+          <p>Drag each task into the role you think should handle it. On a phone or tablet, select a task and then select its bucket.</p>
+        </div>
+        <p class="sr-only" id="job-sort-help">You can drag tasks with a mouse. With a keyboard or touch screen, select a task, then activate a bucket to place it.</p>
+        <div class="job-sort-board" aria-describedby="job-sort-help">
+          <div class="job-task-bank" id="job-task-bank" aria-label="Unsorted responsibilities">
+            <button type="button" class="job-task" draggable="true" data-task-id="grade" aria-pressed="false">Grade student work using the rubric</button>
+            <button type="button" class="job-task" draggable="true" data-task-id="dress-code" aria-pressed="false">Talk with a student about a dress-code violation</button>
+            <button type="button" class="job-task" draggable="true" data-task-id="personal-life" aria-pressed="false">Monitor students’ personal lives outside class</button>
+            <p class="job-bank-empty" hidden>All tasks are sorted.</p>
+          </div>
+          <div class="job-bucket-grid">
+            <div class="job-bucket" data-job-bucket="ta" tabindex="0" role="group" aria-label="TA job drop zone">
+              <h4>TA job</h4>
+              <div class="job-bucket-items"><p class="job-empty">Drop a task here</p></div>
+            </div>
+            <div class="job-bucket" data-job-bucket="brother-pacini" tabindex="0" role="group" aria-label="BroPa’s job drop zone">
+              <h4>BroPa’s job</h4>
+              <div class="job-bucket-items"><p class="job-empty">Drop a task here</p></div>
+            </div>
+            <div class="job-bucket" data-job-bucket="no-one" tabindex="0" role="group" aria-label="No one’s job drop zone">
+              <h4>No one’s job</h4>
+              <div class="job-bucket-items"><p class="job-empty">Drop a task here</p></div>
+            </div>
+          </div>
+        </div>
+        <p class="job-sort-status" id="job-sort-status" role="status" aria-live="polite">Sort all three tasks. Your buckets will help clarify your thinking.</p>
+        <input type="hidden" id="job-sort-grade" name="job-sort-grade" value="">
+        <input type="hidden" id="job-sort-dress-code" name="job-sort-dress-code" value="">
+        <input type="hidden" id="job-sort-personal-life" name="job-sort-personal-life" value="">
+      </section>
 
-        <div class="prompt-block" style="margin-top:0;padding-top:0;border-top:0">
+      <div class="wizard-actions">
+        <button class="back-button" type="button" data-back>Back</button>
+        <button class="submit-button wizard-next" type="button" data-next>Continue to common questions</button>
+      </div>
+    </section>
+
+    <section class="section-card wizard-panel" id="step-questions" data-step-panel="2" role="tabpanel" aria-labelledby="tab-questions" tabindex="0" hidden>
+      <p class="section-kicker">03 · Common questions · part of the same 30 minutes</p>
+      <h2 id="questions-title">Show me how you think</h2>
+      <p class="section-intro">Continue with the same timer you started on the Sliders tab; both tabs share one 30-minute limit. Short bullet answers are fine: I care about content, not format. You are welcome to use AI, voice-to-text, or any tech tools that will help.</p>
+
+      <div class="questions-list" aria-label="Common questions">
+        <div class="prompt-block question-card">
           <label for="course-magic">What are three things from the class that are magical—things we should not touch? What is one thing we should change, and why is it the highest-priority fix for students?</label>
           <textarea id="course-magic" name="course-magic" maxlength="1400" placeholder="Protect what is working, then make the strongest case for one priority change." required></textarea>
         </div>
 
-        <div class="prompt-block">
+        <div class="prompt-block question-card">
           <label for="manage-up">A great TA knows how to “manage up.” Look up that phrase if you need to. Explain what it means in this context, then convince me you can do it effectively as a TA.</label>
           <textarea id="manage-up" name="manage-up" maxlength="1200" placeholder="Think about communication, initiative, and helping the person you report to do their job well." required></textarea>
         </div>
 
-        <div class="prompt-block">
+        <div class="prompt-block question-card">
           <label for="holy-ghost-action">Choose the single highest-leverage action we could take to increase the presence of and teaching of the Holy Ghost in our class.</label>
           <textarea id="holy-ghost-action" name="holy-ghost-action" maxlength="1200" placeholder="You may borrow a practice from another class or suggest an original idea." required></textarea>
         </div>
 
-        <div class="prompt-block">
-          <label for="excellent-ta">Describe what makes an excellent TA. Think of someone you know in real life and privately consider why they might or might not make a good TA, including the rating you would give them. Do not enter anything about that person or their rating. Then do the same for yourself: why would you make a great TA, and what overall rating would you give yourself?</label>
-          <textarea id="excellent-ta" name="excellent-ta" maxlength="1600" placeholder="Keep the other person’s identity, details, and rating private. Explain your own case honestly." required></textarea>
-        </div>
-
-        <div class="prompt-block">
+        <div class="prompt-block question-card">
           <label for="why-ta">Why do you want this job? Give three reasons.</label>
           <textarea id="why-ta" name="why-ta" maxlength="1200" placeholder="Short bullet points are fine." required></textarea>
         </div>
@@ -291,8 +365,8 @@
       </div>
     </section>
 
-    <section class="section-card wizard-panel" id="step-work" data-step-panel="2" role="tabpanel" aria-labelledby="tab-work" tabindex="0" hidden>
-      <p class="section-kicker">03 · What you’ll bring · up to one hour total</p>
+    <section class="section-card wizard-panel" id="step-work" data-step-panel="3" role="tabpanel" aria-labelledby="tab-work" tabindex="0" hidden>
+      <p class="section-kicker">04 · What you’ll bring · up to one hour total</p>
       <h2 id="samples-title">Choose three ways to show what you can contribute</h2>
       <p class="section-intro">Plan up to one hour total for this tab. Choose exactly three prompts across the five buckets. Keep the work focused: I want to see that you can contribute effectively and efficiently, not that you can over-polish an answer. Short responses, links, and focused examples are welcome.</p>
       <div class="menu-intro">
@@ -343,8 +417,8 @@
       </div>
     </section>
 
-    <section class="section-card wizard-panel" id="step-reflection" data-step-panel="3" role="tabpanel" aria-labelledby="tab-reflection" tabindex="0" hidden>
-      <p class="section-kicker">04 · Reflection</p>
+    <section class="section-card wizard-panel" id="step-reflection" data-step-panel="4" role="tabpanel" aria-labelledby="tab-reflection" tabindex="0" hidden>
+      <p class="section-kicker">05 · Reflection</p>
       <h2 id="reflection-title">What will you take with you?</h2>
       <p class="section-intro">Whether or not you get the job, use this step to reflect on what you hope to build and what you can carry forward.</p>
       <div class="prompt-block" style="margin-top:0;padding-top:0;border-top:0">
@@ -392,8 +466,13 @@
   const selectionCount = document.getElementById('selection-count');
   const selectionMessage = document.getElementById('selection-message');
   const formMessage = document.getElementById('form-message');
+  const jobTaskBank = document.getElementById('job-task-bank');
+  const jobSortStatus = document.getElementById('job-sort-status');
+  const jobTasks = Array.from(document.querySelectorAll('.job-task'));
+  const jobBuckets = Array.from(document.querySelectorAll('[data-job-bucket]'));
+  let activeJobTask = null;
   let currentStep = 0;
-  const stepNames = ['Basic application information', 'Common questions', 'What you’ll bring', 'Reflection'];
+  const stepNames = ['Basic application information', 'Self-assessment sliders', 'Common questions', 'What you’ll bring', 'Reflection'];
 
   function showStep(index, focusPanel = true) {
     currentStep = index;
@@ -403,7 +482,7 @@
       tab.setAttribute('aria-selected', String(active));
       tab.tabIndex = active ? 0 : -1;
     });
-    stepStatus.textContent = 'Step ' + (index + 1) + ' of 4 · ' + stepNames[index];
+    stepStatus.textContent = 'Step ' + (index + 1) + ' of ' + panels.length + ' · ' + stepNames[index];
     formMessage.textContent = '';
     if (focusPanel) {
       const heading = panels[index].querySelector('h2');
@@ -426,7 +505,15 @@
         return false;
       }
     }
-    if (index === 2 && choices.filter((choice) => choice.checked).length !== 3) {
+    if (index === 1 && jobTasks.some((task) => jobTaskBank.contains(task))) {
+      if (index === currentStep) {
+        jobSortStatus.textContent = 'Sort every task into a bucket before continuing.';
+        document.getElementById('job-sort-title').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        jobTaskBank.querySelector('.job-task')?.focus();
+      }
+      return false;
+    }
+    if (index === 3 && choices.filter((choice) => choice.checked).length !== 3) {
       if (index === currentStep) {
         selectionMessage.textContent = 'Choose exactly three work samples before continuing.';
         document.getElementById('samples-title').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -502,6 +589,99 @@
       selectedWork.appendChild(card);
     });
   }
+
+  function updateJobEmptyStates() {
+    document.querySelectorAll('[data-job-bucket]').forEach((bucket) => {
+      const hasTasks = Boolean(bucket.querySelector('.job-bucket-items .job-task'));
+      const empty = bucket.querySelector('.job-empty');
+      if (empty) empty.hidden = hasTasks;
+    });
+    const bankEmpty = jobTaskBank.querySelector('.job-bank-empty');
+    if (bankEmpty) bankEmpty.hidden = Boolean(jobTaskBank.querySelector('.job-task'));
+  }
+
+  function selectJobTask(task) {
+    if (activeJobTask === task) {
+      task.classList.remove('is-selected');
+      task.setAttribute('aria-pressed', 'false');
+      activeJobTask = null;
+      jobBuckets.forEach((bucket) => bucket.classList.remove('is-selected-target'));
+      jobSortStatus.textContent = 'Task selection cleared. Select a task, then choose a bucket.';
+      return;
+    }
+    activeJobTask = task;
+    jobTasks.forEach((item) => {
+      const selected = item === task;
+      item.classList.toggle('is-selected', selected);
+      item.setAttribute('aria-pressed', String(selected));
+    });
+    jobBuckets.forEach((bucket) => bucket.classList.add('is-selected-target'));
+    jobSortStatus.textContent = 'Selected: ' + task.textContent.trim() + '. Choose a bucket to place it.';
+  }
+
+  function placeJobTask(task, bucket) {
+    const previousBucket = task.closest('[data-job-bucket]');
+    bucket.querySelector('.job-bucket-items').appendChild(task);
+    const storedRole = document.getElementById('job-sort-' + task.dataset.taskId);
+    if (storedRole) storedRole.value = bucket.dataset.jobBucket;
+    task.classList.remove('is-selected', 'is-dragging');
+    task.setAttribute('aria-pressed', 'false');
+    activeJobTask = null;
+    jobBuckets.forEach((item) => item.classList.remove('is-over', 'is-selected-target'));
+    updateJobEmptyStates();
+    const remaining = jobTaskBank.querySelectorAll('.job-task').length;
+    const placed = jobTasks.length - remaining;
+    jobSortStatus.textContent = remaining
+      ? 'Placed “' + task.textContent.trim() + '” in ' + bucket.querySelector('h4').textContent + '. ' + remaining + ' task' + (remaining === 1 ? '' : 's') + ' left to sort.'
+      : 'All ' + placed + ' tasks are sorted. Move any task to another bucket if you want to change your choice.';
+    if (previousBucket && previousBucket !== bucket) updateJobEmptyStates();
+  }
+
+  jobTasks.forEach((task) => {
+    task.addEventListener('click', () => selectJobTask(task));
+    task.addEventListener('dragstart', (event) => {
+      selectJobTask(task);
+      task.classList.add('is-dragging');
+      if (event.dataTransfer) {
+        event.dataTransfer.effectAllowed = 'move';
+        event.dataTransfer.setData('text/plain', task.dataset.taskId);
+      }
+    });
+    task.addEventListener('dragend', () => {
+      task.classList.remove('is-dragging');
+      jobBuckets.forEach((bucket) => bucket.classList.remove('is-over'));
+    });
+  });
+
+  jobBuckets.forEach((bucket) => {
+    bucket.addEventListener('dragover', (event) => {
+      event.preventDefault();
+      bucket.classList.add('is-over');
+      if (event.dataTransfer) event.dataTransfer.dropEffect = 'move';
+    });
+    bucket.addEventListener('dragleave', (event) => {
+      if (!bucket.contains(event.relatedTarget)) bucket.classList.remove('is-over');
+    });
+    bucket.addEventListener('drop', (event) => {
+      event.preventDefault();
+      const taskId = event.dataTransfer?.getData('text/plain');
+      const task = jobTasks.find((item) => item.dataset.taskId === taskId) || activeJobTask;
+      if (task) placeJobTask(task, bucket);
+    });
+    bucket.addEventListener('click', (event) => {
+      if (event.target.closest('.job-task')) return;
+      if (activeJobTask) placeJobTask(activeJobTask, bucket);
+      else jobSortStatus.textContent = 'Select a task first, then choose a bucket.';
+    });
+    bucket.addEventListener('keydown', (event) => {
+      if ((event.key === 'Enter' || event.key === ' ') && activeJobTask) {
+        event.preventDefault();
+        placeJobTask(activeJobTask, bucket);
+      }
+    });
+  });
+
+  updateJobEmptyStates();
 
   tabs.forEach((tab, index) => {
     tab.addEventListener('click', () => showStep(index, false));
