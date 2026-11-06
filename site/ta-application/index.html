@@ -213,33 +213,14 @@
         <div class="field"><label for="course-name">Which class are you applying to TA for?</label><input id="course-name" name="course" type="text" placeholder="Course number or name" required></div>
       </div>
 
-      <fieldset class="prompt-block">
-        <legend>Have you checked the TA schedule and confirmed the times work for you?</legend>
-        <div class="radio-stack">
-          <label class="choice-row"><input type="radio" name="schedule" value="yes" required><span>Yes, I checked and the times work.</span></label>
-          <label class="choice-row"><input type="radio" name="schedule" value="not-yet"><span>Not yet; I still need to check.</span></label>
-        </div>
-      </fieldset>
-
-      <fieldset class="prompt-block">
-        <legend>Which best describes your grade in this class?</legend>
-        <div class="radio-stack">
-          <label class="choice-row"><input type="radio" name="grade" value="current-a" required><span>I currently have an A.</span></label>
-          <label class="choice-row"><input type="radio" name="grade" value="prior-a"><span>I earned an A in this class before.</span></label>
-          <label class="choice-row"><input type="radio" name="grade" value="both"><span>Both of these apply.</span></label>
-          <label class="choice-row"><input type="radio" name="grade" value="neither"><span>Neither applies yet.</span></label>
-        </div>
-        <p class="helper">A strong course grade is part of appointment decisions. An honest answer helps us have a clear conversation.</p>
-      </fieldset>
-
       <fieldset class="prompt-block expectations">
-        <legend>Before continuing, please confirm these five things.</legend>
+        <legend>Before continuing, please confirm the following.</legend>
         <div class="check-stack">
-          <label class="choice-row"><input type="checkbox" name="ack-time" required><span>I understand Tab 1 should take no more than five minutes.</span></label>
+          <label class="choice-row"><input type="checkbox" name="ack-grade" required><span>I have earned an A in this class before, currently have an A, or can show strong evidence that I will earn an A in the class I’m applying to TA for.</span></label>
+          <label class="choice-row"><input type="checkbox" name="ack-schedule" required><span>I’ve checked Brother Pacini’s online schedule and can be present for the class when he teaches.</span></label>
           <label class="choice-row"><input type="checkbox" name="ack-enrollment" required><span>I understand I’m expected to be enrolled in the class I TA during the semester I serve.</span></label>
-          <label class="choice-row"><input type="checkbox" name="ack-hours" required><span>I can plan for about five hours of TA work each week.</span></label>
-          <label class="choice-row"><input type="checkbox" name="ack-schedule" required><span>I understand that schedule fit is part of appointment decisions.</span></label>
-          <label class="choice-row"><input type="checkbox" name="ack-grade" required><span>I understand that a strong grade in the course is part of appointment decisions.</span></label>
+          <label class="choice-row"><input type="checkbox" name="ack-attendance-hours" required><span>I understand TAs are expected to attend the class they support and typically work about five hours each week.</span></label>
+          <label class="choice-row"><input type="checkbox" name="ack-time" required><span>I understand Tab 1 should take no more than five minutes.</span></label>
         </div>
       </fieldset>
 
