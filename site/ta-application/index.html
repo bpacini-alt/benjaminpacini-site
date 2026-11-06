@@ -229,53 +229,59 @@
     </section>
 
     <section class="section-card wizard-panel" id="step-questions" data-step-panel="1" role="tabpanel" aria-labelledby="tab-questions" tabindex="0" hidden>
-      <p class="section-kicker">02 · Common questions · about 30 minutes</p>
+      <p class="section-kicker">02 · Common questions · 30 minutes</p>
       <h2 id="questions-title">Show me how you think</h2>
-      <p class="section-intro">Answer all five prompts, then complete the quick self-assessment. I want to see thoughtful work done effectively and efficiently; concise, specific answers are welcome.</p>
-
-      <div class="prompt-block" style="margin-top:0;padding-top:0;border-top:0">
-        <label for="course-magic">What are three things from the class that are magical and that we should not touch? What is one thing we should change, and why is it the highest-priority fix for students?</label>
-        <textarea id="course-magic" name="course-magic" maxlength="1400" placeholder="Protect what is working, then make the strongest case for one priority change." required></textarea>
-      </div>
-
-      <div class="prompt-block">
-        <label for="manage-up">A great TA knows how to “manage up.” Look up that phrase if you need to. Explain what it means in this context, then convince me you can do it effectively as a TA.</label>
-        <textarea id="manage-up" name="manage-up" maxlength="1200" placeholder="Think about communication, initiative, and helping the person you report to do their job well." required></textarea>
-      </div>
-
-      <div class="prompt-block">
-        <label for="gospel-reflection">What gospel-related things did the TAs or Brother Pacini do this semester that you appreciated? What would you like them to do more often? What spiritual learning have you experienced, and what helped bring it on?</label>
-        <textarea id="gospel-reflection" name="gospel-reflection" maxlength="1200" placeholder="A specific moment or practice is helpful; concise answers are welcome." required></textarea>
-      </div>
-
-      <div class="prompt-block">
-        <label for="holy-ghost-action">Now choose the single highest-leverage action we could take to increase the presence of and teaching of the Holy Ghost in our class.</label>
-        <textarea id="holy-ghost-action" name="holy-ghost-action" maxlength="1200" placeholder="You may borrow a practice from another class or suggest an original idea." required></textarea>
-      </div>
-
-      <div class="prompt-block">
-        <label for="excellent-ta">Describe what makes an excellent TA. Think of someone you know in real life and privately consider why they might or might not make a good TA, including the rating you would give them. Do not enter anything about that person or their rating. Then do the same for yourself: why would you make a great TA, and what overall rating would you give yourself?</label>
-        <textarea id="excellent-ta" name="excellent-ta" maxlength="1400" placeholder="Keep the other person’s identity, details, and rating private. Explain your own case honestly." required></textarea>
-      </div>
-
-      <div class="prompt-block">
-        <label for="unique-contribution">TA work includes grading, administration, peer mentoring, and more. I also hope it can be a life-changing experience where each TA builds something unique to leave behind. Why do you want this job? Give three brief reasons, then describe what you would uniquely bring or build for the class.</label>
-        <textarea id="unique-contribution" name="unique-contribution" maxlength="1600" placeholder="Past examples include contributing to the textbook, teaching a class, improving quizzes, or researching a topic that changes how I teach. Your idea can be small or ambitious." required></textarea>
-      </div>
+      <p class="section-intro">Set a 30-minute timer and be done when it goes off. You are welcome to use any tech tools (AI, voice-to-text, etc.) that will help. Short bullets are just fine: I care about content, not format. Work efficiently and stop when time is up.</p>
 
       <div class="rating-block" aria-labelledby="ratings-title">
-        <p class="section-kicker">Quick self-assessment</p>
+        <p class="section-kicker">Self-assessment sliders</p>
         <h3 id="ratings-title">Rate the skills you would bring</h3>
-        <p class="section-intro">For each skill, choose a score from 1 to 10 and add one brief example or growth goal. I combined overlapping areas while keeping the original dimensions.</p>
+        <p class="section-intro">Rate each area from 1 to 10. I care more about self-awareness than high scores: tell me what you are good at, and show me that you understand your weaknesses and where you can grow.</p>
         <div class="scale-grid">
-          <fieldset class="rating-card"><legend><span class="rating-number">1</span>How confident are you with this course’s content?</legend><div class="slider-line"><input id="r1" name="rating-content" type="range" min="1" max="10" value="5"><output for="r1">5 / 10</output></div><div class="scale-labels"><span>Still learning</span><span>Ready to teach it</span></div><label class="evidence-label" for="e1">One reason for that score, or a growth goal</label><input id="e1" name="evidence-content" type="text" maxlength="180" placeholder="A brief example or goal" required></fieldset>
-          <fieldset class="rating-card"><legend><span class="rating-number">2</span>How well could you help a student who has fallen behind?</legend><div class="slider-line"><input id="r2" name="rating-support" type="range" min="1" max="10" value="5"><output for="r2">5 / 10</output></div><div class="scale-labels"><span>Still learning</span><span>Ready to model it</span></div><label class="evidence-label" for="e2">One reason for that score, or a growth goal</label><input id="e2" name="evidence-support" type="text" maxlength="180" placeholder="A brief example or goal" required></fieldset>
-          <fieldset class="rating-card"><legend><span class="rating-number">3</span>How well do you notice what needs doing and act independently with good judgment?</legend><div class="slider-line"><input id="r3" name="rating-initiative" type="range" min="1" max="10" value="5"><output for="r3">5 / 10</output></div><div class="scale-labels"><span>Usually need direction</span><span>Anticipate and handle needs</span></div><label class="evidence-label" for="e3">One reason for that score, or a growth goal</label><input id="e3" name="evidence-initiative" type="text" maxlength="180" placeholder="A brief example or goal" required></fieldset>
-          <fieldset class="rating-card"><legend><span class="rating-number">4</span>How efficiently and consistently could you grade student work?</legend><div class="slider-line"><input id="r4" name="rating-grading" type="range" min="1" max="10" value="5"><output for="r4">5 / 10</output></div><div class="scale-labels"><span>Still learning</span><span>Fast and consistent</span></div><label class="evidence-label" for="e4">One reason for that score, or a growth goal</label><input id="e4" name="evidence-grading" type="text" maxlength="180" placeholder="A brief example or goal" required></fieldset>
-          <fieldset class="rating-card"><legend><span class="rating-number">5</span>How comfortable are you with HTML, AI, and course technology?</legend><div class="slider-line"><input id="r5" name="rating-tech" type="range" min="1" max="10" value="5"><output for="r5">5 / 10</output></div><div class="scale-labels"><span>New to me</span><span>Can troubleshoot or build</span></div><label class="evidence-label" for="e5">One reason for that score, or a growth goal</label><input id="e5" name="evidence-tech" type="text" maxlength="180" placeholder="A brief example or goal" required></fieldset>
-          <fieldset class="rating-card"><legend><span class="rating-number">6</span>How would you contribute to a positive class vibe?</legend><div class="slider-line"><input id="r6" name="rating-vibe" type="range" min="1" max="10" value="5"><output for="r6">5 / 10</output></div><div class="scale-labels"><span>Quiet contributor</span><span>Can lift the room</span></div><label class="evidence-label" for="e6">One reason for that score, or a growth goal</label><input id="e6" name="evidence-vibe" type="text" maxlength="180" placeholder="A brief example or goal" required></fieldset>
-          <fieldset class="rating-card"><legend><span class="rating-number">7</span>How ready are you to learn what you need, propose a useful innovation, and test it while protecting what already works?</legend><div class="slider-line"><input id="r7" name="rating-innovation" type="range" min="1" max="10" value="5"><output for="r7">5 / 10</output></div><div class="scale-labels"><span>Prefer familiar routines</span><span>Propose, test, and learn</span></div><label class="evidence-label" for="e7">One reason for that score, or a growth goal</label><input id="e7" name="evidence-innovation" type="text" maxlength="180" placeholder="A brief example or goal" required></fieldset>
-          <fieldset class="rating-card"><legend><span class="rating-number">8</span>How comfortable are you advocating for students, speaking up to me, clarifying priorities, and setting a respectful boundary when needed?</legend><div class="slider-line"><input id="r8" name="rating-manage-up" type="range" min="1" max="10" value="5"><output for="r8">5 / 10</output></div><div class="scale-labels"><span>Would hesitate to raise it</span><span>Can speak up constructively</span></div><label class="evidence-label" for="e8">One reason for that score, or a growth goal</label><input id="e8" name="evidence-manage-up" type="text" maxlength="180" placeholder="A brief example or goal" required></fieldset>
+          <fieldset class="rating-card"><legend><span class="rating-number">1</span><strong>Class vibe:</strong> How would you help create a positive, welcoming class atmosphere?</legend><div class="slider-line"><input id="r1" name="rating-vibe" type="range" min="1" max="10" value="5"><output for="r1">5 / 10</output></div><div class="scale-labels"><span>Quiet contributor</span><span>Can lift the room</span></div></fieldset>
+          <fieldset class="rating-card"><legend><span class="rating-number">2</span><strong>Technology flexibility:</strong> How comfortable are you with HTML, AI, and course technology, and are you willing to learn new tools where you have gaps?</legend><div class="slider-line"><input id="r2" name="rating-tech" type="range" min="1" max="10" value="5"><output for="r2">5 / 10</output></div><div class="scale-labels"><span>New to me</span><span>Comfortable and willing to learn</span></div></fieldset>
+          <fieldset class="rating-card"><legend><span class="rating-number">3</span><strong>Student mentorship:</strong> How effective do you feel you will be at mentoring students, especially those who have fallen behind?</legend><div class="slider-line"><input id="r3" name="rating-support" type="range" min="1" max="10" value="5"><output for="r3">5 / 10</output></div><div class="scale-labels"><span>Still developing</span><span>Strong mentor</span></div></fieldset>
+          <fieldset class="rating-card"><legend><span class="rating-number">4</span><strong>Course knowledge:</strong> How confident are you with this course’s content?</legend><div class="slider-line"><input id="r4" name="rating-content" type="range" min="1" max="10" value="5"><output for="r4">5 / 10</output></div><div class="scale-labels"><span>Still learning</span><span>Ready to teach it</span></div></fieldset>
+          <fieldset class="rating-card"><legend><span class="rating-number">5</span><strong>Managing up:</strong> How comfortable are you managing up, advocating for students, clarifying priorities, and setting boundaries with me?</legend><div class="slider-line"><input id="r5" name="rating-manage-up" type="range" min="1" max="10" value="5"><output for="r5">5 / 10</output></div><div class="scale-labels"><span>Would hesitate to raise it</span><span>Can speak up constructively</span></div></fieldset>
+          <fieldset class="rating-card"><legend><span class="rating-number">6</span><strong>Reliable grading:</strong> How efficiently and consistently could you grade student work?</legend><div class="slider-line"><input id="r6" name="rating-grading" type="range" min="1" max="10" value="5"><output for="r6">5 / 10</output></div><div class="scale-labels"><span>Still learning</span><span>Fast and consistent</span></div></fieldset>
+          <fieldset class="rating-card"><legend><span class="rating-number">7</span><strong>Innovative:</strong> How capable are you at brainstorming new ideas, piloting the best ones, scaling when an idea works, and protecting what already works?</legend><div class="slider-line"><input id="r7" name="rating-innovation" type="range" min="1" max="10" value="5"><output for="r7">5 / 10</output></div><div class="scale-labels"><span>Prefer familiar routines</span><span>Can test and scale ideas</span></div></fieldset>
+          <fieldset class="rating-card"><legend><span class="rating-number">8</span><strong>Proactive:</strong> How well do you see issues and address them as they come up?</legend><div class="slider-line"><input id="r8" name="rating-initiative" type="range" min="1" max="10" value="5"><output for="r8">5 / 10</output></div><div class="scale-labels"><span>Usually need direction</span><span>Anticipate and handle needs</span></div></fieldset>
+        </div>
+
+        <div class="prompt-block">
+          <label for="slider-context">Which of the sliders would you add a little more context to? Add that context, then tell us why.</label>
+          <textarea id="slider-context" name="slider-context" maxlength="1200" placeholder="Name any slider or sliders that need context. If none need clarification, say so and explain which rating best represents a strength or an area for growth." required></textarea>
+        </div>
+      </div>
+
+      <div class="questions-block" aria-labelledby="common-questions-title">
+        <p class="section-kicker">Common questions</p>
+        <h3 id="common-questions-title">Answer each prompt</h3>
+        <p class="section-intro">Short, thoughtful answers are enough. Bullets are welcome.</p>
+
+        <div class="prompt-block" style="margin-top:0;padding-top:0;border-top:0">
+          <label for="course-magic">What are three things from the class that are magical—things we should not touch? What is one thing we should change, and why is it the highest-priority fix for students?</label>
+          <textarea id="course-magic" name="course-magic" maxlength="1400" placeholder="Protect what is working, then make the strongest case for one priority change." required></textarea>
+        </div>
+
+        <div class="prompt-block">
+          <label for="manage-up">A great TA knows how to “manage up.” Look up that phrase if you need to. Explain what it means in this context, then convince me you can do it effectively as a TA.</label>
+          <textarea id="manage-up" name="manage-up" maxlength="1200" placeholder="Think about communication, initiative, and helping the person you report to do their job well." required></textarea>
+        </div>
+
+        <div class="prompt-block">
+          <label for="holy-ghost-action">Choose the single highest-leverage action we could take to increase the presence of and teaching of the Holy Ghost in our class.</label>
+          <textarea id="holy-ghost-action" name="holy-ghost-action" maxlength="1200" placeholder="You may borrow a practice from another class or suggest an original idea." required></textarea>
+        </div>
+
+        <div class="prompt-block">
+          <label for="excellent-ta">Describe what makes an excellent TA. Think of someone you know in real life and privately consider why they might or might not make a good TA, including the rating you would give them. Do not enter anything about that person or their rating. Then do the same for yourself: why would you make a great TA, and what overall rating would you give yourself?</label>
+          <textarea id="excellent-ta" name="excellent-ta" maxlength="1600" placeholder="Keep the other person’s identity, details, and rating private. Explain your own case honestly." required></textarea>
+        </div>
+
+        <div class="prompt-block">
+          <label for="why-ta">Why do you want this job? Give three reasons.</label>
+          <textarea id="why-ta" name="why-ta" maxlength="1200" placeholder="Short bullet points are fine." required></textarea>
         </div>
       </div>
 
@@ -340,10 +346,15 @@
     <section class="section-card wizard-panel" id="step-reflection" data-step-panel="3" role="tabpanel" aria-labelledby="tab-reflection" tabindex="0" hidden>
       <p class="section-kicker">04 · Reflection</p>
       <h2 id="reflection-title">What will you take with you?</h2>
-      <p class="section-intro">Whether or not you get the job, the application can help you notice what you value and what you want to build.</p>
+      <p class="section-intro">Whether or not you get the job, use this step to reflect on what you hope to build and what you can carry forward.</p>
       <div class="prompt-block" style="margin-top:0;padding-top:0;border-top:0">
         <label for="reflection-answer">What have you learned through this application that you can apply to the rest of your life?</label>
         <textarea id="reflection-answer" name="reflection" maxlength="1000" placeholder="Name one thing you can carry forward, whether or not you are selected." required></textarea>
+      </div>
+
+      <div class="prompt-block" style="margin-top:0;padding-top:0;border-top:0">
+        <label for="legacy-contribution">TA work includes grading, administration, peer mentoring, and more. I also hope this can be a life-changing experience where each TA builds something unique to leave behind. What would you uniquely bring or build for the class?</label>
+        <textarea id="legacy-contribution" name="legacy-contribution" maxlength="1600" placeholder="Past examples include contributing to the textbook, teaching a class, improving quizzes, or researching a topic that changes how I teach. Your idea can be small or ambitious." required></textarea>
       </div>
 
       <div class="agreement">
