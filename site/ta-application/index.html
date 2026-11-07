@@ -92,12 +92,12 @@
   input[type="radio"], input[type="checkbox"] { width: 18px; height: 18px; flex: 0 0 auto; margin: 2px 0 0; accent-color: var(--blue); }
   .scale-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; align-items: stretch; gap: 14px; }
   .rating-card { padding: 15px; border: 1px solid var(--lavender-line); border-radius: 13px; background: #fcfbfe; }
-  .rating-card legend { width: 100%; margin-bottom: 9px; color: #354258; font-weight: 680; line-height: 1.35; }
+  .rating-question { display: block; width: 100%; margin: 0 0 12px; color: #354258; font-weight: 680; line-height: 1.4; overflow-wrap: anywhere; }
   .rating-number {
     display: inline-grid; width: 25px; height: 25px; place-items: center; margin-right: 6px;
     border-radius: 8px; background: var(--lavender); color: #55506d; font-size: .8rem; vertical-align: middle;
   }
-  .slider-line { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 12px; margin: 4px 0 8px; }
+  .slider-line { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; margin: 4px 0 8px; }
   input[type="range"] { display: block; width: 100%; min-width: 0; accent-color: var(--blue); }
   output { width: 60px; padding: 3px 7px; border-radius: 8px; background: var(--blue-pale); color: var(--blue-dark); font-weight: 750; font-variant-numeric: tabular-nums; text-align: center; }
   .scale-labels { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; margin-top: 3px; color: var(--muted); font-size: .75rem; line-height: 1.35; }
@@ -139,7 +139,7 @@
     .page { width: min(100% - 20px, 900px); margin-top: 12px; }
     .field-grid, .scale-grid, .reflection-grid { grid-template-columns: 1fr; }
     .scale-grid { grid-auto-rows: auto; }
-    .rating-card legend { flex: 0 0 auto; }
+    .rating-card { grid-template-rows: auto auto auto; }
     .section-nav { top: 4px; }
     .hero { border-radius: 16px; }
   }
@@ -157,9 +157,9 @@
   .step-copy small { color: var(--muted); font-size: .77rem; line-height: 1.25; }
   .step-number { display: grid; width: 30px; height: 30px; flex: 0 0 30px; place-items: center; border-radius: 50%; background: #e8ebef; color: #536175; font-size: .8rem; font-weight: 750; }
   .step-tab[aria-selected="true"] .step-number { background: var(--blue); color: #fff; }
-  .rating-card { display: flex; min-width: 0; flex-direction: column; }
-  .rating-card legend { min-height: 0; flex: 1 0 auto; margin-bottom: 14px; overflow-wrap: anywhere; }
-  .rating-card legend strong { font-weight: 800; }
+  .rating-card { display: grid; min-width: 0; grid-template-rows: minmax(4.2rem, 1fr) auto auto; align-content: stretch; }
+  .rating-card .rating-question { min-height: 0; margin-bottom: 12px; }
+  .rating-card .rating-question strong { font-weight: 800; }
   .slider-followup { display: block; margin-top: 4px; color: var(--muted); font-weight: 550; }
   .questions-list { display: grid; gap: 14px; margin-top: 18px; }
   .questions-list .question-card { margin: 0; padding: 16px; border: 1px solid var(--line); border-radius: 13px; background: #fff; }
@@ -279,14 +279,14 @@
         <h3 id="slider-guidance-title">Rate each area from 1 to 10</h3>
         <p class="section-intro">I care more about self-awareness than high scores. Tell me what you are good at, and show me that you understand your weaknesses and where you can grow.</p>
         <div class="scale-grid">
-          <fieldset class="rating-card"><legend><span class="rating-number">1</span><strong>Class vibe:</strong> How effectively can you help create a positive, welcoming, joyous, slightly unhinged class atmosphere?</legend><div class="slider-line"><input id="r1" name="rating-vibe" type="range" min="1" max="10" value="5"><output for="r1">5 / 10</output></div><div class="scale-labels"><span>Quiet contributor</span><span>Adds joyful energy</span></div></fieldset>
-          <fieldset class="rating-card"><legend><span class="rating-number">2</span><strong>Technology:</strong> How comfortable are you with HTML, AI, and course technology?<span class="slider-followup">If not, how comfortable are you learning those skills?</span></legend><div class="slider-line"><input id="r2" name="rating-tech" type="range" min="1" max="10" value="5"><output for="r2">5 / 10</output></div><div class="scale-labels"><span>New to these tools</span><span>Comfortable or willing to learn</span></div></fieldset>
-          <fieldset class="rating-card"><legend><span class="rating-number">3</span><strong>Student mentorship:</strong> How effectively will you be able to mentor students—for example, by recognizing top students, developing professional relationships, and working with struggling students?</legend><div class="slider-line"><input id="r3" name="rating-mentorship" type="range" min="1" max="10" value="5"><output for="r3">5 / 10</output></div><div class="scale-labels"><span>Still developing</span><span>Strong mentor</span></div></fieldset>
-          <fieldset class="rating-card"><legend><span class="rating-number">4</span><strong>Course knowledge:</strong> How confident are you with this course’s content?</legend><div class="slider-line"><input id="r4" name="rating-content" type="range" min="1" max="10" value="5"><output for="r4">5 / 10</output></div><div class="scale-labels"><span>Still learning</span><span>Ready to teach it</span></div></fieldset>
-          <fieldset class="rating-card"><legend><span class="rating-number">5</span><strong>Assertiveness:</strong> How comfortable are you being assertive—saying no, drawing boundaries, and doing what is right even when it is unpopular?</legend><div class="slider-line"><input id="r5" name="rating-assertiveness" type="range" min="1" max="10" value="5"><output for="r5">5 / 10</output></div><div class="scale-labels"><span>Hard to speak up</span><span>Can be respectfully firm</span></div></fieldset>
-          <fieldset class="rating-card"><legend><span class="rating-number">6</span><strong>Reliable grading:</strong> How efficiently and consistently could you grade student work?</legend><div class="slider-line"><input id="r6" name="rating-grading" type="range" min="1" max="10" value="5"><output for="r6">5 / 10</output></div><div class="scale-labels"><span>Still learning</span><span>Fast and consistent</span></div></fieldset>
-          <fieldset class="rating-card"><legend><span class="rating-number">7</span><strong>Innovative:</strong> How capable are you at brainstorming new ideas, piloting the best ones, scaling when an idea works, and protecting what already works?</legend><div class="slider-line"><input id="r7" name="rating-innovation" type="range" min="1" max="10" value="5"><output for="r7">5 / 10</output></div><div class="scale-labels"><span>Prefer familiar routines</span><span>Can test and scale ideas</span></div></fieldset>
-          <fieldset class="rating-card"><legend><span class="rating-number">8</span><strong>Proactive:</strong> How well do you see issues and address them as they come up?</legend><div class="slider-line"><input id="r8" name="rating-initiative" type="range" min="1" max="10" value="5"><output for="r8">5 / 10</output></div><div class="scale-labels"><span>Usually need direction</span><span>Anticipate and handle needs</span></div></fieldset>
+          <div class="rating-card"><label class="rating-question" for="r1"><span class="rating-number" aria-hidden="true">1</span><strong>Class vibe:</strong> How effectively can you help create a positive, welcoming, joyous, slightly unhinged class atmosphere?</label><div class="slider-line"><input id="r1" name="rating-vibe" type="range" min="1" max="10" value="5"><output for="r1">5 / 10</output></div><div class="scale-labels"><span>Quiet contributor</span><span>Adds joyful energy</span></div></div>
+          <div class="rating-card"><label class="rating-question" for="r2"><span class="rating-number" aria-hidden="true">2</span><strong>Technology:</strong> How comfortable are you with HTML, AI, and course technology?<span class="slider-followup">If not, how comfortable are you learning those skills?</span></label><div class="slider-line"><input id="r2" name="rating-tech" type="range" min="1" max="10" value="5"><output for="r2">5 / 10</output></div><div class="scale-labels"><span>New to these tools</span><span>Comfortable or willing to learn</span></div></div>
+          <div class="rating-card"><label class="rating-question" for="r3"><span class="rating-number" aria-hidden="true">3</span><strong>Student mentorship:</strong> How effectively will you be able to mentor students—for example, by recognizing top students, developing professional relationships, and working with struggling students?</label><div class="slider-line"><input id="r3" name="rating-mentorship" type="range" min="1" max="10" value="5"><output for="r3">5 / 10</output></div><div class="scale-labels"><span>Still developing</span><span>Strong mentor</span></div></div>
+          <div class="rating-card"><label class="rating-question" for="r4"><span class="rating-number" aria-hidden="true">4</span><strong>Course knowledge:</strong> How confident are you with this course’s content?</label><div class="slider-line"><input id="r4" name="rating-content" type="range" min="1" max="10" value="5"><output for="r4">5 / 10</output></div><div class="scale-labels"><span>Still learning</span><span>Ready to teach it</span></div></div>
+          <div class="rating-card"><label class="rating-question" for="r5"><span class="rating-number" aria-hidden="true">5</span><strong>Assertiveness:</strong> How comfortable are you being assertive—saying no, drawing boundaries, and doing what is right even when it is unpopular?</label><div class="slider-line"><input id="r5" name="rating-assertiveness" type="range" min="1" max="10" value="5"><output for="r5">5 / 10</output></div><div class="scale-labels"><span>Hard to speak up</span><span>Can be respectfully firm</span></div></div>
+          <div class="rating-card"><label class="rating-question" for="r6"><span class="rating-number" aria-hidden="true">6</span><strong>Reliable grading:</strong> How efficiently and consistently could you grade student work?</label><div class="slider-line"><input id="r6" name="rating-grading" type="range" min="1" max="10" value="5"><output for="r6">5 / 10</output></div><div class="scale-labels"><span>Still learning</span><span>Fast and consistent</span></div></div>
+          <div class="rating-card"><label class="rating-question" for="r7"><span class="rating-number" aria-hidden="true">7</span><strong>Innovative:</strong> How capable are you at brainstorming new ideas, piloting the best ones, scaling when an idea works, and protecting what already works?</label><div class="slider-line"><input id="r7" name="rating-innovation" type="range" min="1" max="10" value="5"><output for="r7">5 / 10</output></div><div class="scale-labels"><span>Prefer familiar routines</span><span>Can test and scale ideas</span></div></div>
+          <div class="rating-card"><label class="rating-question" for="r8"><span class="rating-number" aria-hidden="true">8</span><strong>Proactive:</strong> How well do you see issues and address them as they come up?</label><div class="slider-line"><input id="r8" name="rating-initiative" type="range" min="1" max="10" value="5"><output for="r8">5 / 10</output></div><div class="scale-labels"><span>Usually need direction</span><span>Anticipate and handle needs</span></div></div>
         </div>
 
         <div class="prompt-block slider-context">
