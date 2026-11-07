@@ -227,13 +227,13 @@
     <span class="eyebrow">A chance to contribute</span>
     <h1>Teaching Assistant Application</h1>
     <p>Share what you bring, what you are still learning, and how you would help make this class better for students.</p>
-    <div class="hero-meta"><span>Basics · ≤ 5 minutes</span><span>Sliders + questions · 30 minutes total</span><span>Work samples · up to 1 hour</span></div>
+    <div class="hero-meta"><span>Basics · ≤ 5 minutes</span><span>Sliders · 10 minutes</span><span>Questions · 20 minutes</span><span>Work samples · up to 1 hour</span></div>
   </header>
   <nav class="wizard-tabs" aria-label="Application steps">
     <div class="step-list" role="tablist" aria-label="Five application steps">
       <button type="button" class="step-tab" id="tab-basics" role="tab" data-step-tab="0" aria-controls="step-basics" aria-selected="true" tabindex="0"><span class="step-number">1</span><span class="step-copy"><strong>Basics</strong><small>≤ 5 min</small></span></button>
-      <button type="button" class="step-tab" id="tab-sliders" role="tab" data-step-tab="1" aria-controls="step-sliders" aria-selected="false" tabindex="-1"><span class="step-number">2</span><span class="step-copy"><strong>Sliders</strong><small>30 min total</small></span></button>
-      <button type="button" class="step-tab" id="tab-questions" role="tab" data-step-tab="2" aria-controls="step-questions" aria-selected="false" tabindex="-1"><span class="step-number">3</span><span class="step-copy"><strong>Questions</strong><small>same timer</small></span></button>
+      <button type="button" class="step-tab" id="tab-sliders" role="tab" data-step-tab="1" aria-controls="step-sliders" aria-selected="false" tabindex="-1"><span class="step-number">2</span><span class="step-copy"><strong>Sliders</strong><small>10 minutes</small></span></button>
+      <button type="button" class="step-tab" id="tab-questions" role="tab" data-step-tab="2" aria-controls="step-questions" aria-selected="false" tabindex="-1"><span class="step-number">3</span><span class="step-copy"><strong>Questions</strong><small>20 minutes</small></span></button>
       <button type="button" class="step-tab" id="tab-work" role="tab" data-step-tab="3" aria-controls="step-work" aria-selected="false" tabindex="-1"><span class="step-number">4</span><span class="step-copy"><strong>Work samples</strong><small>up to 1 hour</small></span></button>
       <button type="button" class="step-tab" id="tab-reflection" role="tab" data-step-tab="4" aria-controls="step-reflection" aria-selected="false" tabindex="-1"><span class="step-number">5</span><span class="step-copy"><strong>Reflection</strong><small>Final step</small></span></button>
     </div>
@@ -267,9 +267,9 @@
     </section>
 
     <section class="section-card wizard-panel" id="step-sliders" data-step-panel="1" role="tabpanel" aria-labelledby="tab-sliders" tabindex="0" hidden>
-      <p class="section-kicker">02 · Self-assessment · part of 30 minutes</p>
+      <p class="section-kicker">02 · Self-assessment · 10 minutes</p>
       <h2 id="ratings-title">Rate the skills you would bring</h2>
-      <p class="section-intro">Set one 30-minute timer for this tab and the Common Questions tab that follows. Finish both steps when the timer ends. You are welcome to use any tech tools (AI, voice-to-text, etc.) that will help. Short bullets are fine; I care about content, not format.</p>
+      <p class="section-intro">Plan 10 minutes for this tab. Set a timer and move through the sliders and responsibility sort efficiently; stop when the 10 minutes are up. You are welcome to use any tech tools (AI, voice-to-text, etc.) that will help. Short bullets are fine; I care about content, not format.</p>
 
       <div class="rating-block" aria-labelledby="slider-guidance-title">
         <p class="section-kicker">Self-awareness matters most</p>
@@ -368,9 +368,9 @@
     </section>
 
     <section class="section-card wizard-panel" id="step-questions" data-step-panel="2" role="tabpanel" aria-labelledby="tab-questions" tabindex="0" hidden>
-      <p class="section-kicker">03 · Common questions · part of the same 30 minutes</p>
+      <p class="section-kicker">03 · Common questions · 20 minutes</p>
       <h2 id="questions-title">Show me how you think</h2>
-      <p class="section-intro">Continue with the same timer you started on the Sliders tab; both tabs share one 30-minute limit. Short bullet answers are fine: I care about content, not format. You are welcome to use AI, voice-to-text, or any tech tools that will help.</p>
+      <p class="section-intro">Plan 20 minutes for these questions. Set a timer and be done when it goes off. You are welcome to use any tech tools (AI, voice-to-text, etc.) that will help. Short bullet answers are fine: I care about content, not format.</p>
 
       <div class="questions-list" aria-label="Common questions">
         <div class="prompt-block question-card">
@@ -403,7 +403,11 @@
     <section class="section-card wizard-panel" id="step-work" data-step-panel="3" role="tabpanel" aria-labelledby="tab-work" tabindex="0" hidden>
       <p class="section-kicker">04 · What you’ll bring · up to one hour total</p>
       <h2 id="samples-title">Choose three ways to show what you can contribute</h2>
-      <p class="section-intro">Plan up to one hour total for this tab. Choose exactly three prompts across the five buckets. Keep the work focused: I want to see that you can contribute effectively and efficiently, not that you can over-polish an answer. Short responses, links, and focused examples are welcome.</p>
+      <p class="section-intro">Plan up to one hour total for this tab. Describe what you would uniquely bring or build for the class, then choose exactly three prompts across the five buckets. Keep the work focused: I want to see that you can contribute effectively and efficiently, not that you can over-polish an answer. Short responses, links, and focused examples are welcome.</p>
+      <div class="prompt-block work-legacy-prompt">
+        <label for="legacy-contribution">TA work includes grading, administration, peer mentoring, and more. I also hope this can be a life-changing experience where each TA builds something unique to leave behind. What would you uniquely bring or build for the class?</label>
+        <textarea id="legacy-contribution" name="legacy-contribution" maxlength="1600" placeholder="Past examples include contributing to the textbook, teaching a class, improving quizzes, or researching a topic that changes how I teach. Your idea can be small or ambitious." required></textarea>
+      </div>
       <div class="menu-intro">
         <p style="margin:0;color:var(--muted)">Pick the samples that best show your strengths and interests.</p>
         <div class="selection-count" id="selection-count" aria-live="polite">0 / 3 selected</div>
@@ -455,19 +459,14 @@
     <section class="section-card wizard-panel" id="step-reflection" data-step-panel="4" role="tabpanel" aria-labelledby="tab-reflection" tabindex="0" hidden>
       <p class="section-kicker">05 · Reflection</p>
       <h2 id="reflection-title">What will you take with you?</h2>
-      <p class="section-intro">Whether or not you get the job, use this step to reflect on what you hope to build and what you can carry forward.</p>
+      <p class="section-intro">Whether or not you get the job, use this step to reflect on what you learned and what you can carry forward.</p>
       <div class="prompt-block" style="margin-top:0;padding-top:0;border-top:0">
         <label for="reflection-answer">What have you learned through this application that you can apply to the rest of your life?</label>
         <textarea id="reflection-answer" name="reflection" maxlength="1000" placeholder="Name one thing you can carry forward, whether or not you are selected." required></textarea>
       </div>
 
-      <div class="prompt-block" style="margin-top:0;padding-top:0;border-top:0">
-        <label for="legacy-contribution">TA work includes grading, administration, peer mentoring, and more. I also hope this can be a life-changing experience where each TA builds something unique to leave behind. What would you uniquely bring or build for the class?</label>
-        <textarea id="legacy-contribution" name="legacy-contribution" maxlength="1600" placeholder="Past examples include contributing to the textbook, teaching a class, improving quizzes, or researching a topic that changes how I teach. Your idea can be small or ambitious." required></textarea>
-      </div>
-
       <div class="agreement">
-        <label class="choice-row"><input id="relationship-acknowledgment" name="relationship-acknowledgment" type="checkbox" required><span>I know that if Brother Pacini chooses someone else this semester, he still loves me. I’m welcome to visit his office, join the PACPAC Zoom channel, and keep hanging out. The decision is about what is right for the semester; it doesn’t change that I’m valued and welcome.</span></label>
+        <label class="choice-row"><input id="relationship-acknowledgment" name="relationship-acknowledgment" type="checkbox" required><span>I know that if Brother Pacini chooses someone else this semester, he still loves me. I’m welcome to visit his office, join the PacPack Zoom channel, and keep hanging out. The decision is about which student feels right, and sometimes that means identifying the student who needs the opportunity, not necessarily the “best” candidate. It doesn’t change that I’m valued and welcome.</span></label>
       </div>
 
       <fieldset class="prompt-block">
