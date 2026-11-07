@@ -90,7 +90,7 @@
   }
   .choice-row:hover { border-color: #b7c8d7; background: #fbfdff; }
   input[type="radio"], input[type="checkbox"] { width: 18px; height: 18px; flex: 0 0 auto; margin: 2px 0 0; accent-color: var(--blue); }
-  .scale-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .scale-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; align-items: stretch; gap: 14px; }
   .rating-card { padding: 15px; border: 1px solid var(--lavender-line); border-radius: 13px; background: #fcfbfe; }
   .rating-card legend { width: 100%; margin-bottom: 9px; color: #354258; font-weight: 680; line-height: 1.35; }
   .rating-number {
@@ -98,9 +98,10 @@
     border-radius: 8px; background: var(--lavender); color: #55506d; font-size: .8rem; vertical-align: middle;
   }
   .slider-line { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 12px; margin: 4px 0 8px; }
-  input[type="range"] { width: 100%; accent-color: var(--blue); }
-  output { min-width: 54px; padding: 3px 7px; border-radius: 8px; background: var(--blue-pale); color: var(--blue-dark); font-weight: 750; text-align: center; }
-  .scale-labels { display: flex; justify-content: space-between; margin-top: -4px; color: var(--muted); font-size: .75rem; }
+  input[type="range"] { display: block; width: 100%; min-width: 0; accent-color: var(--blue); }
+  output { width: 60px; padding: 3px 7px; border-radius: 8px; background: var(--blue-pale); color: var(--blue-dark); font-weight: 750; font-variant-numeric: tabular-nums; text-align: center; }
+  .scale-labels { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; margin-top: 3px; color: var(--muted); font-size: .75rem; line-height: 1.35; }
+  .scale-labels span:last-child { text-align: right; }
   .evidence-label { display: block; margin: 11px 0 5px; color: #4d596a; font-size: .84rem; font-weight: 650; }
   .rating-card input[type="text"] { min-height: 40px; font-size: .9rem; }
   .ai-note { margin-top: 18px; padding: 14px 16px; border-left: 4px solid #829bb2; border-radius: 0 10px 10px 0; background: #f5f8fa; color: #46576a; font-size: .91rem; }
@@ -137,6 +138,8 @@
   @media (max-width: 700px) {
     .page { width: min(100% - 20px, 900px); margin-top: 12px; }
     .field-grid, .scale-grid, .reflection-grid { grid-template-columns: 1fr; }
+    .scale-grid { grid-auto-rows: auto; }
+    .rating-card legend { flex: 0 0 auto; }
     .section-nav { top: 4px; }
     .hero { border-radius: 16px; }
   }
@@ -154,8 +157,8 @@
   .step-copy small { color: var(--muted); font-size: .77rem; line-height: 1.25; }
   .step-number { display: grid; width: 30px; height: 30px; flex: 0 0 30px; place-items: center; border-radius: 50%; background: #e8ebef; color: #536175; font-size: .8rem; font-weight: 750; }
   .step-tab[aria-selected="true"] .step-number { background: var(--blue); color: #fff; }
-  .rating-card { display: grid; grid-template-rows: minmax(4.2rem, 1fr) auto auto; align-content: stretch; }
-  .rating-card legend { min-height: 4.2em; margin-bottom: 12px; }
+  .rating-card { display: flex; min-width: 0; flex-direction: column; }
+  .rating-card legend { min-height: 0; flex: 1 0 auto; margin-bottom: 14px; overflow-wrap: anywhere; }
   .rating-card legend strong { font-weight: 800; }
   .slider-followup { display: block; margin-top: 4px; color: var(--muted); font-weight: 550; }
   .questions-list { display: grid; gap: 14px; margin-top: 18px; }
