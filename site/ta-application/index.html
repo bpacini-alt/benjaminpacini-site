@@ -217,6 +217,7 @@
   .wizard-panel .questions-list .question-card textarea { min-height: 110px; }
   .job-bucket { cursor: pointer; }
   .job-bucket:hover { border-color: #b7c8d7; }
+  .wizard-panel .job-sort-context textarea { min-height: 76px; }
 </style>
 </head>
 <body>
@@ -336,6 +337,10 @@
           </div>
         </div>
         <p class="job-sort-status" id="job-sort-status" role="status" aria-live="polite">Sort every task into the role you think should handle it. You can move tasks between buckets anytime.</p>
+        <div class="prompt-block job-sort-context">
+          <label for="job-sort-context">Which ones need more context? Keep it brief, but feel free to add a little more.</label>
+          <textarea id="job-sort-context" name="job-sort-context" maxlength="800" placeholder="Name a task and add any context that would help explain your choice."></textarea>
+        </div>
         <input type="hidden" id="job-sort-grade" name="job-sort-grade" value="">
         <input type="hidden" id="job-sort-dress-code" name="job-sort-dress-code" value="">
         <input type="hidden" id="job-sort-personal-life" name="job-sort-personal-life" value="">
