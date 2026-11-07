@@ -72,7 +72,7 @@
   .field, .prompt-block { min-width: 0; }
   .field label, .prompt-block > label, .sample-response > label { display: block; margin-bottom: 6px; color: #344258; font-weight: 680; }
   .optional { color: var(--muted); font-size: .83rem; font-weight: 450; }
-  input[type="text"], input[type="email"], select, textarea {
+  input[type="text"], input[type="email"], input[type="number"], select, textarea {
     width: 100%; min-height: 46px; padding: 10px 12px; border: 1px solid #cfd6df;
     border-radius: 10px; background: #fff; color: var(--ink);
   }
@@ -217,6 +217,7 @@
   .wizard-panel .questions-list .question-card textarea { min-height: 110px; }
   .job-bucket { cursor: pointer; }
   .job-bucket:hover { border-color: #b7c8d7; }
+  .wizard-panel .job-sort-context textarea { min-height: 76px; }
 </style>
 </head>
 <body>
@@ -226,15 +227,15 @@
     <span class="eyebrow">A chance to contribute</span>
     <h1>Teaching Assistant Application</h1>
     <p>Share what you bring, what you are still learning, and how you would help make this class better for students.</p>
-    <div class="hero-meta"><span>Basics · ≤ 5 minutes</span><span>Sliders + questions · 30 minutes total</span><span>Work samples · up to 1 hour</span></div>
+    <div class="hero-meta"><span>Basics · ≤ 5 minutes</span><span>Sliders · 10 minutes</span><span>Questions · 20 minutes</span><span>Work samples · up to 1 hour</span><span>Reflection · under 5 minutes</span></div>
   </header>
   <nav class="wizard-tabs" aria-label="Application steps">
     <div class="step-list" role="tablist" aria-label="Five application steps">
       <button type="button" class="step-tab" id="tab-basics" role="tab" data-step-tab="0" aria-controls="step-basics" aria-selected="true" tabindex="0"><span class="step-number">1</span><span class="step-copy"><strong>Basics</strong><small>≤ 5 min</small></span></button>
-      <button type="button" class="step-tab" id="tab-sliders" role="tab" data-step-tab="1" aria-controls="step-sliders" aria-selected="false" tabindex="-1"><span class="step-number">2</span><span class="step-copy"><strong>Sliders</strong><small>30 min total</small></span></button>
-      <button type="button" class="step-tab" id="tab-questions" role="tab" data-step-tab="2" aria-controls="step-questions" aria-selected="false" tabindex="-1"><span class="step-number">3</span><span class="step-copy"><strong>Questions</strong><small>same timer</small></span></button>
+      <button type="button" class="step-tab" id="tab-sliders" role="tab" data-step-tab="1" aria-controls="step-sliders" aria-selected="false" tabindex="-1"><span class="step-number">2</span><span class="step-copy"><strong>Sliders</strong><small>10 minutes</small></span></button>
+      <button type="button" class="step-tab" id="tab-questions" role="tab" data-step-tab="2" aria-controls="step-questions" aria-selected="false" tabindex="-1"><span class="step-number">3</span><span class="step-copy"><strong>Questions</strong><small>20 minutes</small></span></button>
       <button type="button" class="step-tab" id="tab-work" role="tab" data-step-tab="3" aria-controls="step-work" aria-selected="false" tabindex="-1"><span class="step-number">4</span><span class="step-copy"><strong>Work samples</strong><small>up to 1 hour</small></span></button>
-      <button type="button" class="step-tab" id="tab-reflection" role="tab" data-step-tab="4" aria-controls="step-reflection" aria-selected="false" tabindex="-1"><span class="step-number">5</span><span class="step-copy"><strong>Reflection</strong><small>Final step</small></span></button>
+      <button type="button" class="step-tab" id="tab-reflection" role="tab" data-step-tab="4" aria-controls="step-reflection" aria-selected="false" tabindex="-1"><span class="step-number">5</span><span class="step-copy"><strong>Reflection</strong><small>under 5 min</small></span></button>
     </div>
   </nav>
   <form id="application" novalidate>
@@ -266,9 +267,9 @@
     </section>
 
     <section class="section-card wizard-panel" id="step-sliders" data-step-panel="1" role="tabpanel" aria-labelledby="tab-sliders" tabindex="0" hidden>
-      <p class="section-kicker">02 · Self-assessment · part of 30 minutes</p>
+      <p class="section-kicker">02 · Self-assessment · 10 minutes</p>
       <h2 id="ratings-title">Rate the skills you would bring</h2>
-      <p class="section-intro">Set one 30-minute timer for this tab and the Common Questions tab that follows. Finish both steps when the timer ends. You are welcome to use any tech tools (AI, voice-to-text, etc.) that will help. Short bullets are fine; I care about content, not format.</p>
+      <p class="section-intro">Plan 10 minutes for this tab. Set a timer and move through the sliders and responsibility sort efficiently; stop when the 10 minutes are up. You are welcome to use any tech tools (AI, voice-to-text, etc.) that will help. Short bullets are fine; I care about content, not format.</p>
 
       <div class="rating-block" aria-labelledby="slider-guidance-title">
         <p class="section-kicker">Self-awareness matters most</p>
@@ -303,6 +304,21 @@
             <button type="button" class="job-task" draggable="true" data-task-id="grade" aria-pressed="false">Grade student work using the rubric</button>
             <button type="button" class="job-task" draggable="true" data-task-id="dress-code" aria-pressed="false">Talk with a student about a dress-code violation</button>
             <button type="button" class="job-task" draggable="true" data-task-id="personal-life" aria-pressed="false">Monitor students’ personal lives outside class</button>
+            <button type="button" class="job-task" draggable="true" data-task-id="integrity" aria-pressed="false">Deal with academic-integrity issues</button>
+            <button type="button" class="job-task" draggable="true" data-task-id="canvas-bugs" aria-pressed="false">Fix bugs in Canvas</button>
+            <button type="button" class="job-task" draggable="true" data-task-id="call-it" aria-pressed="false">Call IT if the classroom computer is broken</button>
+            <button type="button" class="job-task" draggable="true" data-task-id="weekend-zoom" aria-pressed="false">Answer Zoom messages on a weekend</button>
+            <button type="button" class="job-task" draggable="true" data-task-id="refer-support" aria-pressed="false">Refer a student to the Dean of Students or Title IX</button>
+            <button type="button" class="job-task" draggable="true" data-task-id="diagnose-disability" aria-pressed="false">Diagnose a student with a disability</button>
+            <button type="button" class="job-task" draggable="true" data-task-id="modify-assignment" aria-pressed="false">Modify a major assignment</button>
+            <button type="button" class="job-task" draggable="true" data-task-id="grade-exception" aria-pressed="false">Make an exception to a student’s grade (e.g., extra credit or dropping an assignment)</button>
+            <button type="button" class="job-task" draggable="true" data-task-id="correct-ta" aria-pressed="false">Correct a TA’s behavior or performance</button>
+            <button type="button" class="job-task" draggable="true" data-task-id="redirect-student" aria-pressed="false">Correct a student who leaves early, is on their phone, or is doing something distracting</button>
+            <button type="button" class="job-task" draggable="true" data-task-id="practical-jokes" aria-pressed="false">Play practical jokes</button>
+            <button type="button" class="job-task" draggable="true" data-task-id="change-memes" aria-pressed="false">Change memes</button>
+            <button type="button" class="job-task" draggable="true" data-task-id="financial-support" aria-pressed="false">Provide financial support to a student</button>
+            <button type="button" class="job-task" draggable="true" data-task-id="interview-tas" aria-pressed="false">Interview TAs</button>
+            <button type="button" class="job-task" draggable="true" data-task-id="promise-grade" aria-pressed="false">Promise a certain grade to a student</button>
             <p class="job-bank-empty" hidden>All tasks are sorted.</p>
           </div>
           <div class="job-bucket-grid">
@@ -320,10 +336,29 @@
             </div>
           </div>
         </div>
-        <p class="job-sort-status" id="job-sort-status" role="status" aria-live="polite">Sort all three tasks. Your buckets will help clarify your thinking.</p>
+        <p class="job-sort-status" id="job-sort-status" role="status" aria-live="polite">Sort every task into the role you think should handle it. You can move tasks between buckets anytime.</p>
+        <div class="prompt-block job-sort-context">
+          <label for="job-sort-context">Which ones need more context? Keep it brief, but feel free to add a little more.</label>
+          <textarea id="job-sort-context" name="job-sort-context" maxlength="800" placeholder="Name a task and add any context that would help explain your choice."></textarea>
+        </div>
         <input type="hidden" id="job-sort-grade" name="job-sort-grade" value="">
         <input type="hidden" id="job-sort-dress-code" name="job-sort-dress-code" value="">
         <input type="hidden" id="job-sort-personal-life" name="job-sort-personal-life" value="">
+        <input type="hidden" id="job-sort-integrity" name="job-sort-integrity" value="">
+        <input type="hidden" id="job-sort-canvas-bugs" name="job-sort-canvas-bugs" value="">
+        <input type="hidden" id="job-sort-call-it" name="job-sort-call-it" value="">
+        <input type="hidden" id="job-sort-weekend-zoom" name="job-sort-weekend-zoom" value="">
+        <input type="hidden" id="job-sort-refer-support" name="job-sort-refer-support" value="">
+        <input type="hidden" id="job-sort-diagnose-disability" name="job-sort-diagnose-disability" value="">
+        <input type="hidden" id="job-sort-modify-assignment" name="job-sort-modify-assignment" value="">
+        <input type="hidden" id="job-sort-grade-exception" name="job-sort-grade-exception" value="">
+        <input type="hidden" id="job-sort-correct-ta" name="job-sort-correct-ta" value="">
+        <input type="hidden" id="job-sort-redirect-student" name="job-sort-redirect-student" value="">
+        <input type="hidden" id="job-sort-practical-jokes" name="job-sort-practical-jokes" value="">
+        <input type="hidden" id="job-sort-change-memes" name="job-sort-change-memes" value="">
+        <input type="hidden" id="job-sort-financial-support" name="job-sort-financial-support" value="">
+        <input type="hidden" id="job-sort-interview-tas" name="job-sort-interview-tas" value="">
+        <input type="hidden" id="job-sort-promise-grade" name="job-sort-promise-grade" value="">
       </section>
 
       <div class="wizard-actions">
@@ -333,9 +368,9 @@
     </section>
 
     <section class="section-card wizard-panel" id="step-questions" data-step-panel="2" role="tabpanel" aria-labelledby="tab-questions" tabindex="0" hidden>
-      <p class="section-kicker">03 · Common questions · part of the same 30 minutes</p>
+      <p class="section-kicker">03 · Common questions · 20 minutes</p>
       <h2 id="questions-title">Show me how you think</h2>
-      <p class="section-intro">Continue with the same timer you started on the Sliders tab; both tabs share one 30-minute limit. Short bullet answers are fine: I care about content, not format. You are welcome to use AI, voice-to-text, or any tech tools that will help.</p>
+      <p class="section-intro">Plan 20 minutes for these questions. Set a timer and be done when it goes off. You are welcome to use any tech tools (AI, voice-to-text, etc.) that will help. Short bullet answers are fine: I care about content, not format.</p>
 
       <div class="questions-list" aria-label="Common questions">
         <div class="prompt-block question-card">
@@ -356,6 +391,11 @@
         <div class="prompt-block question-card">
           <label for="why-ta">Why do you want this job? Give three reasons.</label>
           <textarea id="why-ta" name="why-ta" maxlength="1200" placeholder="Short bullet points are fine." required></textarea>
+        </div>
+
+        <div class="prompt-block question-card">
+          <label for="legacy-contribution">TA work includes grading, administration, peer mentoring, and more. I also hope it can be a life-changing experience where each TA builds something unique to leave behind. What would you uniquely bring or build for the class?</label>
+          <textarea id="legacy-contribution" name="legacy-contribution" maxlength="1600" placeholder="Past examples include contributing to the textbook, teaching a class, improving quizzes, or researching a topic that changes how I teach. Your idea can be small or ambitious." required></textarea>
         </div>
       </div>
 
@@ -418,21 +458,21 @@
     </section>
 
     <section class="section-card wizard-panel" id="step-reflection" data-step-panel="4" role="tabpanel" aria-labelledby="tab-reflection" tabindex="0" hidden>
-      <p class="section-kicker">05 · Reflection</p>
+      <p class="section-kicker">05 · Reflection · under 5 minutes</p>
       <h2 id="reflection-title">What will you take with you?</h2>
-      <p class="section-intro">Whether or not you get the job, use this step to reflect on what you hope to build and what you can carry forward.</p>
+      <p class="section-intro">This final reflection should take under five minutes. Whether or not you get the job, use it to consider what you learned and what you can carry forward.</p>
+      <div class="prompt-block time-estimate">
+        <label for="application-time">Estimate how much time you really spent on this full application.</label>
+        <input id="application-time" name="application-time-minutes" type="number" min="1" step="1" placeholder="Minutes" required>
+        <p class="helper">Enter your estimate in minutes.</p>
+      </div>
       <div class="prompt-block" style="margin-top:0;padding-top:0;border-top:0">
         <label for="reflection-answer">What have you learned through this application that you can apply to the rest of your life?</label>
         <textarea id="reflection-answer" name="reflection" maxlength="1000" placeholder="Name one thing you can carry forward, whether or not you are selected." required></textarea>
       </div>
 
-      <div class="prompt-block" style="margin-top:0;padding-top:0;border-top:0">
-        <label for="legacy-contribution">TA work includes grading, administration, peer mentoring, and more. I also hope this can be a life-changing experience where each TA builds something unique to leave behind. What would you uniquely bring or build for the class?</label>
-        <textarea id="legacy-contribution" name="legacy-contribution" maxlength="1600" placeholder="Past examples include contributing to the textbook, teaching a class, improving quizzes, or researching a topic that changes how I teach. Your idea can be small or ambitious." required></textarea>
-      </div>
-
       <div class="agreement">
-        <label class="choice-row"><input id="relationship-acknowledgment" name="relationship-acknowledgment" type="checkbox" required><span>I know that if Brother Pacini chooses someone else this semester, he still loves me. I’m welcome to visit his office, join the PACPAC Zoom channel, and keep hanging out. The decision is about what is right for the semester; it doesn’t change that I’m valued and welcome.</span></label>
+        <label class="choice-row"><input id="relationship-acknowledgment" name="relationship-acknowledgment" type="checkbox" required><span>I know that if Brother Pacini chooses someone else this semester, he still loves me. I’m welcome to visit his office, join the PacPack Zoom channel, and keep hanging out. The decision is about which student feels right, and sometimes that means identifying the student who needs the opportunity, not necessarily the “best” candidate. It doesn’t change that I’m valued and welcome.</span></label>
       </div>
 
       <fieldset class="prompt-block">
