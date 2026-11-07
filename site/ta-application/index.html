@@ -72,7 +72,7 @@
   .field, .prompt-block { min-width: 0; }
   .field label, .prompt-block > label, .sample-response > label { display: block; margin-bottom: 6px; color: #344258; font-weight: 680; }
   .optional { color: var(--muted); font-size: .83rem; font-weight: 450; }
-  input[type="text"], input[type="email"], select, textarea {
+  input[type="text"], input[type="email"], input[type="number"], select, textarea {
     width: 100%; min-height: 46px; padding: 10px 12px; border: 1px solid #cfd6df;
     border-radius: 10px; background: #fff; color: var(--ink);
   }
@@ -227,7 +227,7 @@
     <span class="eyebrow">A chance to contribute</span>
     <h1>Teaching Assistant Application</h1>
     <p>Share what you bring, what you are still learning, and how you would help make this class better for students.</p>
-    <div class="hero-meta"><span>Basics · ≤ 5 minutes</span><span>Sliders · 10 minutes</span><span>Questions · 20 minutes</span><span>Work samples · up to 1 hour</span></div>
+    <div class="hero-meta"><span>Basics · ≤ 5 minutes</span><span>Sliders · 10 minutes</span><span>Questions · 20 minutes</span><span>Work samples · up to 1 hour</span><span>Reflection · under 5 minutes</span></div>
   </header>
   <nav class="wizard-tabs" aria-label="Application steps">
     <div class="step-list" role="tablist" aria-label="Five application steps">
@@ -235,7 +235,7 @@
       <button type="button" class="step-tab" id="tab-sliders" role="tab" data-step-tab="1" aria-controls="step-sliders" aria-selected="false" tabindex="-1"><span class="step-number">2</span><span class="step-copy"><strong>Sliders</strong><small>10 minutes</small></span></button>
       <button type="button" class="step-tab" id="tab-questions" role="tab" data-step-tab="2" aria-controls="step-questions" aria-selected="false" tabindex="-1"><span class="step-number">3</span><span class="step-copy"><strong>Questions</strong><small>20 minutes</small></span></button>
       <button type="button" class="step-tab" id="tab-work" role="tab" data-step-tab="3" aria-controls="step-work" aria-selected="false" tabindex="-1"><span class="step-number">4</span><span class="step-copy"><strong>Work samples</strong><small>up to 1 hour</small></span></button>
-      <button type="button" class="step-tab" id="tab-reflection" role="tab" data-step-tab="4" aria-controls="step-reflection" aria-selected="false" tabindex="-1"><span class="step-number">5</span><span class="step-copy"><strong>Reflection</strong><small>Final step</small></span></button>
+      <button type="button" class="step-tab" id="tab-reflection" role="tab" data-step-tab="4" aria-controls="step-reflection" aria-selected="false" tabindex="-1"><span class="step-number">5</span><span class="step-copy"><strong>Reflection</strong><small>under 5 min</small></span></button>
     </div>
   </nav>
   <form id="application" novalidate>
@@ -458,9 +458,14 @@
     </section>
 
     <section class="section-card wizard-panel" id="step-reflection" data-step-panel="4" role="tabpanel" aria-labelledby="tab-reflection" tabindex="0" hidden>
-      <p class="section-kicker">05 · Reflection</p>
+      <p class="section-kicker">05 · Reflection · under 5 minutes</p>
       <h2 id="reflection-title">What will you take with you?</h2>
-      <p class="section-intro">Whether or not you get the job, use this step to reflect on what you learned and what you can carry forward.</p>
+      <p class="section-intro">This final reflection should take under five minutes. Whether or not you get the job, use it to consider what you learned and what you can carry forward.</p>
+      <div class="prompt-block time-estimate">
+        <label for="application-time">Estimate how much time you really spent on this full application.</label>
+        <input id="application-time" name="application-time-minutes" type="number" min="1" step="1" placeholder="Minutes" required>
+        <p class="helper">Enter your estimate in minutes.</p>
+      </div>
       <div class="prompt-block" style="margin-top:0;padding-top:0;border-top:0">
         <label for="reflection-answer">What have you learned through this application that you can apply to the rest of your life?</label>
         <textarea id="reflection-answer" name="reflection" maxlength="1000" placeholder="Name one thing you can carry forward, whether or not you are selected." required></textarea>
