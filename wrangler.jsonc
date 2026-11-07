@@ -1,11 +1,19 @@
 // Cloudflare Worker settings.
-// Serves the site folder as the website at benjaminpacini.com. Static files only; no worker code.
-// The archive folder is never published.
+// Serves the site folder as the website at benjaminpacini.com.
+// The TA application D1 binding is reserved for its Worker API; the static form
+// remains preview-only until the submission endpoint and schema are added.
 {
   "name": "benjaminpacini-site",
   "compatibility_date": "2026-09-01",
   "previews": {},
   "assets": {
     "directory": "./site"
-  }
+  },
+  "d1_databases": [
+    {
+      "binding": "TA_APPLICATIONS_DB",
+      "database_name": "ta-applications-prod",
+      "database_id": "b3c92410-2de7-4826-a220-eba399cd5f20"
+    }
+  ]
 }
