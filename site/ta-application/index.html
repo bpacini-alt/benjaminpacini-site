@@ -232,7 +232,7 @@
 </head>
 <body>
 <main class="page">
-  <div class="preview-banner"><strong>Application information.</strong> When you submit, your answers will be sent to Brother Pacini and saved for review.</div>
+  <div class="preview-banner"><strong>Application information.</strong> When you submit, your answers will be saved for Brother Pacini to review.</div>
   <header class="hero">
     <span class="eyebrow">A chance to contribute</span>
     <h1>Teaching Assistant Application</h1>
@@ -530,7 +530,7 @@
         <button class="submit-button wizard-finish" type="submit" id="submit-application">Submit application</button>
       </div>
       <p class="form-message" id="form-message" role="status" aria-live="polite"></p>
-      <p class="submit-note">Your answers will be sent to Brother Pacini when you submit.</p>
+      <p class="submit-note">Your application will be saved for Brother Pacini to review.</p>
     </section>
   </form>
   <p class="footer-note">A five-step TA application · complete all five steps before submitting.</p>
@@ -892,7 +892,7 @@
         throw new Error(result.error || 'Your application could not be saved. Please try again.');
       }
 
-      formMessage.textContent = 'Your application has been received. Thank you!';
+      formMessage.textContent = 'Your application has been saved. Thank you!';
       submitButton.textContent = 'Application received';
       submitNote.textContent = 'Your application has been saved for Brother Pacini to review.';
       formMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });

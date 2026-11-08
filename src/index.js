@@ -122,7 +122,8 @@ export default {
       const origin = request.headers.get("Origin");
       if (origin) {
         try {
-          if (!PRODUCTION_HOSTS.has(new URL(origin).hostname)) {
+          const originUrl = new URL(origin);
+          if (!PRODUCTION_HOSTS.has(originUrl.hostname) || originUrl.protocol !== "https:") {
             return jsonResponse({ error: "This request could not be accepted." }, 403);
           }
         } catch {
