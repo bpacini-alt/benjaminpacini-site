@@ -230,7 +230,17 @@ async function handleFullReview(env, scope) {
     role: scope === "owner" ? "Instructor view" : "TA reviewer view · " + courseScope,
     applications: visible.map(({ row, answers }) => {
       const visibleAnswers = scope === "owner" || !answers ? answers : { ...answers };
-      if (scope !== "owner" && visibleAnswers) delete visibleAnswers.timing;
+      if (scope !== "owner" && visibleAnswers) {
+        delete visibleAnswers.timing;
+        if (visibleAnswers.applicant) {
+          visibleAnswers.applicant = {
+            ...visibleAnswers.applicant,
+            course: courseScope,
+            courseSelections: [courseScope],
+            otherCourse: ""
+          };
+        }
+      }
       return {
         submittedAt: row.submitted_at,
         answers: visibleAnswers,
