@@ -1,7 +1,6 @@
 // Cloudflare Worker settings.
 // Serves the site folder as the website at benjaminpacini.com.
-// The TA application D1 binding is reserved for its Worker API; the static form
-// remains preview-only until the submission endpoint and schema are added.
+// The Worker handles live application submissions and token-protected reviewer APIs.
 {
   "name": "benjaminpacini-site",
   "compatibility_date": "2026-09-01",

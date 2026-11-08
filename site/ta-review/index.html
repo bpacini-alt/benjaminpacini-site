@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer">
+<title>TA Application Review · Benjamin Pacini</title>
+<style>
+:root{color-scheme:light;--navy:#173b65;--paper:#f6f7f9;--line:#d8e0e8;--ink:#243447;--muted:#60738a;--white:#fff;--gold:#f1c66d}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:980px;margin:0 auto;padding:36px 20px 72px}.masthead{border-radius:18px;background:var(--navy);color:white;padding:28px 32px;margin-bottom:22px}
+.eyebrow{text-transform:uppercase;font-size:.76rem;font-weight:800;letter-spacing:.12em;color:#d3e3f6}.masthead h1{font-family:Georgia,serif;font-size:clamp(2rem,5vw,3rem);line-height:1.1;margin:8px 0}
+.masthead p{max-width:720px;margin:8px 0 0;color:#e6eef8}.private-note{font-size:.9rem;color:#f4e7c4;margin-top:16px!important}
+.panel{background:var(--white);border:1px solid var(--line);border-radius:16px;padding:22px 24px;margin:18px 0;box-shadow:0 4px 18px rgba(23,59,101,.05)}
+.notice{padding:16px 18px;border-radius:12px;background:#edf3f9;color:var(--navy);margin:18px 0}.error{background:#fff1ef;color:#8b2d1d}.muted{color:var(--muted)}
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px}.toolbar button{border:1px solid var(--line);background:white;color:var(--navy);border-radius:10px;padding:10px 16px;font:inherit;font-weight:700;cursor:pointer}
+.toolbar button:disabled{opacity:.45;cursor:not-allowed}.counter{font-weight:800;color:var(--muted);text-align:center}.app-name{font-family:Georgia,serif;color:var(--navy);font-size:1.7rem;margin:0 0 4px}
+h2{color:var(--navy);margin-top:0}h3{color:var(--navy);font-size:1.1rem;margin:0 0 10px}.meta{color:var(--muted);margin:0 0 18px}
+.answer-section{border-top:1px solid var(--line);padding-top:20px;margin-top:22px}.answer-item{margin:14px 0}.answer-label{font-weight:800;color:var(--navy);margin:0 0 4px}.answer-text{white-space:pre-wrap;margin:0}
+.sample{border-left:4px solid var(--gold);padding:8px 0 8px 14px;margin:15px 0}.sample-title{font-weight:800;margin:0 0 6px}
+[hidden]{display:none!important}
+@media(max-width:560px){main{padding:18px 12px 48px}.masthead{padding:22px 20px}.panel{padding:18px}.toolbar{display:grid;grid-template-columns:1fr 1fr}.counter{grid-column:1/-1;grid-row:1}.toolbar button{width:100%}}
+</style>
+</head>
+<body>
+<main>
+<header class="masthead"><div class="eyebrow">Private reviewer access</div><h1>TA application review</h1><p id="role">One application at a time.</p><p class="private-note">This link is the key to this page. Share it only with reviewers you trust.</p></header>
+<div class="notice" id="loading" role="status">Opening the private review page…</div>
+<div class="notice error" id="error" role="alert" hidden></div>
+<section id="review" hidden><div class="toolbar"><button type="button" id="previous">← Previous</button><span class="counter" id="counter"></span><button type="button" id="next">Next →</button></div><article class="panel" id="application-card" aria-live="polite"></article></section>
+</main>
+<script>
+const tokenKey="ta-review-full-token";
+function getToken(){const match=window.location.hash.match(/^#([a-f0-9]{64})$/i);if(match){sessionStorage.setItem(tokenKey,match[1].toLowerCase());history.replaceState(null,"",window.location.pathname+window.location.search);}return sessionStorage.getItem(tokenKey);}
+function el(tag,className,text){const node=document.createElement(tag);if(className)node.className=className;if(text!==undefined&&text!==null)node.textContent=String(text);return node;}
+function addField(parent,label,value){const block=el("div","answer-item");block.appendChild(el("p","answer-label",label));block.appendChild(el("p","answer-text",value===undefined||value===null||value===""?"—":value));parent.appendChild(block);}
+function addSection(parent,title){const section=el("section","answer-section");section.appendChild(el("h3","",title));parent.appendChild(section);return section;}
+const questionLabels={courseMagic:"Three magical things to preserve, and the highest-priority change",managingUp:"Managing up",holyGhostAction:"High-leverage action for Holy Ghost–inspired learning",whyThisJob:"Why this job",uniqueContribution:"What this applicant would uniquely bring or build"};
+const responsibilityLabels={grade:"Grade student work using the rubric","dress-code":"Talk with a student about a dress-code violation","personal-life":"Monitor students’ personal lives outside class",integrity:"Deal with academic-integrity issues","canvas-bugs":"Fix bugs in Canvas","call-it":"Call IT if the classroom computer is broken","weekend-zoom":"Answer Zoom messages on a weekend","refer-support":"Refer a student to the dean of students or Title IX","diagnose-disability":"Diagnose a student with a disability","modify-assignment":"Modify a major assignment","grade-exception":"Make an exception to a student’s grade","correct-ta":"Correct a TA’s behavior or performance","redirect-student":"Address a student leaving early, using a phone, or distracting others","practical-jokes":"Play practical jokes","change-memes":"Change memes","financial-support":"Provide financial support to a student","interview-tas":"Interview TAs","promise-grade":"Promise a certain grade to a student"};
+const roleLabels={ta:"TA job","brother-pacini":"BroPa’s job","no-one":"No one’s job"};
+function renderApplication(item,index,total,role){
+const card=document.getElementById("application-card");card.replaceChildren();const data=item.answers||{};const applicant=data.applicant||{};
+card.appendChild(el("h2","app-name",applicant.name||"Application"));
+card.appendChild(el("p","meta",(applicant.email||"No email")+" · "+(applicant.course||"No course")+" · Submitted "+new Date(item.submittedAt).toLocaleString()));
+if(item.ranking&&role==="Instructor view"){const rank=item.ranking;addField(card,"Blind ranking summary",rank.reviewerCount?"Mean rank "+rank.averageRank+" across "+rank.reviewerCount+" reviewer(s); lower ranks are stronger.":"No blind rankings saved yet.");}
+const acknowledgments=data.acknowledgments||{};const basics=addSection(card,"Application details");addField(basics,"Course",applicant.course||"—");addField(basics,"Email",applicant.email||"—");addField(basics,"Shared with invited TA reviewers",acknowledgments.shareWithReviewers===true?"Yes":"No");
+const ratings=data.ratings||{};const ratingNames={vibe:"Class vibe",technology:"Technology",mentorship:"Student mentorship",content:"Course knowledge",assertiveness:"Assertiveness",grading:"Reliable grading",innovation:"Innovation",initiative:"Proactive initiative"};const slider=addSection(card,"Self-assessment sliders");Object.keys(ratingNames).forEach(function(key){addField(slider,ratingNames[key],ratings[key]===undefined?"—":ratings[key]+" / 10");});addField(slider,"Slider context",data.sliderContext);
+const responsibilities=addSection(card,"Whose job is this?");const responsibilityAnswers=data.responsibilities||{};Object.keys(responsibilityAnswers).forEach(function(key){addField(responsibilities,responsibilityLabels[key]||key,roleLabels[responsibilityAnswers[key]]||responsibilityAnswers[key]);});addField(responsibilities,"Additional context",data.responsibilityContext);
+const questions=addSection(card,"Common Questions");Object.keys(questionLabels).forEach(function(key){addField(questions,questionLabels[key],data.questions&&data.questions[key]);});
+const samplesSection=addSection(card,"Work samples");(Array.isArray(data.workSamples)?data.workSamples:[]).forEach(function(sample){const block=el("div","sample");block.appendChild(el("p","sample-title",sample.title||sample.id||"Work sample"));block.appendChild(el("p","answer-text",sample.response||"—"));if(sample.aiUse)addField(block,"AI or other tools used",sample.aiUse);samplesSection.appendChild(block);});
+const reflection=data.reflection||{};const finalSection=addSection(card,"Final reflection");addField(finalSection,"Time spent",reflection.timeSpentMinutes?reflection.timeSpentMinutes+" minutes":"—");addField(finalSection,"What they will carry forward",reflection.answer);addField(finalSection,"Interested in other opportunities",reflection.otherOpportunities?"Yes":"No");
+document.getElementById("counter").textContent="Application "+(index+1)+" of "+total;document.getElementById("previous").disabled=index===0;document.getElementById("next").disabled=index>=total-1;
+}
+let applications=[];let currentIndex=0;let currentRole="";
+async function loadReview(){
+const token=getToken();if(!token){document.getElementById("loading").hidden=true;const err=document.getElementById("error");err.textContent="Open this page from the private link BroPa gave you. The access key is missing.";err.hidden=false;return;}
+try{const response=await fetch("/api/review/full",{headers:{Authorization:"Bearer "+token},cache:"no-store"});const data=await response.json();if(!response.ok)throw new Error(data.error||"This private link could not open the review page.");currentRole=data.role||"Reviewer view";document.getElementById("role").textContent=currentRole+". Use the arrows to move through one application at a time.";applications=Array.isArray(data.applications)?data.applications:[];document.getElementById("loading").hidden=true;if(!applications.length){const err=document.getElementById("error");err.textContent=currentRole==="TA reviewer view"?"No applicants have opted in to TA review yet.":"There are no applications to review yet.";err.hidden=false;return;}document.getElementById("review").hidden=false;renderApplication(applications[currentIndex],currentIndex,applications.length,currentRole);}catch(error){document.getElementById("loading").hidden=true;const err=document.getElementById("error");err.textContent=error.message||"The review page could not load.";err.hidden=false;}
+}
+document.getElementById("previous").addEventListener("click",function(){if(currentIndex>0){currentIndex-=1;renderApplication(applications[currentIndex],currentIndex,applications.length,currentRole);window.scrollTo(0,0);}});
+document.getElementById("next").addEventListener("click",function(){if(currentIndex<applications.length-1){currentIndex+=1;renderApplication(applications[currentIndex],currentIndex,applications.length,currentRole);window.scrollTo(0,0);}});
+loadReview();
+</script>
+</body>
+</html>
