@@ -258,15 +258,27 @@
       <div class="field-grid">
         <div class="field"><label for="applicant-name">Your name</label><input id="applicant-name" name="name" type="text" autocomplete="name" required></div>
         <div class="field"><label for="applicant-email">Email address</label><input id="applicant-email" name="email" type="email" autocomplete="email" required></div>
-        <div class="field"><label for="course-name">Which class are you applying to TA for?</label><input id="course-name" name="course" type="text" placeholder="Course number or name" required></div>
+
       </div>
+
+      <fieldset class="prompt-block course-selection">
+        <legend>Which class or classes are you applying to TA for? Select all that apply.</legend>
+        <div class="check-stack">
+          <label class="choice-row"><input type="checkbox" name="course-selection" value="EDCOR 200"><span>EDCOR 200 — Teaching as a Profession</span></label>
+          <label class="choice-row"><input type="checkbox" name="course-selection" value="EDCOR 310"><span>EDCOR 310 — Educational Psychology and Human Development</span></label>
+          <label class="choice-row"><input type="checkbox" name="course-selection" value="ECON 150"><span>ECON 150 — Principles of Microeconomics</span></label>
+          <label class="choice-row"><input type="checkbox" id="other-course-checkbox" name="course-selection" value="OTHER"><span>Other</span></label>
+        </div>
+        <div class="field" id="other-course-field" hidden><label for="other-course">Which other course?</label><input id="other-course" name="other-course" type="text" maxlength="80" placeholder="Course number or name" disabled></div>
+      </fieldset>
 
       <fieldset class="prompt-block expectations">
         <legend>Before continuing, please confirm the following.</legend>
         <div class="check-stack">
-          <label class="choice-row"><input type="checkbox" name="ack-grade" required><span>I have earned an A in this class before, currently have an A, or can show strong evidence that I will earn an A in the class I’m applying to TA for.</span></label>
-          <label class="choice-row"><input type="checkbox" name="ack-schedule" required><span>I’ve checked Brother Pacini’s online schedule and can be present for the class when he teaches.</span></label>
+          <label class="choice-row"><input type="checkbox" name="ack-grade" required><span>I have earned an A in, currently have an A in, or can show strong evidence that I will earn an A in each class I’m applying to TA for.</span></label>
+          <label class="choice-row"><input type="checkbox" name="ack-schedule" required><span>I’ve checked Brother Pacini’s online schedule and can be present in each class I selected when he teaches.</span></label>
           <label class="choice-row"><input type="checkbox" name="ack-attendance-hours" required><span>I understand TAs are expected to attend the class they support and typically work about five hours each week.</span></label>
+          <label class="choice-row"><input id="share-with-reviewers" name="share-with-reviewers" type="checkbox"><span>I understand that Brother Pacini and TAs will use the information I submit to inform decisions on TA hiring.</span></label>
         </div>
       </fieldset>
 
@@ -520,13 +532,6 @@
         <label class="choice-row"><input id="relationship-acknowledgment" name="relationship-acknowledgment" type="checkbox" required><span>I know that if Brother Pacini chooses someone else this semester, he still loves me. I’m welcome to visit his office, join the PacPack Zoom channel, and keep hanging out. The decision is about which student feels right, and sometimes that means identifying the student who needs the opportunity, not necessarily the “best” candidate. It doesn’t change that I’m valued and welcome.</span></label>
       </div>
 
-      <fieldset class="prompt-block review-sharing">
-        <legend>Optional: sharing with TA reviewers</legend>
-        <div class="check-stack">
-          <label class="choice-row"><input id="share-with-reviewers" name="share-with-reviewers" type="checkbox"><span>I’m comfortable with Brother Pacini sharing my full application with the TAs he invites to review. My Common Questions responses may also appear on a separate page without my name, email, or course for blind ranking. A reviewer may still recognize my writing or details. If I leave this unchecked, only Brother Pacini will review my application.</span></label>
-        </div>
-      </fieldset>
-
       <fieldset class="prompt-block">
         <legend>Would you like to hear about other opportunities?</legend>
         <div class="check-stack"><label class="choice-row"><input id="other-jobs" name="other-opportunities" type="checkbox"><span>I’d be interested in hearing about other on-campus, online, or future jobs.</span></label></div>
@@ -565,6 +570,25 @@
   let activeJobTask = null;
   let currentStep = 0;
   const stepNames = ['Basic application information', 'Self-assessment sliders', 'Common questions', 'Email BroPa with your work samples', 'Reflection'];
+  const courseTitles = {
+    'EDCOR 200': 'Teaching as a Profession',
+    'EDCOR 310': 'Educational Psychology and Human Development',
+    'ECON 150': 'Principles of Microeconomics'
+  };
+  const courseSelectionInputs = Array.from(document.querySelectorAll('input[name="course-selection"]'));
+  const otherCourseCheckbox = document.getElementById('other-course-checkbox');
+  const otherCourseField = document.getElementById('other-course-field');
+  const otherCourseInput = document.getElementById('other-course');
+
+  function updateOtherCourseField() {
+    const enabled = otherCourseCheckbox.checked;
+    otherCourseField.hidden = !enabled;
+    otherCourseInput.disabled = !enabled;
+    otherCourseInput.required = enabled;
+  }
+
+  courseSelectionInputs.forEach((input) => input.addEventListener('change', updateOtherCourseField));
+  updateOtherCourseField();
 
   function showStep(index, focusPanel = true) {
     currentStep = index;
@@ -587,6 +611,13 @@
 
   function validatePanel(index) {
     const panel = panels[index];
+    if (index === 0 && !courseSelectionInputs.some((input) => input.checked)) {
+      if (index === currentStep) {
+        formMessage.textContent = 'Select at least one class before continuing.';
+        courseSelectionInputs[0]?.focus();
+      }
+      return false;
+    }
     const fields = Array.from(panel.querySelectorAll('input[required], textarea[required], select[required]'));
     for (const field of fields) {
       if (!field.checkValidity()) {
@@ -826,12 +857,67 @@
     return Boolean(field && field.checked);
   }
 
+  const activeTimeStorageKey = 'ta-application-active-ms';
+  const activeIdleLimitMs = 120000;
+  let trackedActiveMs = 0;
+  let activeSegmentStart = null;
+  let lastActiveInteraction = 0;
+  try {
+    trackedActiveMs = Math.max(0, Number(sessionStorage.getItem(activeTimeStorageKey)) || 0);
+  } catch {}
+
+  function persistActiveTime() {
+    try { sessionStorage.setItem(activeTimeStorageKey, String(trackedActiveMs)); } catch {}
+  }
+
+  function flushActiveTime() {
+    if (activeSegmentStart === null) return;
+    const now = performance.now();
+    const countedThrough = Math.min(now, lastActiveInteraction + activeIdleLimitMs);
+    if (countedThrough > activeSegmentStart) trackedActiveMs += countedThrough - activeSegmentStart;
+    activeSegmentStart = now;
+    persistActiveTime();
+  }
+
+  function noteActiveInteraction() {
+    const now = performance.now();
+    if (activeSegmentStart !== null) flushActiveTime();
+    activeSegmentStart = now;
+    lastActiveInteraction = now;
+  }
+
+  function pauseActiveTime() {
+    flushActiveTime();
+    activeSegmentStart = null;
+    lastActiveInteraction = 0;
+    persistActiveTime();
+  }
+
+  ['pointerdown', 'keydown', 'input', 'change', 'wheel', 'touchstart'].forEach((eventName) => {
+    document.addEventListener(eventName, noteActiveInteraction, { passive: true });
+  });
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) pauseActiveTime();
+    else { activeSegmentStart = null; lastActiveInteraction = 0; }
+  });
+  window.setInterval(flushActiveTime, 15000);
+
+  function getTrackedActiveSeconds() {
+    flushActiveTime();
+    return Math.round(trackedActiveMs / 1000);
+  }
+
   function buildApplication() {
+    const courseSelections = courseSelectionInputs.filter((input) => input.checked).map((input) => input.value);
+    const otherCourse = otherCourseCheckbox.checked ? readValue('other-course') : '';
+    const course = courseSelections.map((selection) => selection === 'OTHER' ? 'Other: ' + otherCourse : selection + ' — ' + courseTitles[selection]).join(', ');
     return {
       applicant: {
         name: readValue('name'),
         email: readValue('email'),
-        course: readValue('course')
+        course,
+        courseSelections,
+        otherCourse
       },
       acknowledgments: {
         grade: isChecked('ack-grade'),
@@ -876,7 +962,8 @@
         timeSpentMinutes: Number(readValue('application-time-minutes')),
         answer: readValue('reflection'),
         otherOpportunities: isChecked('other-opportunities')
-      }
+      },
+      timing: { activeSeconds: getTrackedActiveSeconds() }
     };
   }
 

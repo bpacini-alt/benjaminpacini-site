@@ -3,8 +3,18 @@ const PRODUCTION_HOSTS = new Set(["benjaminpacini.com", "www.benjaminpacini.com"
 const REQUIRED_ACKNOWLEDGMENTS = ["grade", "schedule", "attendanceHours", "relationship"];
 const REVIEW_TOKEN_HASHES = {
   owner: "30cc9477aeb96691e04a034f0f3a638a9276c00d0833bccf496b3251be91d193",
-  ta: "1a872033734c588a9971a1889a055e9867e4d3648789aa20a40a7e4b85e80136",
-  blind: "0301184d4017392f6f739e5bdf93f7e421857d3858699e2e1f7c7db631943a34"
+  "ta:EDCOR 200": "b86f92bd94950e42ae7ffedc8c1c71a8d112fb1d7ed3275a55a37abe464d74d4",
+  "blind:EDCOR 200": "1793306ca005eed34d6fa87f8ab59e282f3978a1d4c9666f163e358b58e50688",
+  "ta:EDCOR 310": "0ac7fe38310a513de3011519d5f99117c0bfbcec1e97addaf09a0d3921996710",
+  "blind:EDCOR 310": "684829b716a333d01a216bfa8e52a0090dc34eaf7ed0e9ac6b49a80790d842fa",
+  "ta:ECON 150": "01ce39d15587eedba777476d7aaffd64882acd47a66fc7ccd9ff844cd56bdc13",
+  "blind:ECON 150": "fe53c62866bc03f089e5c6fe36ea31a110b4082e8af0aeb9afa270d59cbc0216"
+};
+const COURSE_OPTIONS = ["EDCOR 200", "EDCOR 310", "ECON 150"];
+const COURSE_TITLES = {
+  "EDCOR 200": "Teaching as a Profession",
+  "EDCOR 310": "Educational Psychology and Human Development",
+  "ECON 150": "Principles of Microeconomics"
 };
 const BLIND_QUESTION_KEYS = ["courseMagic", "managingUp", "holyGhostAction", "whyThisJob", "uniqueContribution"];
 const RATING_FIELDS = [
@@ -50,8 +60,25 @@ function validateApplication(data) {
       !hasText(applicant.name, 120) ||
       !hasText(applicant.email, 254) ||
       !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(applicant.email) ||
-      !hasText(applicant.course, 120)) {
-    return "Please check your name, email address, and class.";
+      !Array.isArray(applicant.courseSelections) ||
+      applicant.courseSelections.length < 1 ||
+      applicant.courseSelections.length > COURSE_OPTIONS.length + 1 ||
+      applicant.courseSelections.some((course) => course !== "OTHER" && !COURSE_OPTIONS.includes(course)) ||
+      new Set(applicant.courseSelections).size !== applicant.courseSelections.length) {
+    return "Please check your name, email address, and selected class or classes.";
+  }
+
+  const hasOtherCourse = applicant.courseSelections.includes("OTHER");
+  if (hasOtherCourse
+        ? !hasText(applicant.otherCourse, 80)
+        : typeof applicant.otherCourse !== "string" || applicant.otherCourse.length > 80) {
+    return "Please name the other course you selected.";
+  }
+  const expectedCourse = applicant.courseSelections
+    .map((course) => course === "OTHER" ? "Other: " + applicant.otherCourse.trim() : course + " — " + COURSE_TITLES[course])
+    .join(", ");
+  if (!hasText(applicant.course, 240) || applicant.course.trim() !== expectedCourse) {
+    return "Please check your selected class or classes.";
   }
 
   const acknowledgments = data.acknowledgments;
@@ -109,6 +136,12 @@ function validateApplication(data) {
       !hasText(reflection.answer, 1000) ||
       typeof reflection.otherOpportunities !== "boolean") {
     return "Please complete the final reflection.";
+  }
+
+  if (data.timing !== undefined &&
+      (!isObject(data.timing) || !Number.isInteger(data.timing.activeSeconds) ||
+       data.timing.activeSeconds < 0 || data.timing.activeSeconds > 86400)) {
+    return "Please resubmit the application.";
   }
 
   return null;
@@ -169,31 +202,67 @@ async function listReviewApplications(env) {
 
 async function handleFullReview(env, scope) {
   const all = await listReviewApplications(env);
-  const visible = scope === "owner" ? all : all.filter(({ answers }) => canShareWithReviewers(answers));
+  const courseScope = scope === "owner" ? null : scope.slice("ta:".length);
+  const visible = scope === "owner"
+    ? all
+    : all.filter(({ answers }) => canShareWithReviewers(answers) && answers?.applicant?.courseSelections?.includes(courseScope));
   const rankingMap = new Map();
   if (scope === "owner") {
     const rankings = await env.TA_APPLICATIONS_DB.prepare(
-      "SELECT blind_id, COUNT(*) AS rank_count, ROUND(AVG(rank), 2) AS average_rank FROM blind_rankings GROUP BY blind_id"
+      "SELECT reviewer_key, blind_id, rank FROM blind_rankings"
     ).all();
-    for (const item of rankings.results || []) rankingMap.set(item.blind_id, { reviewerCount: item.rank_count, averageRank: item.average_rank });
+    const totals = new Map();
+    for (const item of rankings.results || []) {
+      const separator = item.reviewer_key.indexOf("::");
+      if (separator < 1) continue;
+      const course = item.reviewer_key.slice(0, separator).toUpperCase();
+      const key = item.blind_id + "|" + course;
+      const total = totals.get(key) || { total: 0, count: 0 };
+      total.total += item.rank;
+      total.count += 1;
+      totals.set(key, total);
+    }
+    for (const [key, total] of totals) {
+      const separator = key.lastIndexOf("|");
+      const blindId = key.slice(0, separator);
+      const course = key.slice(separator + 1);
+      const byCourse = rankingMap.get(blindId) || {};
+      byCourse[course] = { reviewerCount: total.count, averageRank: Math.round((total.total / total.count) * 100) / 100 };
+      rankingMap.set(blindId, byCourse);
+    }
   }
   return jsonResponse({
-    role: scope === "owner" ? "Instructor view" : "TA reviewer view",
-    applications: visible.map(({ row, answers }) => ({
-      submittedAt: row.submitted_at,
-      answers,
-      ...(scope === "owner" ? {
-        blindId: row.blind_id,
-        ranking: rankingMap.get(row.blind_id) || { reviewerCount: 0, averageRank: null }
-      } : {})
-    }))
+    role: scope === "owner" ? "Instructor view" : "TA reviewer view · " + courseScope + " — " + COURSE_TITLES[courseScope],
+    applications: visible.map(({ row, answers }) => {
+      const visibleAnswers = scope === "owner" || !answers ? answers : { ...answers };
+      if (scope !== "owner" && visibleAnswers) {
+        delete visibleAnswers.timing;
+        if (visibleAnswers.applicant) {
+          visibleAnswers.applicant = {
+            ...visibleAnswers.applicant,
+            course: courseScope,
+            courseSelections: [courseScope],
+            otherCourse: ""
+          };
+        }
+      }
+      return {
+        submittedAt: row.submitted_at,
+        answers: visibleAnswers,
+        ...(scope === "owner" ? {
+          blindId: row.blind_id,
+          rankingByCourse: rankingMap.get(row.blind_id) || {}
+        } : {})
+      };
+    })
   }, 200);
 }
 
-async function handleBlindReview(env) {
+async function handleBlindReview(env, courseScope) {
   const all = await listReviewApplications(env);
   const eligible = all
-    .filter(({ row, answers }) => row.blind_id && canShareWithReviewers(answers))
+    .filter(({ row, answers }) =>
+      row.blind_id && canShareWithReviewers(answers) && answers?.applicant?.courseSelections?.includes(courseScope))
     .map(({ row, answers }) => ({
       blindId: row.blind_id,
       questions: Object.fromEntries(BLIND_QUESTION_KEYS.map((key) => [key, answers?.questions?.[key] || ""]))
@@ -202,10 +271,10 @@ async function handleBlindReview(env) {
     const other = Math.floor(Math.random() * (index + 1));
     [eligible[index], eligible[other]] = [eligible[other], eligible[index]];
   }
-  return jsonResponse({ applications: eligible }, 200);
+  return jsonResponse({ course: courseScope, courseTitle: COURSE_TITLES[courseScope], applications: eligible }, 200);
 }
 
-async function handleBlindRanking(request, env) {
+async function handleBlindRanking(request, env, courseScope) {
   const contentType = request.headers.get("Content-Type") || "";
   if (!/^application\/json(?:\s*;|$)/i.test(contentType)) {
     return jsonResponse({ error: "Please submit the ranking form." }, 415);
@@ -237,7 +306,7 @@ async function handleBlindRanking(request, env) {
     return jsonResponse({ error: "Please review the ranking and try again." }, 400);
   }
   const reviewerLabel = typeof data?.reviewerLabel === "string" ? data.reviewerLabel.trim().replace(/\s+/g, " ") : "";
-  const reviewerKey = reviewerLabel.toLowerCase();
+  const reviewerKey = courseScope.toLowerCase() + "::" + reviewerLabel.toLowerCase();
   const rankings = data?.rankings;
   if (!hasText(reviewerLabel, 80) || /[\u0000-\u001f]/.test(reviewerLabel) ||
       !Array.isArray(rankings) || rankings.length < 1 || rankings.length > 100) {
@@ -260,7 +329,7 @@ async function handleBlindRanking(request, env) {
 
   const all = await listReviewApplications(env);
   const eligibleIds = new Set(all
-    .filter(({ row, answers }) => row.blind_id && canShareWithReviewers(answers))
+    .filter(({ row, answers }) => row.blind_id && canShareWithReviewers(answers) && answers?.applicant?.courseSelections?.includes(courseScope))
     .map(({ row }) => row.blind_id));
   if (eligibleIds.size !== rankings.length || rankings.some((item) => !eligibleIds.has(item.blindId))) {
     return jsonResponse({ error: "The application list changed. Refresh the page and rank the current list." }, 409);
@@ -286,7 +355,7 @@ async function handleReviewRequest(request, env, url) {
 
   if (url.pathname === "/api/review/full") {
     if (request.method !== "GET") return jsonResponse({ error: "Use the review page to view applications." }, 405);
-    if (scope !== "owner" && scope !== "ta") return jsonResponse({ error: "This link does not open the full review page." }, 403);
+    if (scope !== "owner" && !scope.startsWith("ta:")) return jsonResponse({ error: "This link does not open the full review page." }, 403);
     try {
       return await handleFullReview(env, scope);
     } catch (error) {
@@ -296,9 +365,9 @@ async function handleReviewRequest(request, env, url) {
   }
   if (url.pathname === "/api/review/blind") {
     if (request.method !== "GET") return jsonResponse({ error: "Use the blind review page to view applications." }, 405);
-    if (scope !== "blind") return jsonResponse({ error: "This link does not open the blind review page." }, 403);
+    if (!scope.startsWith("blind:")) return jsonResponse({ error: "This link does not open the blind review page." }, 403);
     try {
-      return await handleBlindReview(env);
+      return await handleBlindReview(env, scope.slice("blind:".length));
     } catch (error) {
       console.error("Could not load blind TA application responses.", error);
       return jsonResponse({ error: "Responses could not be loaded right now." }, 500);
@@ -306,9 +375,9 @@ async function handleReviewRequest(request, env, url) {
   }
   if (url.pathname === "/api/review/blind/rankings") {
     if (request.method !== "POST") return jsonResponse({ error: "Use the blind review page to save rankings." }, 405);
-    if (scope !== "blind") return jsonResponse({ error: "This link cannot save blind rankings." }, 403);
+    if (!scope.startsWith("blind:")) return jsonResponse({ error: "This link cannot save blind rankings." }, 403);
     try {
-      return await handleBlindRanking(request, env);
+      return await handleBlindRanking(request, env, scope.slice("blind:".length));
     } catch (error) {
       console.error("Could not save blind TA application rankings.", error);
       return jsonResponse({ error: "Rankings could not be saved right now." }, 500);
