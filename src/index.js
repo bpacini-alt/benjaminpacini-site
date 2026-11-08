@@ -11,6 +11,11 @@ const REVIEW_TOKEN_HASHES = {
   "blind:ECON 150": "fe53c62866bc03f089e5c6fe36ea31a110b4082e8af0aeb9afa270d59cbc0216"
 };
 const COURSE_OPTIONS = ["EDCOR 200", "EDCOR 310", "ECON 150"];
+const COURSE_TITLES = {
+  "EDCOR 200": "Educational Psychology and Human Development",
+  "EDCOR 310": "Teaching as a Profession",
+  "ECON 150": "Principles of Microeconomics"
+};
 const BLIND_QUESTION_KEYS = ["courseMagic", "managingUp", "holyGhostAction", "whyThisJob", "uniqueContribution"];
 const RATING_FIELDS = [
   "vibe", "technology", "mentorship", "content",
@@ -70,7 +75,7 @@ function validateApplication(data) {
     return "Please name the other course you selected.";
   }
   const expectedCourse = applicant.courseSelections
-    .map((course) => course === "OTHER" ? "Other: " + applicant.otherCourse.trim() : course)
+    .map((course) => course === "OTHER" ? "Other: " + applicant.otherCourse.trim() : course + " — " + COURSE_TITLES[course])
     .join(", ");
   if (!hasText(applicant.course, 240) || applicant.course.trim() !== expectedCourse) {
     return "Please check your selected class or classes.";
@@ -227,7 +232,7 @@ async function handleFullReview(env, scope) {
     }
   }
   return jsonResponse({
-    role: scope === "owner" ? "Instructor view" : "TA reviewer view · " + courseScope,
+    role: scope === "owner" ? "Instructor view" : "TA reviewer view · " + courseScope + " — " + COURSE_TITLES[courseScope],
     applications: visible.map(({ row, answers }) => {
       const visibleAnswers = scope === "owner" || !answers ? answers : { ...answers };
       if (scope !== "owner" && visibleAnswers) {
@@ -266,7 +271,7 @@ async function handleBlindReview(env, courseScope) {
     const other = Math.floor(Math.random() * (index + 1));
     [eligible[index], eligible[other]] = [eligible[other], eligible[index]];
   }
-  return jsonResponse({ course: courseScope, applications: eligible }, 200);
+  return jsonResponse({ course: courseScope, courseTitle: COURSE_TITLES[courseScope], applications: eligible }, 200);
 }
 
 async function handleBlindRanking(request, env, courseScope) {
