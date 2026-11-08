@@ -151,7 +151,20 @@ async function listReviewApplications(env) {
   const result = await env.TA_APPLICATIONS_DB.prepare(
     "SELECT id, submitted_at, name, email, course, answers_json, blind_id FROM applications ORDER BY submitted_at DESC"
   ).all();
-  return (result.results || []).map((row) => ({ row, answers: parseAnswers(row.answers_json) }));
+  const rows = result.results || [];
+  for (const row of rows) {
+    if (!row.blind_id) {
+      const candidate = crypto.randomUUID().replace(/-/g, "");
+      await env.TA_APPLICATIONS_DB.prepare(
+        "UPDATE applications SET blind_id = ? WHERE id = ? AND blind_id IS NULL"
+      ).bind(candidate, row.id).run();
+      const assigned = await env.TA_APPLICATIONS_DB.prepare(
+        "SELECT blind_id FROM applications WHERE id = ?"
+      ).bind(row.id).first();
+      row.blind_id = assigned?.blind_id || candidate;
+    }
+  }
+  return rows.map((row) => ({ row, answers: parseAnswers(row.answers_json) }));
 }
 
 async function handleFullReview(env, scope) {
