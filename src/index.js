@@ -12,8 +12,8 @@ const REVIEW_TOKEN_HASHES = {
 };
 const COURSE_OPTIONS = ["EDCOR 200", "EDCOR 310", "ECON 150"];
 const COURSE_TITLES = {
-  "EDCOR 200": "Educational Psychology and Human Development",
-  "EDCOR 310": "Teaching as a Profession",
+  "EDCOR 200": "Teaching as a Profession",
+  "EDCOR 310": "Educational Psychology and Human Development",
   "ECON 150": "Principles of Microeconomics"
 };
 const BLIND_QUESTION_KEYS = ["courseMagic", "managingUp", "holyGhostAction", "whyThisJob", "uniqueContribution"];

@@ -264,8 +264,8 @@
       <fieldset class="prompt-block course-selection">
         <legend>Which class or classes are you applying to TA for? Select all that apply.</legend>
         <div class="check-stack">
-          <label class="choice-row"><input type="checkbox" name="course-selection" value="EDCOR 200"><span>EDCOR 200 — Educational Psychology and Human Development</span></label>
-          <label class="choice-row"><input type="checkbox" name="course-selection" value="EDCOR 310"><span>EDCOR 310 — Teaching as a Profession</span></label>
+          <label class="choice-row"><input type="checkbox" name="course-selection" value="EDCOR 200"><span>EDCOR 200 — Teaching as a Profession</span></label>
+          <label class="choice-row"><input type="checkbox" name="course-selection" value="EDCOR 310"><span>EDCOR 310 — Educational Psychology and Human Development</span></label>
           <label class="choice-row"><input type="checkbox" name="course-selection" value="ECON 150"><span>ECON 150 — Principles of Microeconomics</span></label>
           <label class="choice-row"><input type="checkbox" id="other-course-checkbox" name="course-selection" value="OTHER"><span>Other</span></label>
         </div>
@@ -577,8 +577,8 @@
   let currentStep = 0;
   const stepNames = ['Basic application information', 'Self-assessment sliders', 'Common questions', 'Email BroPa with your work samples', 'Reflection'];
   const courseTitles = {
-    'EDCOR 200': 'Educational Psychology and Human Development',
-    'EDCOR 310': 'Teaching as a Profession',
+    'EDCOR 200': 'Teaching as a Profession',
+    'EDCOR 310': 'Educational Psychology and Human Development',
     'ECON 150': 'Principles of Microeconomics'
   };
   const courseSelectionInputs = Array.from(document.querySelectorAll('input[name="course-selection"]'));
