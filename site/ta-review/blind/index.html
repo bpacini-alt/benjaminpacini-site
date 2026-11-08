@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer">
+<title>Blind TA Application Ranking · Benjamin Pacini</title>
+<style>
+:root{color-scheme:light;--navy:#173b65;--paper:#f6f7f9;--line:#d8e0e8;--ink:#243447;--muted:#60738a;--white:#fff;--gold:#f1c66d}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:1050px;margin:0 auto;padding:36px 20px 72px}.masthead{border-radius:18px;background:var(--navy);color:white;padding:28px 32px;margin-bottom:22px}
+.eyebrow{text-transform:uppercase;font-size:.76rem;font-weight:800;letter-spacing:.12em;color:#d3e3f6}.masthead h1{font-family:Georgia,serif;font-size:clamp(2rem,5vw,3rem);line-height:1.1;margin:8px 0}
+.masthead p{max-width:780px;margin:8px 0 0;color:#e6eef8}.panel,.application-card{background:var(--white);border:1px solid var(--line);border-radius:16px;padding:22px 24px;margin:18px 0;box-shadow:0 4px 18px rgba(23,59,101,.05)}
+.notice{padding:16px 18px;border-radius:12px;background:#edf3f9;color:var(--navy);margin:18px 0}.error{background:#fff1ef;color:#8b2d1d}.muted{color:var(--muted)}
+.application-card{border-left:5px solid var(--gold)}.application-card h2{font-family:Georgia,serif;color:var(--navy);margin:0 0 14px}
+.question{border-top:1px solid var(--line);padding:16px 0}.question h3{font-size:1rem;color:var(--navy);margin:0 0 7px}.question p{white-space:pre-wrap;margin:0}
+.rank-row{display:flex;align-items:center;gap:12px;margin:8px 0 2px}.rank-row label{font-weight:800;color:var(--navy)}select,input{font:inherit;border:1px solid #aebdce;border-radius:8px;padding:9px 11px;background:white;color:var(--ink)}
+.rank-row select{min-width:165px}.reviewer-field{display:grid;gap:6px;max-width:420px}.reviewer-field label{font-weight:800;color:var(--navy)}
+button{border:0;background:var(--navy);color:white;border-radius:10px;padding:12px 20px;font:inherit;font-weight:800;cursor:pointer}button:disabled{opacity:.45;cursor:not-allowed}
+.save-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}.status{color:var(--muted)}[hidden]{display:none!important}
+@media(max-width:560px){main{padding:18px 12px 48px}.masthead{padding:22px 20px}.panel,.application-card{padding:18px}.rank-row{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<main>
+<header class="masthead"><div class="eyebrow">Private · blind ranking</div><h1>Common Questions, without names</h1><p>Rank each applicant from strongest overall fit (1) to weakest overall fit. Names, emails, courses, and submission dates are not shown.</p><p>Answers may still contain details or writing that help you recognize someone. Use this page to focus on the thinking in the responses.</p></header>
+<div class="notice" id="loading" role="status">Opening the private ranking page…</div>
+<div class="notice error" id="error" role="alert" hidden></div>
+<section class="panel" id="instructions" hidden>
+<div class="reviewer-field"><label for="reviewer-label">Your name or initials</label><input id="reviewer-label" type="text" maxlength="80" autocomplete="name" placeholder="So rankings can be attributed"></div>
+<p id="progress" class="muted">Ranks must be unique: 1 is strongest overall.</p>
+<div id="applications"></div>
+<div class="save-row"><button type="button" id="save" disabled>Save ranking</button><span id="save-status" class="status" role="status" aria-live="polite"></span></div>
+</section>
+</main>
+<script>
+const tokenKey="ta-review-blind-token";const draftKey="ta-review-blind-draft";
+const questionLabels={courseMagic:"Three magical things to preserve, and the highest-priority change",managingUp:"Managing up",holyGhostAction:"High-leverage action for Holy Ghost–inspired learning",whyThisJob:"Why this job",uniqueContribution:"What the applicant would uniquely bring or build"};
+let applications=[];let draft={};
+function getToken(){const match=window.location.hash.match(/^#([a-f0-9]{64})$/i);if(match){sessionStorage.setItem(tokenKey,match[1].toLowerCase());history.replaceState(null,"",window.location.pathname+window.location.search);}return sessionStorage.getItem(tokenKey);}
+function el(tag,className,text){const node=document.createElement(tag);if(className)node.className=className;if(text!==undefined&&text!==null)node.textContent=String(text);return node;}
+function showError(message){document.getElementById("loading").hidden=true;document.getElementById("instructions").hidden=true;const error=document.getElementById("error");error.textContent=message;error.hidden=false;}
+function collectRanks(){return Array.from(document.querySelectorAll(".rank-select")).map(function(select){return {blindId:select.dataset.blindId,rank:Number(select.value)};});}
+function updateProgress(){const chosen=collectRanks();const filled=chosen.filter(function(item){return item.rank>0;}).length;const unique=new Set(chosen.filter(function(item){return item.rank>0;}).map(function(item){return item.rank;})).size;const reviewer=document.getElementById("reviewer-label").value.trim();const valid=applications.length>0&&filled===applications.length&&unique===applications.length&&reviewer.length>0;const progress=document.getElementById("progress");progress.textContent=filled+" of "+applications.length+" ranked. Use each rank exactly once; 1 is strongest overall.";document.getElementById("save").disabled=!valid;if(filled===applications.length&&unique!==applications.length)progress.textContent="Two or more applications share a rank. Give each application a unique rank.";}
+function saveDraft(){const values={};document.querySelectorAll(".rank-select").forEach(function(select){if(select.value)values[select.dataset.blindId]=Number(select.value);});sessionStorage.setItem(draftKey,JSON.stringify(values));updateProgress();}
+function renderApplications(){
+const container=document.getElementById("applications");container.replaceChildren();
+applications.forEach(function(application,index){
+const card=el("article","application-card");const head=el("div","rank-row");const title=el("h2","", "Application "+(index+1));title.style.margin="0";const label=el("label","","Overall rank");label.htmlFor="rank-"+index;
+const select=document.createElement("select");select.id="rank-"+index;select.className="rank-select";select.dataset.blindId=application.blindId;select.setAttribute("aria-label","Overall rank for application "+(index+1));
+const empty=el("option","","Choose rank");empty.value="";select.appendChild(empty);
+for(let rank=1;rank<=applications.length;rank+=1){const option=el("option","",String(rank)+(rank===1?" · strongest":""));option.value=String(rank);select.appendChild(option);}
+if(draft[application.blindId])select.value=String(draft[application.blindId]);select.addEventListener("change",saveDraft);head.appendChild(title);head.appendChild(label);head.appendChild(select);card.appendChild(head);
+Object.keys(questionLabels).forEach(function(key){const block=el("section","question");block.appendChild(el("h3","",questionLabels[key]));block.appendChild(el("p","",application.questions&&application.questions[key]?application.questions[key]:"—"));card.appendChild(block);});
+container.appendChild(card);
+});updateProgress();
+}
+async function saveRanking(){
+const button=document.getElementById("save");button.disabled=true;const status=document.getElementById("save-status");status.textContent="Saving…";
+try{const response=await fetch("/api/review/blind/rankings",{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+getToken()},body:JSON.stringify({reviewerLabel:document.getElementById("reviewer-label").value.trim(),rankings:collectRanks()}),cache:"no-store"});const data=await response.json();if(!response.ok)throw new Error(data.error||"The ranking could not be saved.");status.textContent="Ranking saved at "+new Date(data.updatedAt).toLocaleString()+". You can change it and save again.";}catch(error){status.textContent=error.message||"The ranking could not be saved.";}updateProgress();
+}
+async function loadBlind(){
+try{const saved=JSON.parse(sessionStorage.getItem(draftKey)||"{}");draft=saved&&typeof saved==="object"?saved:{};}catch{draft={};}
+const token=getToken();if(!token){showError("Open this page from the private blind-ranking link BroPa gave you. The access key is missing.");return;}
+try{const response=await fetch("/api/review/blind",{headers:{Authorization:"Bearer "+token},cache:"no-store"});const data=await response.json();if(!response.ok)throw new Error(data.error||"This private link could not open the blind review page.");applications=Array.isArray(data.applications)?data.applications:[];document.getElementById("loading").hidden=true;if(!applications.length){const error=document.getElementById("error");error.textContent="No applicants have opted in to blind TA review yet.";error.hidden=false;return;}
+document.getElementById("instructions").hidden=false;document.getElementById("reviewer-label").value=sessionStorage.getItem("ta-review-reviewer-label")||"";document.getElementById("reviewer-label").addEventListener("input",function(){sessionStorage.setItem("ta-review-reviewer-label",this.value.trim());updateProgress();});document.getElementById("save").addEventListener("click",saveRanking);renderApplications();
+}catch(error){showError(error.message||"The blind ranking page could not load.");}
+}
+loadBlind();
+</script>
+</body>
+</html>
