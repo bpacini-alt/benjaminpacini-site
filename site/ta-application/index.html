@@ -232,7 +232,7 @@
 </head>
 <body>
 <main class="page">
-  <div class="preview-banner"><strong>Preview only.</strong> This form does not collect or send responses yet.</div>
+  <div class="preview-banner"><strong>Application information.</strong> When you submit, your answers will be saved for Brother Pacini to review.</div>
   <header class="hero">
     <span class="eyebrow">A chance to contribute</span>
     <h1>Teaching Assistant Application</h1>
@@ -527,13 +527,13 @@
 
       <div class="wizard-actions">
         <button class="back-button" type="button" data-back>Back</button>
-        <button class="submit-button wizard-finish" type="button" id="finish-preview">Finish preview</button>
+        <button class="submit-button wizard-finish" type="submit" id="submit-application">Submit application</button>
       </div>
       <p class="form-message" id="form-message" role="status" aria-live="polite"></p>
-      <p class="submit-note">This preview does not send or save your answers.</p>
+      <p class="submit-note">Your application will be saved for Brother Pacini to review.</p>
     </section>
   </form>
-  <p class="footer-note">A five-step TA application preview · work-sample menu ready for review.</p>
+  <p class="footer-note">A five-step TA application · complete all five steps before submitting.</p>
 </main>
 <script>
   document.querySelectorAll('input[type="range"]').forEach((slider) => {
@@ -805,11 +805,111 @@
     });
   });
 
-  document.getElementById('finish-preview').addEventListener('click', () => {
+  const applicationForm = document.getElementById('application');
+  const submitButton = document.getElementById('submit-application');
+  const submitNote = document.querySelector('.submit-note');
+
+  function readValue(name) {
+    const field = applicationForm.elements.namedItem(name);
+    return field ? field.value.trim() : '';
+  }
+
+  function isChecked(name) {
+    const field = applicationForm.elements.namedItem(name);
+    return Boolean(field && field.checked);
+  }
+
+  function buildApplication() {
+    return {
+      applicant: {
+        name: readValue('name'),
+        email: readValue('email'),
+        course: readValue('course')
+      },
+      acknowledgments: {
+        grade: isChecked('ack-grade'),
+        schedule: isChecked('ack-schedule'),
+        attendanceHours: isChecked('ack-attendance-hours'),
+        relationship: isChecked('relationship-acknowledgment')
+      },
+      ratings: {
+        vibe: Number(readValue('rating-vibe')),
+        technology: Number(readValue('rating-tech')),
+        mentorship: Number(readValue('rating-mentorship')),
+        content: Number(readValue('rating-content')),
+        assertiveness: Number(readValue('rating-assertiveness')),
+        grading: Number(readValue('rating-grading')),
+        innovation: Number(readValue('rating-innovation')),
+        initiative: Number(readValue('rating-initiative'))
+      },
+      sliderContext: readValue('slider-context'),
+      responsibilities: Object.fromEntries(jobTasks.map((task) => {
+        const field = document.getElementById('job-sort-' + task.dataset.taskId);
+        return [task.dataset.taskId, field ? field.value : ''];
+      })),
+      responsibilityContext: readValue('job-sort-context'),
+      questions: {
+        courseMagic: readValue('course-magic'),
+        managingUp: readValue('manage-up'),
+        holyGhostAction: readValue('holy-ghost-action'),
+        whyThisJob: readValue('why-ta'),
+        uniqueContribution: readValue('legacy-contribution')
+      },
+      workSamples: choices.filter((choice) => choice.checked).map((choice) => {
+        const id = choice.dataset.id;
+        return {
+          id,
+          title: choice.dataset.title,
+          response: readValue('response-' + id),
+          aiUse: readValue('ai-' + id)
+        };
+      }),
+      reflection: {
+        timeSpentMinutes: Number(readValue('application-time-minutes')),
+        answer: readValue('reflection'),
+        otherOpportunities: isChecked('other-opportunities')
+      }
+    };
+  }
+
+  applicationForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
     if (!validateWholeApplication()) return;
-    formMessage.textContent = 'Preview complete. No information was sent or saved; this is still a prototype.';
-    formMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+    const originalButtonText = submitButton.textContent;
+    submitButton.disabled = true;
+    submitButton.textContent = 'Sending application…';
+    formMessage.textContent = '';
+
+    try {
+      const response = await fetch('/api/applications', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(buildApplication())
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(result.error || 'Your application could not be saved. Please try again.');
+      }
+
+      formMessage.textContent = 'Your application has been saved. Thank you!';
+      submitButton.textContent = 'Application received';
+      submitNote.textContent = 'Your application has been saved for Brother Pacini to review.';
+      formMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } catch (error) {
+      formMessage.textContent = error.message || 'Your application could not be saved. Please try again.';
+      submitButton.disabled = false;
+      submitButton.textContent = originalButtonText;
+      formMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
   });
+
+  const productionHosts = ['benjaminpacini.com', 'www.benjaminpacini.com'];
+  if (!productionHosts.includes(window.location.hostname)) {
+    submitButton.disabled = true;
+    submitButton.textContent = 'Submit on the live application page';
+    submitNote.textContent = 'This preview cannot accept applications. Use benjaminpacini.com to submit.';
+  }
 
   showStep(0, false);
 </script>

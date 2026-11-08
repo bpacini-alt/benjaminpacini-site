@@ -5,15 +5,19 @@
 {
   "name": "benjaminpacini-site",
   "compatibility_date": "2026-09-01",
+  "main": "./src/index.js",
   "previews": {},
   "assets": {
-    "directory": "./site"
+    "directory": "./site",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
   },
   "d1_databases": [
     {
       "binding": "TA_APPLICATIONS_DB",
       "database_name": "ta-applications-prod",
-      "database_id": "b3c92410-2de7-4826-a220-eba399cd5f20"
+      "database_id": "b3c92410-2de7-4826-a220-eba399cd5f20",
+      "migrations_dir": "migrations"
     }
   ]
 }
