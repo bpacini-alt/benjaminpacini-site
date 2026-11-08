@@ -109,6 +109,12 @@
   .selection-count { padding: 7px 11px; border-radius: 999px; background: var(--blue-pale); color: var(--blue-dark); font-size: .9rem; font-weight: 750; white-space: nowrap; }
   .bucket-list { display: grid; gap: 12px; }
   .bucket { padding: 16px; border: 1px solid var(--line); border-radius: 13px; background: #fff; }
+  .future-ideas { margin-top: 22px; padding: 16px; border: 1px dashed #c6d0dc; border-radius: 13px; background: #f7f9fb; }
+  .future-ideas-intro { margin: 0 0 12px; color: var(--muted); font-size: .9rem; }
+  .future-idea-list { display: grid; gap: 8px; }
+  .future-idea { padding: 11px 12px; border: 1px solid #e0e5eb; border-radius: 10px; background: rgba(255,255,255,.75); }
+  .future-idea strong { color: #546173; font-size: .92rem; }
+  .future-idea p { margin: 3px 0 0; color: var(--muted); font-size: .88rem; line-height: 1.42; }
   .bucket-subtitle { margin: -5px 0 12px; color: var(--muted); font-size: .9rem; line-height: 1.45; }
   .bucket-header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; margin-bottom: 10px; }
   .bucket-header h3 { margin: 0; }
@@ -474,6 +480,17 @@
           <label class="task-option"><input type="checkbox" class="task-choice" data-id="notice-small-need" data-title="Notice a Small Need" data-prompt="Name one small need in the office, classroom, or online space and outline a bounded response. Include when you would ask before acting or leave it to someone else."><span class="task-copy"><strong>Notice a Small Need</strong><small>Name one small need in the office, classroom, or online space and outline a bounded response. Include when you would ask before acting or leave it to someone else.</small></span></label>
         </div></section>
       </div>
+
+      <section class="future-ideas" aria-labelledby="future-ideas-title">
+        <div class="bucket-header"><h3 id="future-ideas-title">Future work-sample ideas</h3><span class="draft-tag">Not selectable</span></div>
+        <p class="future-ideas-intro">These are reminders for possible future versions of the application. Please do not choose or complete them. (We didn’t have time to load the example materials for these yet, but they’re ideas we have for the future.)</p>
+        <div class="future-idea-list">
+          <article class="future-idea"><strong>AI-assisted quiz tune-up</strong><p>Use AI to improve three quiz questions so they are cleaner, clearer, and better aligned with what they are meant to measure. Check their validity and reliability, and explain what changed.</p></article>
+          <article class="future-idea"><strong>Grade an actual student work sample</strong><p>Use an anonymized student response or essay and its rubric to assign a grade and write clear, fair, useful feedback.</p></article>
+          <article class="future-idea"><strong>Turn an essay question into an AP-style FRQ</strong><p>Revise an existing essay question into an AP-style free-response question and sketch a short scoring guide.</p></article>
+          <article class="future-idea"><strong>Build chapter practice</strong><p>Create a short practice activity aligned with a textbook chapter and its quiz.</p></article>
+        </div>
+      </section>
 
       <p class="selection-message" id="selection-message" aria-live="polite">Choose three options. Draft your work in the response spaces below.</p>
       <div class="selected-work" id="selected-work"></div>
