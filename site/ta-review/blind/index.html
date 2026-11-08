@@ -22,7 +22,7 @@ button{border:0;background:var(--navy);color:white;border-radius:10px;padding:12
 </head>
 <body>
 <main>
-<header class="masthead"><div class="eyebrow">Private · blind ranking</div><h1>Common Questions, without names</h1><p>Rank each applicant from strongest overall fit (1) to weakest overall fit. Names, emails, courses, and submission dates are not shown.</p><p>Answers may still contain details or writing that help you recognize someone. Use this page to focus on the thinking in the responses.</p></header>
+<header class="masthead"><div class="eyebrow">Private · blind ranking</div><h1>Common Questions, without names</h1><p>Rank each applicant from strongest overall fit (1) to weakest overall fit. Names, emails, courses, and submission dates are not shown.</p><p>Answers may still contain details or writing that help you recognize someone. Use this page to focus on the thinking in the responses.</p><p id="course-title" class="course-title"></p></header>
 <div class="notice" id="loading" role="status">Opening the private ranking page…</div>
 <div class="notice error" id="error" role="alert" hidden></div>
 <section class="panel" id="instructions" hidden>
@@ -61,7 +61,7 @@ try{const response=await fetch("/api/review/blind/rankings",{method:"POST",heade
 async function loadBlind(){
 try{const saved=JSON.parse(sessionStorage.getItem(draftKey)||"{}");draft=saved&&typeof saved==="object"?saved:{};}catch{draft={};}
 const token=getToken();if(!token){showError("Open this page from the private blind-ranking link BroPa gave you. The access key is missing.");return;}
-try{const response=await fetch("/api/review/blind",{headers:{Authorization:"Bearer "+token},cache:"no-store"});const data=await response.json();if(!response.ok)throw new Error(data.error||"This private link could not open the blind review page.");applications=Array.isArray(data.applications)?data.applications:[];document.getElementById("loading").hidden=true;if(!applications.length){const error=document.getElementById("error");error.textContent="No applicants have opted in to blind TA review yet.";error.hidden=false;return;}
+try{const response=await fetch("/api/review/blind",{headers:{Authorization:"Bearer "+token},cache:"no-store"});const data=await response.json();if(!response.ok)throw new Error(data.error||"This private link could not open the blind review page.");applications=Array.isArray(data.applications)?data.applications:[];document.getElementById("course-title").textContent="Course: "+(data.course||"");document.getElementById("loading").hidden=true;if(!applications.length){const error=document.getElementById("error");error.textContent="No applicants have opted in to blind TA review yet.";error.hidden=false;return;}
 document.getElementById("instructions").hidden=false;document.getElementById("reviewer-label").value=sessionStorage.getItem("ta-review-reviewer-label")||"";document.getElementById("reviewer-label").addEventListener("input",function(){sessionStorage.setItem("ta-review-reviewer-label",this.value.trim());updateProgress();});document.getElementById("save").addEventListener("click",saveRanking);renderApplications();
 }catch(error){showError(error.message||"The blind ranking page could not load.");}
 }
