@@ -31,11 +31,25 @@ h1{margin:0;font-size:clamp(34px,4vw,52px);line-height:1.06;letter-spacing:-.025
 .lede{max-width:820px;margin:12px 0 0;color:#424a53;font-size:16px;line-height:1.55}
 .hero-note-more{display:block;margin-top:7px;padding-top:7px;border-top:1px solid #d3e0e8}
 .hero-note{max-width:310px;padding:12px 15px;background:#edf3f6;border-left:4px solid var(--blue);border-radius:0 8px 8px 0;color:#40515d;font-size:12.5px;line-height:1.5}
-.tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;margin:20px 0 14px}
-.tab{min-height:65px;padding:11px 14px;text-align:left;border:1px solid var(--blue-line);border-radius:9px;background:var(--paper);color:#214b64;font-weight:750;font-size:14px;line-height:1.3}
+.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:18px 0 12px;align-items:start}
+.tab{min-height:59px;padding:10px 12px;text-align:left;border:1px solid var(--blue-line);border-radius:8px;background:var(--paper);color:#214b64;font-weight:750;font-size:13px;line-height:1.3}
 .tab small{display:block;margin-top:4px;font-weight:450;font-size:11.5px;color:var(--muted)}
 .tab[aria-selected=true]{background:var(--blue);border-color:var(--blue);color:white}
 .tab[aria-selected=true] small{color:#e3f0f6}
+.more-modes{position:relative;min-width:0}
+.more-modes>summary{display:block;min-height:59px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:#fff;color:#34454f;cursor:pointer;font-size:13px;font-weight:750;line-height:1.3;list-style:none}
+.more-modes>summary::-webkit-details-marker{display:none}
+.more-modes>summary small{display:block;margin-top:4px;color:var(--muted);font-size:11px;font-weight:450}
+.more-modes[open]>summary{border-color:var(--blue-line);background:var(--blue-pale);color:#174e6e}
+.more-mode-list{position:absolute;top:calc(100% + 6px);right:0;z-index:20;display:grid;gap:6px;min-width:230px;padding:7px;border:1px solid var(--line);border-radius:9px;background:#fff;box-shadow:0 10px 24px rgba(20,44,62,.14)}
+.more-mode-list .tab{min-height:48px;width:100%;padding:9px 10px}
+.settings-disclosure{margin:0 0 15px;border:1px solid var(--line);border-radius:10px;background:var(--paper)}
+.settings-disclosure>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:46px;padding:10px 15px;color:#314650;cursor:pointer;font-size:13px;font-weight:800;list-style:none}
+.settings-disclosure>summary::-webkit-details-marker{display:none}
+.settings-disclosure>summary small{color:var(--muted);font-size:11px;font-weight:500}
+.settings-disclosure>summary::after{content:"+";color:var(--blue);font-size:18px;line-height:1}
+.settings-disclosure[open]>summary::after{content:"−"}
+.settings-disclosure .settings{margin:0;border:0;border-top:1px solid var(--line);border-radius:0 0 10px 10px;box-shadow:none}
 .settings{display:grid;grid-template-columns:minmax(170px,.7fr) minmax(250px,1.3fr) minmax(380px,2fr);gap:14px;padding:15px 17px;margin-bottom:16px;background:var(--paper);border:1px solid var(--line);border-radius:11px;box-shadow:0 1px 5px rgba(0,0,0,.04)}
 .setting-group{min-width:0}
 .setting-label{display:block;margin:0 0 8px;color:var(--soft);font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
@@ -68,7 +82,7 @@ select{min-height:37px;padding:7px 30px 7px 10px;border:1px solid #c8d0d8;border
 .sort-help{padding:11px 13px;margin:0 0 14px;background:#f5f8fa;border:1px solid #e1e8ed;border-radius:7px;color:#45535d;font-size:12px;line-height:1.45}
 .sort-help strong{color:#263b48}
 .card-tray{min-height:60px;padding:4px;border-radius:9px;transition:background .12s;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr));gap:9px;margin-bottom:17px}
-.scenario-card{position:relative;display:block;width:100%;padding:13px 14px;border:1px solid #cbd7df;border-radius:9px;background:#fbfdfe;text-align:left;color:var(--ink);line-height:1.48;box-shadow:0 1px 2px rgba(22,46,62,.04)}
+.scenario-card{position:relative;display:block;width:100%;min-height:44px;padding:13px 14px;border:1px solid #cbd7df;border-radius:9px;background:#fbfdfe;text-align:left;color:var(--ink);line-height:1.48;touch-action:manipulation;box-shadow:0 1px 2px rgba(22,46,62,.04)}
 .scenario-card:hover{border-color:#6e9fb9;background:#f4f9fc}
 .scenario-card.selected{border:2px solid var(--blue);background:var(--blue-pale);padding:12px 13px;box-shadow:0 0 0 3px rgba(20,93,144,.1)}
 .scenario-card.correct{border:2px solid var(--green-line);background:var(--green-pale);padding:12px 13px}
@@ -82,11 +96,10 @@ select{min-height:37px;padding:7px 30px 7px 10px;border:1px solid #c8d0d8;border
 .buckets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .buckets.domain-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 .bucket{min-width:0;min-height:156px;padding:12px;border:1px dashed #aebdca;border-radius:9px;background:#f8fafb;transition:background .12s,border-color .12s}
-.card-tray.over{background:#edf6fb}
-.bucket.over{border-color:var(--blue);background:#edf6fb}
+.sort-workspace{padding:12px;border:1px solid var(--line);border-radius:10px;background:#f8fafb}
 .bucket h3{margin:0;font-size:17px;line-height:1.2}
 .bucket-sub{margin:5px 0 10px;color:var(--muted);font-size:11px;line-height:1.35}
-.bucket-place{min-height:30px;margin:0 0 8px;padding:5px 9px;border:1px solid var(--blue-line);border-radius:6px;background:#fff;color:var(--blue);font-size:11px;font-weight:750}
+.bucket-place{min-height:44px;margin:0 0 8px;padding:8px 10px;border:1px solid var(--blue-line);border-radius:6px;background:#fff;color:var(--blue);font-size:12px;font-weight:750;touch-action:manipulation}
 .bucket-cards{display:grid;gap:7px}
 .bucket-cards .scenario-card{padding:9px 10px;font-size:12px}
 .bucket-cards .card-copy{font-size:12.5px}
@@ -176,8 +189,8 @@ select{min-height:37px;padding:7px 30px 7px 10px;border:1px solid #c8d0d8;border
 .hidden{display:none!important}
 .error-box{padding:15px;border:1px solid var(--red-line);border-radius:8px;background:var(--red-pale);color:var(--red);font-size:13px}
 @media(max-width:1050px){.layout{grid-template-columns:minmax(0,1fr) 285px}.settings{grid-template-columns:minmax(150px,.7fr) minmax(210px,1.1fr);}.settings .setting-group:last-child{grid-column:1/-1}}
-@media(max-width:760px){.match-board{grid-template-columns:1fr}.page{padding:18px 14px 42px}.topbar-inner{padding:11px 14px}.hero{grid-template-columns:1fr}.hero-note{max-width:none}.tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.settings{grid-template-columns:1fr 1fr}.settings .setting-group:last-child{grid-column:1/-1}.layout{grid-template-columns:1fr}.ref-column{grid-template-columns:repeat(2,minmax(0,1fr))}.hint-panel{grid-column:1/-1}.activity-panel{padding:16px}.buckets,.buckets.domain-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:520px){.settings{grid-template-columns:1fr}.settings .setting-group:last-child{grid-column:auto}.tabs{gap:6px}.tab{padding:9px 10px;font-size:12px}.tab small{font-size:10px}.activity-head{display:block}.activity-head .controls{margin-top:12px}.buckets,.buckets.domain-grid{grid-template-columns:1fr}.ref-column{grid-template-columns:1fr}.hint-panel{grid-column:auto}.menu-row{grid-template-columns:1fr}.answer-grid{grid-template-columns:1fr}.memory-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.memory-card{min-height:125px}.hero-note{font-size:12px}}
+@media(max-width:760px){.match-board{grid-template-columns:1fr}.page{padding:18px 14px 42px}.topbar-inner{padding:11px 14px}.hero{grid-template-columns:1fr}.hero-note{max-width:none}.tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.more-mode-list{left:0;right:auto;min-width:min(230px,calc(100vw - 44px))}.settings{grid-template-columns:1fr 1fr}.settings .setting-group:last-child{grid-column:1/-1}.layout{grid-template-columns:1fr}.ref-column{grid-template-columns:repeat(2,minmax(0,1fr))}.hint-panel{grid-column:1/-1}.activity-panel{padding:16px}.buckets,.buckets.domain-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.settings{grid-template-columns:1fr}.settings .setting-group:last-child{grid-column:auto}.tabs{gap:6px}.tab{padding:9px 10px;font-size:12px}.tab small{font-size:10px}.more-modes>summary{padding:9px 10px;font-size:12px}.more-modes>summary small{font-size:10px}.settings-disclosure>summary{align-items:flex-start;flex-direction:column;gap:3px}.activity-head{display:block}.activity-head .controls{margin-top:12px}.buckets,.buckets.domain-grid{grid-template-columns:1fr}.ref-column{grid-template-columns:1fr}.hint-panel{grid-column:auto}.menu-row{grid-template-columns:1fr}.answer-grid{grid-template-columns:1fr}.memory-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.memory-card{min-height:125px}.hero-note{font-size:12px}.round-tools{align-items:flex-start}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 @media print{body{background:#fff}.topbar,.settings,.tabs,.ref-column,.controls,.disclaimer{display:none!important}.page{max-width:none;padding:0}.layout{display:block}.panel{box-shadow:none;border:0}.activity-panel{padding:0}}
 </style>
@@ -187,16 +200,15 @@ select{min-height:37px;padding:7px 30px 7px 10px;border:1px solid #c8d0d8;border
 <main class="page">
 <header class="hero">
 <div><p class="eyebrow">EDCOR 200 · Danielson Framework for Teaching (2013)</p><h1>The Teaching Practice Sort &amp; Match Lab</h1><p class="lede">Learn about the 2013 Framework for Teaching (FFT), used in Idaho to evaluate teachers. Explore its domains and components, then use classroom scenarios to consider the evidence behind practice ratings.</p></div>
-<div class="hero-note"><strong>For discussion and practice.</strong> Each vignette is original, and each rating key applies only to the evidence shown in that vignette. It is not an evaluation of a real teacher.<span class="hero-note-more">Idaho's rule names the Framework for Teaching, Second Edition. The 2013 version used here keeps that edition's four domains and 22 components, with updated rubric wording.</span></div>
+<div class="hero-note"><strong>Classroom practice.</strong> Original scenarios for discussion; ratings apply to the evidence in each vignette and do not evaluate real teachers.</div>
 </header>
 <nav class="tabs" aria-label="Choose a practice activity">
 <button class="tab" type="button" data-mode="domain" aria-selected="true">Sort by domain<small>Four broad areas of practice</small></button>
 <button class="tab" type="button" data-mode="component" aria-selected="false">Sort by component<small>Work inside one domain</small></button>
 <button class="tab" type="button" data-mode="match" aria-selected="false">Match<small>Pair each scenario with a component</small></button>
-<button class="tab" type="button" data-mode="memory" aria-selected="false">Memory match<small>Find the hidden pairs</small></button>
-<button class="tab" type="button" data-mode="hard" aria-selected="false">Hard mode<small>Domain + component + rating</small></button>
+<details class="more-modes" id="moreModes"><summary>More practice<small>Memory and rating challenges</small></summary><div class="more-mode-list"><button class="tab" type="button" data-mode="memory" aria-selected="false">Memory match<small>Find the hidden pairs</small></button><button class="tab" type="button" data-mode="hard" aria-selected="false">Evidence challenge<small>Domain, component, and rating</small></button></div></details>
 </nav>
-<section class="settings" aria-label="Activity settings">
+<details class="settings-disclosure" id="setupDisclosure"><summary><span>Round setup</span><small>Round size, domains, and feedback</small></summary><section class="settings" aria-label="Activity settings">
 <div class="setting-group"><span class="setting-label">Scenario bank</span><p class="setting-help">All 66 scenarios · three per component</p><div class="inline-controls"><select id="roundSize" aria-label="Scenarios in a round"><option value="6">6 per round</option><option value="8">8 per round</option><option value="10">10 per round</option><option value="12">12 per round</option></select></div></div>
 <div class="setting-group"><span class="setting-label">Practice layers</span><label class="check-row"><input id="showScores" type="checkbox"> Reveal practice rating after checks</label><p class="setting-help">Ratings stay hidden until the answer is checked.</p></div>
 <div class="setting-group"><span class="setting-label">Domains in this round</span><div id="domainFilters" class="domain-choices">
@@ -206,7 +218,7 @@ select{min-height:37px;padding:7px 30px 7px 10px;border:1px solid #c8d0d8;border
 <label class="check-row"><input type="checkbox" value="4" checked> Domain 4 · Professional</label>
 </div><p class="setting-help">Choose at least two for domain sorting. Filters also shape matching rounds and hard mode.</p></div>
 <div class="setting-group hidden" id="focusGroup"><span class="setting-label">Component sort focus</span><div class="inline-controls"><select id="focusDomain" aria-label="Choose a domain for component sort"></select></div><p class="setting-help">The domain is given; sort the scenarios among its components.</p></div>
-</section>
+</section></details>
 <div class="layout single-column" id="activityLayout">
 <section class="panel activity-panel" aria-labelledby="activityTitle">
 <div class="activity-head"><div><p class="eyebrow" id="modeEyebrow">Round 1</p><h2 id="activityTitle">Domain Sort</h2><p class="activity-intro" id="activityIntro"></p></div><div class="controls"><button type="button" class="btn secondary" id="newRound">New round</button></div></div>
@@ -217,7 +229,7 @@ select{min-height:37px;padding:7px 30px 7px 10px;border:1px solid #c8d0d8;border
 </main>
 <script type="application/json" id="activityData">{
   "title": "EDCOR 200 · Teaching Practice Sort & Match Lab",
-  "version": "3.1",
+  "version": "3.2",
   "scenarios": [
     {
       "id": "FFT13-01A",
@@ -274,7 +286,7 @@ select{min-height:37px;padding:7px 30px 7px 10px;border:1px solid #c8d0d8;border
       "component_code": "1e",
       "component_title": "Designing Coherent Instruction",
       "score": "Distinguished",
-      "scenario": "A teacher plans a coherent, challenging unit with different materials and tasks tailored to specific students' learning needs. Before finalizing it, the teacher asks each student which investigation format and checkpoints would help them succeed, then incorporates those individual ideas while keeping the common learning goal consistent.",
+      "scenario": "A teacher plans a challenging unit with different materials and tasks tailored to specific students' learning needs. Before finalizing it, the teacher asks each student which investigation format and checkpoints would help them succeed, then incorporates those individual ideas while keeping the common learning goal consistent.",
       "component_evidence": "The lesson and unit design, learning activities, grouping, materials, and sequence are planned as a coherent whole.",
       "score_evidence": "The plan is differentiated for individual learners, and the teacher solicits and uses students' ideas about how to structure the learning.",
       "boundary_note": "This is advance design of the learning experience (1e), not an in-the-moment adjustment during instruction (3e)."
@@ -298,7 +310,7 @@ select{min-height:37px;padding:7px 30px 7px 10px;border:1px solid #c8d0d8;border
       "component_code": "2a",
       "component_title": "Creating an Environment of Respect and Rapport",
       "score": "Proficient",
-      "scenario": "During a class discussion, the teacher listens without cutting students off, uses students' names, and responds to mistakes without ridicule. When a peer dismisses a classmate's idea, the teacher prompts the class to respond to the idea respectfully; students generally listen and take turns.",
+      "scenario": "During a class discussion, the teacher listens without cutting students off, uses students' names, and responds to mistakes without ridicule. When a peer dismisses a classmate's idea, the teacher prompts the class to consider the classmate's reasoning before responding; students generally listen and take turns.",
       "component_evidence": "The tone is conveyed through teacher-student and student-student interactions, including how disagreement is handled.",
       "score_evidence": "Interactions are warm and respectful, and the teacher actively maintains a climate where students can participate safely.",
       "boundary_note": "This is about relationships and respect (2a), not compliance with behavior expectations (2d) or academic press (2b)."
@@ -442,7 +454,7 @@ select{min-height:37px;padding:7px 30px 7px 10px;border:1px solid #c8d0d8;border
       "component_code": "4c",
       "component_title": "Communicating with Families",
       "score": "Distinguished",
-      "scenario": "Students prepare brief progress portfolios and regularly share them with families in accessible formats. The teacher communicates frequently, responds sensitively to family concerns, and invites families to participate in unit learning activities; family knowledge and student reflections help shape follow-up support.",
+      "scenario": "Students assemble brief progress portfolios and send them home in accessible formats. When families ask about progress, the teacher responds thoughtfully and invites them to take part in unit learning activities; family knowledge and student reflections shape follow-up support.",
       "component_evidence": "Students contribute to frequent family communication, and families are actively engaged in the learning process.",
       "score_evidence": "Communication is ongoing and reciprocal, students help lead it, family concerns receive sensitive responses, and engagement opportunities are frequent and successful.",
       "boundary_note": "The evidence concerns communication and partnership with families (4c), not professional collaboration among colleagues (4d)."
@@ -514,7 +526,7 @@ select{min-height:37px;padding:7px 30px 7px 10px;border:1px solid #c8d0d8;border
       "component_code": "1c",
       "component_title": "Setting Instructional Outcomes",
       "score": "Proficient",
-      "scenario": "For a civics unit, the teacher sets clear outcomes: students will compare two policy arguments, evaluate the evidence each uses, and write a claim supported by relevant evidence. The outcomes connect to prior work on source credibility, and the teacher plans a vocabulary scaffold for one group and an additional challenge for students ready to go further.",
+      "scenario": "For a civics unit, students will compare two policy arguments, evaluate the evidence each uses, and write a claim supported by relevant evidence. The teacher connects this work to prior learning about source credibility and plans vocabulary support for one group and an additional challenge for students ready to go further.",
       "component_evidence": "The outcomes state important student learning, are assessable, connect to prior learning, and account for group differences.",
       "score_evidence": "The outcomes are rigorous, clear, and varied, and the planned supports differentiate for groups; the vignette does not show individual students setting or shaping their own outcomes.",
       "boundary_note": "The card describes the intended learning targets (1c), not the lesson activities used to teach them (1e)."
@@ -526,7 +538,7 @@ select{min-height:37px;padding:7px 30px 7px 10px;border:1px solid #c8d0d8;border
       "component_code": "1d",
       "component_title": "Demonstrating Knowledge of Resources",
       "score": "Basic",
-      "scenario": "A teacher uses the district workbook for every unit. The teacher knows the school library has additional materials but has not looked for resources beyond the materials already provided, even when students ask for examples connected to local issues.",
+      "scenario": "A teacher uses the district workbook for every unit. The teacher knows the school library holds other materials but has not explored them, even when students ask for examples connected to local issues.",
       "component_evidence": "The evidence concerns the teacher's awareness and use of resources for classroom learning and professional knowledge.",
       "score_evidence": "The teacher knows of some resources beyond the district materials but does not seek to expand that knowledge or use those resources to address student needs.",
       "boundary_note": "The central issue is awareness and selection of resources (1d), not whether the overall lesson sequence is coherent (1e)."
@@ -562,7 +574,7 @@ select{min-height:37px;padding:7px 30px 7px 10px;border:1px solid #c8d0d8;border
       "component_code": "2a",
       "component_title": "Creating an Environment of Respect and Rapport",
       "score": "Basic",
-      "scenario": "The teacher is consistently polite but keeps interactions formal and distant. Students rarely disrespect one another; when a mild put-down occurs, the teacher gives a general reminder, but the student repeats it and the teacher does not follow up. The overall tone is neutral rather than warm or openly hostile.",
+      "scenario": "The teacher is consistently polite but keeps interactions formal and distant. Students are usually quiet; when a mild put-down occurs, the teacher gives a general reminder, but the student repeats it and the teacher does not follow up. The overall tone is neutral rather than warm or openly hostile.",
       "component_evidence": "The key evidence is the interpersonal tone between teacher and students and among students.",
       "score_evidence": "Interactions are generally appropriate, but the teacher's attempt to address disrespect has uneven results and the overall climate is neutral.",
       "boundary_note": "The focus is interpersonal respect and rapport (2a), not whether classroom rules are consistently enforced (2d)."
@@ -694,7 +706,7 @@ select{min-height:37px;padding:7px 30px 7px 10px;border:1px solid #c8d0d8;border
       "component_code": "4b",
       "component_title": "Maintaining Accurate Records",
       "score": "Basic",
-      "scenario": "The teacher keeps a gradebook and a folder of student work, but updates them irregularly. A few assignments are missing from the gradebook, and the teacher must reconstruct completion information before conferences; the records are usable but not consistently accurate or current.",
+      "scenario": "The teacher keeps a gradebook and a folder of student work, but updates them irregularly. A few assignments are missing from the gradebook, and before conferences the teacher must reconstruct which work students completed; the gradebook and folder do not always agree.",
       "component_evidence": "The evidence is the system for tracking student work and progress and its accuracy and timeliness.",
       "score_evidence": "A record-keeping system exists, but gaps and delays make it unreliable without extra reconstruction.",
       "boundary_note": "This is about the accuracy and upkeep of records (4b), not the quality of communication with families (4c)."
@@ -886,7 +898,7 @@ select{min-height:37px;padding:7px 30px 7px 10px;border:1px solid #c8d0d8;border
       "component_code": "3a",
       "component_title": "Communicating with Students",
       "score": "Proficient",
-      "scenario": "At the start of a science lesson, a teacher states the learning purpose and success criteria, explains each step of the investigation, and models the technical vocabulary with a diagram. Students can restate what they will do and what counts as a strong explanation. The teacher's content and directions are accurate and clear.",
+      "scenario": "At the start of a science lesson, a teacher tells students what question the investigation will answer, explains each step, and uses a diagram to clarify technical vocabulary. Students can restate what they will do and describe a strong explanation. The content and directions are accurate.",
       "component_evidence": "The evidence is the teacher's communication of the purpose, content, language, and directions during instruction.",
       "score_evidence": "The purpose and directions are clear, accurate, and accessible, and students understand what they are doing and why. The vignette does not show students shaping or extending the communication themselves.",
       "boundary_note": "This is about what the teacher communicates during the lesson (3a), not how the outcomes were written in the plan (1c) or how questions structure discussion (3b)."
@@ -1047,7 +1059,7 @@ const COMPONENT_CUES={
  "4e":{cue:"Professional learning and growth in practice.",question:"What is the teacher learning, and how does that learning shape practice?"},
  "4f":{cue:"Integrity, confidentiality, judgment, and professional obligations.",question:"What ethical responsibility or professional commitment is at stake?"}
 };
-const state={mode:"domain",roundSize:8,showScores:false,domains:new Set(["1","2","3","4"]),focusDomain:"1",round:[],placements:{},checked:false,selected:null,menus:false,roundNumber:0,matchRound:[],matchAnswers:{},matchChoices:[],matchChecked:false,matchSelectedScenario:null,hardIndex:0,hardItems:[],hardAnswers:{},hardChecked:false,hintLevel:0,memoryCards:[],memoryPicked:[],memoryMatched:new Set(),memoryPairs:6,memoryMoves:0,memoryTimeout:null,hardSummary:false};
+const state={mode:"domain",roundSize:8,showScores:false,showCues:false,domains:new Set(["1","2","3","4"]),focusDomain:"1",round:[],placements:{},checked:false,selected:null,menus:false,roundNumber:0,matchRound:[],matchAnswers:{},matchChoices:[],matchChecked:false,matchSelectedScenario:null,hardIndex:0,hardItems:[],hardAnswers:{},hardChecked:false,hintLevel:0,memoryCards:[],memoryPicked:[],memoryMatched:new Set(),memoryPairs:6,memoryMoves:0,memoryTimeout:null,hardSummary:false};
 let bank=[],domainNames={},componentsByDomain={};
 function esc(value){return String(value).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function shuffle(list){const a=list.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
@@ -1071,15 +1083,18 @@ function roundCount(items){return Math.min(Number(state.roundSize)||8,items.leng
 function setMode(mode){
  state.mode=mode;state.hintLevel=0;state.checked=false;state.matchChecked=false;state.matchAnswers={};state.matchSelectedScenario=null;state.hardChecked=false;state.hardSummary=false;state.memoryMatched=new Set();state.memoryPicked=[];
  $$(".tab").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.mode===mode)));
+ const moreModes=$("#moreModes");if(moreModes)moreModes.open=mode==="memory"||mode==="hard";
+ if(mode==="component")$("#setupDisclosure").open=true;
+ $("#activity").classList.toggle("sort-workspace",mode==="domain"||mode==="component");
  $("#focusGroup").classList.toggle("hidden",mode!=="component");
  $("#roundSize").classList.toggle("hidden",mode==="memory");
  if(mode==="domain")$("#activityTitle").textContent="Domain Sort";
  if(mode==="component")$("#activityTitle").textContent="Component Sort";
  if(mode==="memory")$("#activityTitle").textContent="Memory Match";
  if(mode==="match")$("#activityTitle").textContent="Match";
- if(mode==="hard")$("#activityTitle").textContent="Hard Mode";
+ if(mode==="hard")$("#activityTitle").textContent="Evidence Challenge";
  $("#modeEyebrow").textContent=mode==="domain"?"Round 1":mode==="component"?"Component round":mode==="memory"?"Memory round":mode==="match"?"Matching round":"Three-part challenge";
- $("#activityIntro").textContent=mode==="domain"?"Drag each scenario into the domain that best fits the evidence. Place first; check the whole board when the class is ready.":mode==="component"?"The domain is given. Sort each scenario into the component that best fits its central evidence.":mode==="memory"?"Find a scenario and its matching domain/component card. This is a recognition round.":mode==="match"?"Pair each scenario card with the component card that best fits its central evidence. Check the board when the class is ready.":"For each scenario, choose a domain, a component, and a practice rating. Your choices are checked together.";
+ $("#activityIntro").textContent=mode==="domain"?"Sort each classroom scenario into the domain that best fits its evidence.":mode==="component"?"The domain is given. Sort each scenario into the component that best fits its central evidence.":mode==="memory"?"Find a scenario and its matching domain/component card. This is a recognition round.":mode==="match"?"Pair each scenario card with the component card that best fits its central evidence. Check the board when the class is ready.":"For each scenario, choose a domain, a component, and a practice rating. Your choices are checked together.";
  newRound();
 }
 function makeSortRound(){
@@ -1117,18 +1132,19 @@ function scenarioCard(s,where){
   result+='<p class="score-line">'+esc(s.boundary_note)+'</p>';
  }
  if(state.checked)return '<article class="'+cls+'" tabindex="0" aria-label="'+esc(s.id)+' feedback"><span class="card-id">'+esc(s.id)+'</span>'+body+result+'</article>';
- return '<button type="button" class="'+cls+'" data-scenario="'+esc(s.id)+'" aria-pressed="'+selected+'" draggable="true"><span class="card-id">'+esc(s.id)+(placed?" · placed":"")+'</span>'+body+'</button>';
+ return '<button type="button" class="'+cls+'" data-scenario="'+esc(s.id)+'" aria-pressed="'+selected+'"><span class="card-id">'+esc(s.id)+(placed?" · placed":"")+'</span>'+body+'</button>';
 }
 function renderSort(){
  const activity=$("#activity");
+ activity.classList.add("sort-workspace");
  if(state.mode==="domain"&&selectedDomains().length<2){
   activity.innerHTML='<div class="error-box">Select at least two domains to make a domain sort round.</div>';return;
  }
  if(!state.round.length){activity.innerHTML='<div class="error-box">No scenarios are available with these settings. Choose another set or domain.</div>';return;}
  const buckets=bucketList();
  const placedCount=Object.keys(state.placements).length;
- let html='<div class="round-tools"><span class="round-label">'+state.round.length+' scenarios · '+placedCount+' placed'+(state.checked?' · answers checked':'')+'</span><div class="controls"><button type="button" class="text-button" id="sortMethod">'+(state.menus?"Use drag and drop or click-to-place":"Use category menus instead")+'</button></div></div>';
- html+='<p class="sort-help"><strong>How to place:</strong> Drag a card to a category, or select a card and choose a category. Placement gives no correctness signal. Use the category menus if that works better for you.</p>';
+ let html='<div class="round-tools"><span class="round-label">'+state.round.length+' scenarios · '+placedCount+' placed'+(state.checked?' · answers checked':'')+'</span><div class="controls">'+(state.menus?'':'<button type="button" class="text-button" id="cueToggle" aria-pressed="'+state.showCues+'">'+(state.showCues?'Hide category cues':'Show category cues')+'</button>')+'<button type="button" class="text-button" id="sortMethod">'+(state.menus?"Use card board":"Use list view")+'</button></div></div>';
+ html+='<p class="sort-help"><strong>How to place:</strong> Select a scenario card, then choose <strong>Place selected here</strong> in its category. Use list view if you prefer. Nothing is marked until you check the board.</p>';
  if(state.menus){
   html+='<div class="menu-list">'+state.round.map(s=>{
    const options=buckets.map(b=>'<option value="'+esc(b.key)+'"'+(state.placements[s.id]===b.key?' selected':'')+'>'+esc(b.title)+'</option>').join("");
@@ -1140,36 +1156,25 @@ function renderSort(){
   html+='<div class="bucket-title-row"><h3>Scenario cards</h3><span>'+unplaced.length+' still to place</span></div>'+(selectedPlaced?'<button class="bucket-place" type="button" id="returnToTray">Move selected card back here</button>':'')+'<div class="card-tray" data-zone="tray">'+unplaced.map(s=>scenarioCard(s,"tray")).join("")+'</div>';
   html+='<div class="bucket-title-row"><h3>Choose a category</h3><span>'+((state.selected&&!state.checked)?"Selected: "+esc(state.selected):"")+'</span></div><div class="buckets '+(state.mode==="domain"?"domain-grid":"")+'">'+buckets.map(b=>{
    const cards=state.round.filter(s=>state.placements[s.id]===b.key);
-   return '<section class="bucket" data-bucket="'+esc(b.key)+'" aria-label="'+esc(b.title)+' category"><h3>'+esc(b.title)+'</h3><p class="bucket-sub">'+esc(b.sub)+'</p>'+(state.selected&&!state.checked?'<button class="bucket-place" type="button" data-place="'+esc(b.key)+'">Place selected here</button>':"")+'<div class="bucket-cards">'+cards.map(s=>scenarioCard(s,"bucket")).join("")+'</div></section>';
+   return '<section class="bucket" data-bucket="'+esc(b.key)+'" aria-label="'+esc(b.title)+' category"><h3>'+esc(b.title)+'</h3>'+(state.showCues?'<p class="bucket-sub">'+esc(b.sub)+'</p>':'')+(state.selected&&!state.checked?'<button class="bucket-place" type="button" data-place="'+esc(b.key)+'">Place selected here</button>':"")+'<div class="bucket-cards">'+cards.map(s=>scenarioCard(s,"bucket")).join("")+'</div></section>';
   }).join("")+'</div>';
  }
  if(state.checked){
   const correct=state.round.filter(s=>state.placements[s.id]===targetKey(s)).length;
   html+='<div class="status '+(correct===state.round.length?"good":"bad")+'" role="status"><strong>'+correct+' of '+state.round.length+' in the best-fit category.</strong> Read the evidence and distinction clue before moving on.</div>';
  }else{
-  html+='<div id="sortStatus" class="status" role="status" aria-live="polite">'+(state.selected?"Scenario selected. Choose a category, or drag the card.":"Select a scenario card to begin.")+'</div>';
+  html+='<div id="sortStatus" class="status" role="status" aria-live="polite">'+(state.selected?"Scenario selected. Choose a category to place it.":"Select a scenario card to begin.")+'</div>';
  }
  html+='<div class="controls">'+(state.checked?'<button type="button" class="btn secondary" id="nextSort">New round</button>':'<button type="button" class="btn" id="checkSort" disabled>Check placements</button>')+'</div>';
  activity.innerHTML=html;
+ const cueToggle=$("#cueToggle");if(cueToggle)cueToggle.onclick=()=>{state.showCues=!state.showCues;renderSort();const next=$("#cueToggle");if(next)next.focus({preventScroll:true});};
  activity.querySelectorAll("[data-scenario]").forEach(btn=>{
   btn.addEventListener("click",()=>{if(state.checked)return;state.selected=btn.dataset.scenario;renderSort();const b=activity.querySelector('[data-scenario="'+CSS.escape(state.selected)+'"]');if(b)b.focus({preventScroll:true});});
-  btn.addEventListener("dragstart",ev=>{if(state.checked)return;ev.dataTransfer.setData("text/plain",btn.dataset.scenario);ev.dataTransfer.effectAllowed="move";state.selected=btn.dataset.scenario;});
- });
- activity.querySelectorAll("[data-bucket]").forEach(bucket=>{
-  bucket.addEventListener("dragover",ev=>{ev.preventDefault();bucket.classList.add("over");});
-  bucket.addEventListener("dragleave",()=>bucket.classList.remove("over"));
-  bucket.addEventListener("drop",ev=>{ev.preventDefault();bucket.classList.remove("over");place(ev.dataTransfer.getData("text/plain"),bucket.dataset.bucket);});
  });
  activity.querySelectorAll("[data-place]").forEach(btn=>btn.addEventListener("click",()=>place(state.selected,btn.dataset.place)));
- const tray=activity.querySelector('[data-zone="tray"]');
- if(tray&&!state.checked){
-  tray.addEventListener("dragover",ev=>{ev.preventDefault();tray.classList.add("over");});
-  tray.addEventListener("dragleave",()=>tray.classList.remove("over"));
-  tray.addEventListener("drop",ev=>{ev.preventDefault();tray.classList.remove("over");place(ev.dataTransfer.getData("text/plain"),null);});
- }
  const back=$("#returnToTray");if(back)back.onclick=()=>place(state.selected,null);
- activity.querySelectorAll("[data-menu-scenario]").forEach(sel=>sel.addEventListener("change",()=>{if(sel.value)state.placements[sel.dataset.menuScenario]=sel.value;else delete state.placements[sel.dataset.menuScenario];state.selected=null;renderSort();}));
- const method=$("#sortMethod");if(method)method.onclick=()=>{state.menus=!state.menus;renderSort();};
+ activity.querySelectorAll("[data-menu-scenario]").forEach(sel=>sel.addEventListener("change",()=>place(sel.dataset.menuScenario,sel.value||null)));
+ const method=$("#sortMethod");if(method)method.onclick=()=>{state.menus=!state.menus;renderSort();const next=$("#sortMethod");if(next)next.focus({preventScroll:true});};
  const check=$("#checkSort");if(check){check.disabled=placedCount<state.round.length;check.onclick=()=>{if(placedCount<state.round.length){showStatus("Place every scenario before checking the board.");return;}state.checked=true;state.selected=null;renderSort();};}
  const next=$("#nextSort");if(next)next.onclick=makeSortRound;
 }
@@ -1177,6 +1182,9 @@ function place(id,key){
  if(!id||state.checked)return;
  if(key==null)delete state.placements[id];else state.placements[id]=key;
  state.selected=null;renderSort();
+ const nextId=state.round.find(s=>state.placements[s.id]==null)?.id||id;
+ const target=state.menus?$("#pick-"+CSS.escape(nextId)):$("#activity [data-scenario='"+CSS.escape(nextId)+"']");
+ if(target)target.focus({preventScroll:true});else $("#checkSort")?.focus({preventScroll:true});
 }
 function showStatus(message){const el=$("#sortStatus");if(el)el.textContent=message;}
 function makeMemoryRound(){
