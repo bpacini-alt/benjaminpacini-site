@@ -31,18 +31,9 @@ h1{margin:0;font-size:clamp(34px,4vw,52px);line-height:1.06;letter-spacing:-.025
 .lede{max-width:820px;margin:12px 0 0;color:#424a53;font-size:16px;line-height:1.55}
 .hero-note-more{display:block;margin-top:7px;padding-top:7px;border-top:1px solid #d3e0e8}
 .hero-note{max-width:310px;padding:12px 15px;background:#edf3f6;border-left:4px solid var(--blue);border-radius:0 8px 8px 0;color:#40515d;font-size:12.5px;line-height:1.5}
-.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:18px 0 12px;align-items:start}
-.tab{min-height:59px;padding:10px 12px;text-align:left;border:1px solid var(--blue-line);border-radius:8px;background:var(--paper);color:#214b64;font-weight:750;font-size:13px;line-height:1.3}
-.tab small{display:block;margin-top:4px;font-weight:450;font-size:11.5px;color:var(--muted)}
-.tab[aria-selected=true]{background:var(--blue);border-color:var(--blue);color:white}
-.tab[aria-selected=true] small{color:#e3f0f6}
-.more-modes{position:relative;min-width:0}
-.more-modes>summary{display:block;min-height:59px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:#fff;color:#34454f;cursor:pointer;font-size:13px;font-weight:750;line-height:1.3;list-style:none}
-.more-modes>summary::-webkit-details-marker{display:none}
-.more-modes>summary small{display:block;margin-top:4px;color:var(--muted);font-size:11px;font-weight:450}
-.more-modes[open]>summary{border-color:var(--blue-line);background:var(--blue-pale);color:#174e6e}
-.more-mode-list{position:absolute;top:calc(100% + 6px);right:0;z-index:20;display:grid;gap:6px;min-width:230px;padding:7px;border:1px solid var(--line);border-radius:9px;background:#fff;box-shadow:0 10px 24px rgba(20,44,62,.14)}
-.more-mode-list .tab{min-height:48px;width:100%;padding:9px 10px}
+.practice-picker{display:flex;align-items:center;gap:12px;padding:11px 14px;margin:18px 0 12px;border:1px solid var(--line);border-radius:9px;background:var(--paper)}
+.practice-picker label{color:var(--soft);font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}
+.practice-picker select{min-width:min(320px,100%);max-width:100%;font-size:13px}
 .settings-disclosure{margin:0 0 15px;border:1px solid var(--line);border-radius:10px;background:var(--paper)}
 .settings-disclosure>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:46px;padding:10px 15px;color:#314650;cursor:pointer;font-size:13px;font-weight:800;list-style:none}
 .settings-disclosure>summary::-webkit-details-marker{display:none}
@@ -192,10 +183,10 @@ select{min-height:37px;padding:7px 30px 7px 10px;border:1px solid #c8d0d8;border
 .hidden{display:none!important}
 .error-box{padding:15px;border:1px solid var(--red-line);border-radius:8px;background:var(--red-pale);color:var(--red);font-size:13px}
 @media(max-width:1050px){.layout{grid-template-columns:minmax(0,1fr) 285px}.settings{grid-template-columns:minmax(150px,.7fr) minmax(210px,1.1fr);}.settings .setting-group:last-child{grid-column:1/-1}}
-@media(max-width:760px){.match-board{grid-template-columns:1fr}.page{padding:18px 14px 42px}.topbar-inner{padding:11px 14px}.hero{grid-template-columns:1fr}.hero-note{max-width:none}.tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.more-mode-list{left:0;right:auto;min-width:min(230px,calc(100vw - 44px))}.settings{grid-template-columns:1fr 1fr}.settings .setting-group:last-child{grid-column:1/-1}.layout{grid-template-columns:1fr}.ref-column{grid-template-columns:repeat(2,minmax(0,1fr))}.hint-panel{grid-column:1/-1}.activity-panel{padding:16px}.buckets,.buckets.domain-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:520px){.settings{grid-template-columns:1fr}.settings .setting-group:last-child{grid-column:auto}.tabs{gap:6px}.tab{padding:9px 10px;font-size:12px}.tab small{font-size:10px}.more-modes>summary{padding:9px 10px;font-size:12px}.more-modes>summary small{font-size:10px}.settings-disclosure>summary{align-items:flex-start;flex-direction:column;gap:3px}.activity-head{display:block}.activity-head .controls{margin-top:12px}.buckets,.buckets.domain-grid{grid-template-columns:1fr}.ref-column{grid-template-columns:1fr}.hint-panel{grid-column:auto}.menu-row{grid-template-columns:1fr}.answer-grid{grid-template-columns:1fr}.memory-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.memory-card{min-height:125px}.hero-note{font-size:12px}.round-tools{align-items:flex-start}}
+@media(max-width:760px){.match-board{grid-template-columns:1fr}.page{padding:18px 14px 42px}.topbar-inner{padding:11px 14px}.hero{grid-template-columns:1fr}.hero-note{max-width:none}.settings{grid-template-columns:1fr 1fr}.settings .setting-group:last-child{grid-column:1/-1}.layout{grid-template-columns:1fr}.ref-column{grid-template-columns:repeat(2,minmax(0,1fr))}.hint-panel{grid-column:1/-1}.activity-panel{padding:16px}.buckets,.buckets.domain-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.settings{grid-template-columns:1fr}.settings .setting-group:last-child{grid-column:auto}.practice-picker{align-items:stretch;flex-direction:column;gap:6px;padding:11px 12px}.practice-picker select{width:100%}.settings-disclosure>summary{align-items:flex-start;flex-direction:column;gap:3px}.activity-head{display:block}.activity-head .controls{margin-top:12px}.buckets,.buckets.domain-grid{grid-template-columns:1fr}.ref-column{grid-template-columns:1fr}.hint-panel{grid-column:auto}.menu-row{grid-template-columns:1fr}.answer-grid{grid-template-columns:1fr}.memory-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.memory-card{min-height:125px}.hero-note{font-size:12px}.round-tools{align-items:flex-start}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
-@media print{body{background:#fff}.topbar,.settings,.tabs,.ref-column,.controls,.disclaimer{display:none!important}.page{max-width:none;padding:0}.layout{display:block}.panel{box-shadow:none;border:0}.activity-panel{padding:0}}
+@media print{body{background:#fff}.topbar,.settings,.practice-picker,.ref-column,.controls,.disclaimer{display:none!important}.page{max-width:none;padding:0}.layout{display:block}.panel{box-shadow:none;border:0}.activity-panel{padding:0}}
 </style>
 </head>
 <body>
@@ -205,12 +196,7 @@ select{min-height:37px;padding:7px 30px 7px 10px;border:1px solid #c8d0d8;border
 <div><p class="eyebrow">EDCOR 200 · Danielson Framework for Teaching (2013)</p><h1>The Teaching Practice Sort &amp; Match Lab</h1><p class="lede">Learn about the 2013 Framework for Teaching (FFT), used in Idaho to evaluate teachers. Explore its domains and components, then use classroom scenarios to consider the evidence behind practice ratings.</p></div>
 <div class="hero-note"><strong>Classroom practice.</strong> Original scenarios for discussion; ratings apply to the evidence in each vignette and do not evaluate real teachers.</div>
 </header>
-<nav class="tabs" aria-label="Choose a practice activity">
-<button class="tab" type="button" data-mode="domain" aria-selected="true">Sort by domain<small>Four broad areas of practice</small></button>
-<button class="tab" type="button" data-mode="component" aria-selected="false">Sort by component<small>Work inside one domain</small></button>
-<button class="tab" type="button" data-mode="match" aria-selected="false">Match<small>Pair each scenario with a component</small></button>
-<details class="more-modes" id="moreModes"><summary>More practice<small>Memory and rating challenges</small></summary><div class="more-mode-list"><button class="tab" type="button" data-mode="memory" aria-selected="false">Memory match<small>Find the hidden pairs</small></button><button class="tab" type="button" data-mode="hard" aria-selected="false">Evidence challenge<small>Domain, component, and rating</small></button></div></details>
-</nav>
+<div class="practice-picker"><label for="practiceType">Practice type</label><select id="practiceType" aria-controls="activity"><optgroup label="Core practice"><option value="domain" selected>Sort by domain</option><option value="component">Sort by component</option><option value="match">Match scenarios to components</option></optgroup><optgroup label="More practice"><option value="memory">Memory match</option><option value="hard">Evidence challenge</option></optgroup></select></div>
 <details class="settings-disclosure" id="setupDisclosure"><summary><span>Round setup</span><small>Round size, domains, and feedback</small></summary><section class="settings" aria-label="Activity settings">
 <div class="setting-group"><span class="setting-label">Scenario bank</span><p class="setting-help">All 66 scenarios · three per component</p><div class="inline-controls"><select id="roundSize" aria-label="Scenarios in a round"><option value="6">6 per round</option><option value="8">8 per round</option><option value="10">10 per round</option><option value="12">12 per round</option></select></div></div>
 <div class="setting-group"><span class="setting-label">Practice layers</span><label class="check-row"><input id="showScores" type="checkbox"> Reveal practice rating after checks</label><p class="setting-help">Ratings stay hidden until the answer is checked.</p></div>
@@ -1085,8 +1071,7 @@ function dealBalanced(items,count,keyOf){
 function roundCount(items){return Math.min(Number(state.roundSize)||8,items.length);}
 function setMode(mode){
  state.mode=mode;state.hintLevel=0;state.checked=false;state.matchChecked=false;state.matchAnswers={};state.matchSelectedScenario=null;state.hardChecked=false;state.hardSummary=false;state.memoryMatched=new Set();state.memoryPicked=[];
- $$(".tab").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.mode===mode)));
- const moreModes=$("#moreModes");if(moreModes)moreModes.open=mode==="memory"||mode==="hard";
+ const practiceType=$("#practiceType");if(practiceType&&practiceType.value!==mode)practiceType.value=mode;
  if(mode==="component")$("#setupDisclosure").open=true;
  $("#activity").classList.toggle("sort-workspace",mode==="domain"||mode==="component");
  $("#focusGroup").classList.toggle("hidden",mode!=="component");
@@ -1393,7 +1378,7 @@ function init(data){
  Object.keys(componentsByDomain).forEach(id=>componentsByDomain[id].sort((a,b)=>a.code.localeCompare(b.code)));
  fillFocusDomain();
  $("#focusDomain").onchange=()=>{state.focusDomain=$("#focusDomain").value;if(state.mode==="component")newRound();};
- $$(".tab").forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
+ $("#practiceType").onchange=()=>setMode($("#practiceType").value);
  $("#roundSize").onchange=()=>{updateSettings();newRound();};
  $("#showScores").onchange=()=>{state.showScores=$("#showScores").checked;if(state.mode==="domain"||state.mode==="component")renderSort();else if(state.mode==="match")renderRegularMatch();};
  $$("#domainFilters input").forEach(input=>input.onchange=()=>{
