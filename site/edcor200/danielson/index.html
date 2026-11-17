@@ -95,10 +95,13 @@ select{min-height:37px;padding:7px 30px 7px 10px;border:1px solid #c8d0d8;border
 .bucket-title-row span{color:var(--muted);font-size:11px}
 .buckets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .buckets.domain-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-.bucket{min-width:0;min-height:156px;padding:12px;border:1px dashed #aebdca;border-radius:9px;background:#f8fafb;transition:background .12s,border-color .12s}
+.bucket{min-width:0;min-height:156px;padding:12px;border:1px solid #cfd9e0;border-radius:9px;background:#fff;transition:background .12s,border-color .12s}
 .sort-workspace{padding:12px;border:1px solid var(--line);border-radius:10px;background:#f8fafb}
 .bucket h3{margin:0;font-size:17px;line-height:1.2}
 .bucket-sub{margin:5px 0 10px;color:var(--muted);font-size:11px;line-height:1.35}
+.cue-sheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr));gap:7px;margin:0 0 12px;padding:10px;border:1px solid #dce6eb;border-radius:8px;background:#fff}
+.cue-sheet div{color:#45535d;font-size:11.5px;line-height:1.4}
+.cue-sheet strong{color:#263b48}
 .bucket-place{min-height:44px;margin:0 0 8px;padding:8px 10px;border:1px solid var(--blue-line);border-radius:6px;background:#fff;color:var(--blue);font-size:12px;font-weight:750;touch-action:manipulation}
 .bucket-cards{display:grid;gap:7px}
 .bucket-cards .scenario-card{padding:9px 10px;font-size:12px}
@@ -221,7 +224,7 @@ select{min-height:37px;padding:7px 30px 7px 10px;border:1px solid #c8d0d8;border
 </section></details>
 <div class="layout single-column" id="activityLayout">
 <section class="panel activity-panel" aria-labelledby="activityTitle">
-<div class="activity-head"><div><p class="eyebrow" id="modeEyebrow">Round 1</p><h2 id="activityTitle">Domain Sort</h2><p class="activity-intro" id="activityIntro"></p></div><div class="controls"><button type="button" class="btn secondary" id="newRound">New round</button></div></div>
+<div class="activity-head"><div><p class="eyebrow" id="modeEyebrow">Round 1</p><h2 id="activityTitle">Domain Sort</h2><p class="activity-intro" id="activityIntro"></p></div></div>
 <div id="activity" aria-live="polite"><p class="status">Loading the scenario bank…</p></div>
 <p class="disclaimer">This classroom activity supports practice and discussion. Use the course's official paper or licensed materials when you need full framework language or formal evaluation descriptors. No student responses are collected or saved.</p>
 </section>
@@ -1143,9 +1146,10 @@ function renderSort(){
  if(!state.round.length){activity.innerHTML='<div class="error-box">No scenarios are available with these settings. Choose another set or domain.</div>';return;}
  const buckets=bucketList();
  const placedCount=Object.keys(state.placements).length;
- let html='<div class="round-tools"><span class="round-label">'+state.round.length+' scenarios · '+placedCount+' placed'+(state.checked?' · answers checked':'')+'</span><div class="controls">'+(state.menus?'':'<button type="button" class="text-button" id="cueToggle" aria-pressed="'+state.showCues+'">'+(state.showCues?'Hide category cues':'Show category cues')+'</button>')+'<button type="button" class="text-button" id="sortMethod">'+(state.menus?"Use card board":"Use list view")+'</button></div></div>';
+ let html='<div class="round-tools"><span class="round-label">'+state.round.length+' scenarios · '+placedCount+' placed'+(state.checked?' · answers checked':'')+'</span><div class="controls"><button type="button" class="text-button" id="cueToggle" aria-pressed="'+state.showCues+'">'+(state.showCues?'Hide category cues':'Show category cues')+'</button><button type="button" class="text-button" id="sortMethod">'+(state.menus?"Use card board":"Use list view")+'</button></div></div>';
  html+='<p class="sort-help"><strong>How to place:</strong> Select a scenario card, then choose <strong>Place selected here</strong> in its category. Use list view if you prefer. Nothing is marked until you check the board.</p>';
  if(state.menus){
+  if(state.showCues)html+='<div class="cue-sheet" aria-label="Category cues">'+buckets.map(b=>'<div><strong>'+esc(b.title)+'</strong><br>'+esc(b.sub)+'</div>').join("")+'</div>';
   html+='<div class="menu-list">'+state.round.map(s=>{
    const options=buckets.map(b=>'<option value="'+esc(b.key)+'"'+(state.placements[s.id]===b.key?' selected':'')+'>'+esc(b.title)+'</option>').join("");
    return '<div class="menu-row"><label for="pick-'+esc(s.id)+'"><span class="card-id">'+esc(s.id)+'</span>'+esc(s.scenario)+(state.checked?'<div class="result-line"><strong>Best fit:</strong> '+esc(placementText(s))+'<br>'+esc(s.component_evidence)+'<br>'+esc(s.boundary_note)+(state.showScores?'<br><strong>Practice rating:</strong> '+esc(s.score)+'. '+esc(s.score_evidence):"")+'</div>':"")+'</label><select id="pick-'+esc(s.id)+'" data-menu-scenario="'+esc(s.id)+'" '+(state.checked?"disabled":"")+'><option value="">Choose a category…</option>'+options+'</select></div>';
@@ -1153,10 +1157,10 @@ function renderSort(){
  }else{
   const unplaced=state.round.filter(s=>state.placements[s.id]==null);
   const selectedPlaced=state.selected&&!state.checked&&state.placements[state.selected]!=null;
-  html+='<div class="bucket-title-row"><h3>Scenario cards</h3><span>'+unplaced.length+' still to place</span></div>'+(selectedPlaced?'<button class="bucket-place" type="button" id="returnToTray">Move selected card back here</button>':'')+'<div class="card-tray" data-zone="tray">'+unplaced.map(s=>scenarioCard(s,"tray")).join("")+'</div>';
+  html+='<div class="bucket-title-row"><h3>Scenario cards</h3><span>'+unplaced.length+' still to place</span></div>'+(selectedPlaced?'<button class="bucket-place" type="button" id="returnToTray">Move selected card back here</button>':'')+'<div class="card-tray">'+unplaced.map(s=>scenarioCard(s,"tray")).join("")+'</div>';
   html+='<div class="bucket-title-row"><h3>Choose a category</h3><span>'+((state.selected&&!state.checked)?"Selected: "+esc(state.selected):"")+'</span></div><div class="buckets '+(state.mode==="domain"?"domain-grid":"")+'">'+buckets.map(b=>{
    const cards=state.round.filter(s=>state.placements[s.id]===b.key);
-   return '<section class="bucket" data-bucket="'+esc(b.key)+'" aria-label="'+esc(b.title)+' category"><h3>'+esc(b.title)+'</h3>'+(state.showCues?'<p class="bucket-sub">'+esc(b.sub)+'</p>':'')+(state.selected&&!state.checked?'<button class="bucket-place" type="button" data-place="'+esc(b.key)+'">Place selected here</button>':"")+'<div class="bucket-cards">'+cards.map(s=>scenarioCard(s,"bucket")).join("")+'</div></section>';
+   return '<section class="bucket" aria-label="'+esc(b.title)+' category"><h3>'+esc(b.title)+'</h3>'+(state.showCues?'<p class="bucket-sub">'+esc(b.sub)+'</p>':'')+(state.selected&&!state.checked?'<button class="bucket-place" type="button" data-place="'+esc(b.key)+'" aria-label="Place selected scenario in '+esc(b.title)+'">Place selected here</button>':"")+'<div class="bucket-cards">'+cards.map(s=>scenarioCard(s,"bucket")).join("")+'</div></section>';
   }).join("")+'</div>';
  }
  if(state.checked){
@@ -1390,7 +1394,6 @@ function init(data){
  fillFocusDomain();
  $("#focusDomain").onchange=()=>{state.focusDomain=$("#focusDomain").value;if(state.mode==="component")newRound();};
  $$(".tab").forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
- $("#newRound").onclick=newRound;
  $("#roundSize").onchange=()=>{updateSettings();newRound();};
  $("#showScores").onchange=()=>{state.showScores=$("#showScores").checked;if(state.mode==="domain"||state.mode==="component")renderSort();else if(state.mode==="match")renderRegularMatch();};
  $$("#domainFilters input").forEach(input=>input.onchange=()=>{
