@@ -131,6 +131,7 @@ select{min-height:37px;padding:7px 30px 7px 10px;border:1px solid #c8d0d8;border
 .part-mark.ok{background:var(--green-pale);color:var(--green)}
 .part-mark.miss{background:var(--red-pale);color:var(--red)}
 .tally-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:14px 0}
+.tally-row.four{grid-template-columns:repeat(4,minmax(0,1fr))}
 .tally{padding:12px;border:1px solid var(--blue-line);border-radius:8px;background:#fff;text-align:center}
 .tally-n{display:block;font-family:var(--serif);font-size:26px;font-weight:700;color:var(--ink)}
 .tally-n small{font-size:14px;color:var(--muted);font-weight:400}
@@ -148,9 +149,19 @@ select{min-height:37px;padding:7px 30px 7px 10px;border:1px solid #c8d0d8;border
 .answer-option label{display:block;height:100%;min-height:42px;padding:10px 12px;border:1px solid #cbd6de;border-radius:7px;background:#fff;color:#2f3d46;font-size:12px;line-height:1.35;cursor:pointer}
 .answer-option input:checked+label{border:2px solid var(--blue);padding:9px 11px;background:var(--blue-pale);color:#173f56;font-weight:750}
 .answer-option input:focus-visible+label{outline:3px solid #e6a844;outline-offset:3px}
+.answer-option input[type=checkbox]+label{position:relative;padding-left:38px}
+.answer-option input[type=checkbox]+label::before{content:"";position:absolute;left:11px;top:11px;width:18px;height:18px;border:1.5px solid #8799a5;border-radius:4px;background:#fff}
+.answer-option input[type=checkbox]:checked+label::before{border-color:var(--blue);background:var(--blue)}
+.answer-option input[type=checkbox]:checked+label::after{content:"✓";position:absolute;left:14px;top:10px;color:#fff;font:800 13px var(--sans)}
 .hard-feedback{padding:14px;margin-top:12px;border:1px solid #d4e3d9;border-radius:8px;background:#f2f9f4;color:#294b35;font-size:12.5px;line-height:1.5}
 .hard-feedback strong{font-size:14px}
 .hard-feedback .answer-summary{margin:8px 0;padding:9px 10px;border-radius:6px;background:#fff;font-family:var(--serif);font-size:14px}
+.evidence-review{display:grid;gap:7px;margin:10px 0}
+.evidence-review-item{padding:9px 10px;border:1px solid #d9e5dc;border-radius:6px;background:#fff}
+.evidence-review-item.missed{border-color:#ead9aa;background:#fffaf0}
+.evidence-review-item.misread{border-color:#e8c8c2;background:#fff8f6}
+.evidence-review-item small{display:block;margin-bottom:3px;font:750 10px var(--sans);letter-spacing:.03em;text-transform:uppercase}
+.evidence-review-item p{margin:0;font-size:12px;line-height:1.45}
 .memory-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:13px 0}
 .memory-card{min-height:115px;padding:13px 11px;border:1px solid var(--blue-line);border-radius:9px;background:#f4f9fc;color:#244d63;font-family:var(--serif);font-size:13px;line-height:1.45;text-align:center}
 .memory-card[aria-pressed=true]{border:2px solid var(--blue);padding:12px 10px;background:var(--blue-pale)}
@@ -184,6 +195,7 @@ select{min-height:37px;padding:7px 30px 7px 10px;border:1px solid #c8d0d8;border
 .error-box{padding:15px;border:1px solid var(--red-line);border-radius:8px;background:var(--red-pale);color:var(--red);font-size:13px}
 @media(max-width:1050px){.layout{grid-template-columns:minmax(0,1fr) 285px}.settings{grid-template-columns:minmax(150px,.7fr) minmax(210px,1.1fr);}.settings .setting-group:last-child{grid-column:1/-1}}
 @media(max-width:760px){.match-board{grid-template-columns:1fr}.page{padding:18px 14px 42px}.topbar-inner{padding:11px 14px}.hero{grid-template-columns:1fr}.hero-note{max-width:none}.settings{grid-template-columns:1fr 1fr}.settings .setting-group:last-child{grid-column:1/-1}.layout{grid-template-columns:1fr}.ref-column{grid-template-columns:repeat(2,minmax(0,1fr))}.hint-panel{grid-column:1/-1}.activity-panel{padding:16px}.buckets,.buckets.domain-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:760px){.tally-row.four{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:520px){.settings{grid-template-columns:1fr}.settings .setting-group:last-child{grid-column:auto}.practice-picker{align-items:stretch;flex-direction:column;gap:6px;padding:11px 12px}.practice-picker select{width:100%}.settings-disclosure>summary{align-items:flex-start;flex-direction:column;gap:3px}.activity-head{display:block}.activity-head .controls{margin-top:12px}.buckets,.buckets.domain-grid{grid-template-columns:1fr}.ref-column{grid-template-columns:1fr}.hint-panel{grid-column:auto}.menu-row{grid-template-columns:1fr}.answer-grid{grid-template-columns:1fr}.memory-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.memory-card{min-height:125px}.hero-note{font-size:12px}.round-tools{align-items:flex-start}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 @media print{body{background:#fff}.topbar,.settings,.practice-picker,.ref-column,.controls,.disclaimer{display:none!important}.page{max-width:none;padding:0}.layout{display:block}.panel{box-shadow:none;border:0}.activity-panel{padding:0}}
@@ -1048,7 +1060,78 @@ const COMPONENT_CUES={
  "4e":{cue:"Professional learning and growth in practice.",question:"What is the teacher learning, and how does that learning shape practice?"},
  "4f":{cue:"Integrity, confidentiality, judgment, and professional obligations.",question:"What ethical responsibility or professional commitment is at stake?"}
 };
-const state={mode:"domain",roundSize:8,showScores:false,showCues:false,domains:new Set(["1","2","3","4"]),focusDomain:"1",round:[],placements:{},checked:false,selected:null,menus:false,roundNumber:0,matchRound:[],matchAnswers:{},matchChoices:[],matchChecked:false,matchSelectedScenario:null,hardIndex:0,hardItems:[],hardAnswers:{},hardChecked:false,hintLevel:0,memoryCards:[],memoryPicked:[],memoryMatched:new Set(),memoryPairs:6,memoryMoves:0,memoryTimeout:null,hardSummary:false};
+const T=text=>({text,correct:true});
+const F=(text,neighbor)=>({text,correct:false,neighbor});
+// Every scenario has its own two-key evidence set. Choice order is shuffled per round.
+const EVIDENCE_CHECKS={
+ "FFT13-01A":[T("The plan incorrectly treats cells and organs as the same thing."),T("It skips the prerequisite distinction students need before studying organelles."),F("The main problem is that the teacher has not planned a check for every learning outcome.","1f"),F("The central issue is that the lesson activities are out of sequence despite accurate content.","1e")],
+ "FFT13-01B":[T("The teacher combines recent work, language-development information, and class-interest data."),T("Group patterns from those sources shape vocabulary supports and examples."),F("The plan uses individual student profiles to tailor a different path for each learner.","1b"),F("The teacher is mainly selecting a new set of resources for the unit.","1d")],
+ "FFT13-01C":[T("One listed aim is an activity, while the others describe intended learning."),T("The aims are not clearly connected and are not adapted for different learners."),F("The main evidence is a final assessment that measures every aim with clear criteria.","1f"),F("The only concern is the order of otherwise aligned lesson activities.","1e")],
+ "FFT13-01D":[T("The teacher selects primary sources, an archive collection, and a professional learning resource."),T("The selected materials align with the goal and offer different ways into the same ideas."),F("The central evidence is that the unit outcomes are not clear or appropriately challenging.","1c"),F("The activities and grouping are described as disconnected from one another.","1e")],
+ "FFT13-01E":[T("The plan connects tasks, materials, and checkpoints to individual learning needs."),T("Student input changes the planned formats while the common learning goal stays consistent."),F("The teacher sets a different intended learning outcome for each student.","1c"),F("The plan is only a list of materials; tasks and sequence remain the same for everyone.","1d")],
+ "FFT13-01F":[T("The final test covers some outcomes but leaves others out."),T("Criteria are broad, and the only planned check is asking whether anyone has questions."),F("The main evidence is a clear, challenging set of learning outcomes adapted for students.","1c"),F("The teacher plans a sequence of learning activities that is poorly timed and unrelated.","1e")],
+ "FFT13-B-01A":[T("The plan connects particle motion, temperature, and heat to earlier science learning."),T("The teacher anticipates a specific misconception and plans demonstrations that let students test it."),F("The central evidence is that the unit outcomes are vague and unconnected.","1c"),F("The activities are assigned without regard to grouping, pacing, or sequence.","1e")],
+ "FFT13-B-01B":[T("The teacher relies on a general impression instead of recent information about learners."),T("The same task is planned for everyone without checking individual entry points."),F("The teacher has selected varied materials based on a careful resource review.","1d"),F("The plan sequences activities from prerequisite skills toward a new outcome.","1e")],
+ "FFT13-B-01C":[T("Students will compare arguments, evaluate evidence, and write a supported claim."),T("The outcomes connect to prior learning and include planned support and extension."),F("The main evidence is the teacher's selection of source materials, rather than the intended learning.","1d"),F("The plan describes a complete assessment system with criteria and a midpoint check.","1f")],
+ "FFT13-B-01D":[T("The teacher uses the district workbook for every unit without exploring alternatives."),T("A request for local examples does not lead the teacher to investigate other resources."),F("The central issue is that the unit outcomes do not describe student learning.","1c"),F("The plan's activities, grouping, and timing are incoherent.","1e")],
+ "FFT13-B-01E":[T("The planned quiz, unrelated craft, and worksheet do not build toward one another."),T("Groups are assigned by seating, and the timing leaves the final task unfinished."),F("The main problem is a central content error that the teacher keeps after it is identified.","1a"),F("The only issue is that students receive no clear criteria for a planned assessment.","1f")],
+ "FFT13-B-01F":[T("Every unit outcome has a planned assessment and clear criteria shared in advance."),T("A midpoint check is tied to the criteria, and results are intended to shape the next lesson."),F("The central evidence is that the learning goals mix activities with outcomes.","1c"),F("The plan focuses on selecting additional classroom and professional resources.","1d")],
+ "FFT13-C-01A":[T("The teacher anticipates the specific misconception that 1/8 is larger than 1/6."),T("Fraction strips and number lines are selected to address that misconception accurately."),F("The main evidence is that students help set and revise the unit's learning outcomes.","1c"),F("The teacher only lists materials and does not connect them to how students will learn.","1d")],
+ "FFT13-C-01B":[T("The teacher treats one roster label as if it described every language learner."),T("The teacher ignores available information and keeps the same assumption after student work shows varied needs."),F("The teacher carefully selects accessible sources and alternatives for the project.","1d"),F("The teacher plans aligned checks and uses results to revise instruction.","1f")],
+ "FFT13-C-01C":[T("The only stated goal is completing a poster and packet, not learning about the water cycle."),T("The goal does not connect to the listed standard or to prior learning."),F("The central concern is that the teacher chose a poster format instead of a different resource.","1d"),F("The main evidence is that lesson activities are sequenced poorly despite a clear learning goal.","1e")],
+ "FFT13-C-01D":[T("Students are sent to search online without reliable sources or an alternative to home internet."),T("The teacher declines the librarian's print and digital source sets."),F("The teacher gathers detailed information about students' language skills and interests before planning.","1b"),F("The unit has a coherent sequence of tasks and accessible materials.","1e")],
+ "FFT13-C-01E":[T("The model paragraph takes most of the period, leaving little time for students to use sources."),T("No grouping or support is planned for students who may need help starting the draft."),F("The only stated goal is to complete a packet rather than learn a writing skill.","1c"),F("The teacher plans clear criteria and a formative check for every part of the draft.","1f")],
+ "FFT13-C-01F":[T("The criteria align to all outcomes, and students use sample work to clarify them before the investigation."),T("A midpoint conference and revision opportunity are planned using the same criteria."),F("The teacher's main plan is to find additional materials and professional resources.","1d"),F("The stated outcomes are unconnected and do not describe what students should learn.","1c")],
+ "FFT13-02A":[T("The teacher listens, uses students' names, and responds to mistakes without ridicule."),T("When a peer dismisses an idea, the teacher has the class consider its reasoning before replying."),F("The main evidence is that the teacher consistently monitors and corrects rule-breaking.","2d"),F("Students routinely revise work to meet shared standards of academic quality.","2b")],
+ "FFT13-02B":[T("Completion points are repeatedly presented as what matters most."),T("Students rarely revise or explain their thinking, and careful learning is not expected."),F("The main issue is that classroom transitions and material routines take too long.","2c"),F("The teacher consistently teaches and monitors clear conduct expectations.","2d")],
+ "FFT13-02C":[T("Students shift into teams, collect equipment, and record roles without waiting for the teacher."),T("When materials run short, students use an agreed backup routine and continue working."),F("The central evidence is the teacher's response to disrespectful behavior between students.","2d"),F("Students are encouraged to revise work and set more challenging academic goals.","2b")],
+ "FFT13-02D":[T("The teacher has explained expectations, but notices a side conversation only after several minutes."),T("A general reminder works once, then the teacher misses the same behavior later."),F("The main evidence is that interactions are warm and students resolve disagreements respectfully.","2a"),F("Transitions and material distribution repeatedly interrupt the lesson.","2c")],
+ "FFT13-02E":[T("Tables allow students to see the demonstration and move safely between work areas."),T("A clear route lets a student using a mobility device participate at the same stations."),F("The main evidence is how smoothly students collect and return materials during transitions.","2c"),F("The teacher's warmth and response to student mistakes establish the room's tone.","2a")],
+ "FFT13-B-02A":[T("The teacher is polite but interactions remain formal and distant."),T("A general reminder does not stop a put-down, and the teacher does not follow up."),F("The teacher has taught clear behavior expectations and monitors them consistently.","2d"),F("Students routinely pursue challenging work and help one another improve it.","2b")],
+ "FFT13-B-02B":[T("Students seek feedback, revise independently, and encourage peers to explain their reasoning."),T("Students help define strong work and choose a more challenging extension when ready."),F("The main evidence is a reliable routine for transitions and managing materials.","2c"),F("The teacher's central action is monitoring and correcting disruptive behavior.","2d")],
+ "FFT13-B-02C":[T("Students do not know where to get materials or which table to use for group work."),T("Repeated explanations and waiting consume nearly ten minutes before groups can begin."),F("Students can see and reach all materials, but the teacher has not adjusted the room layout.","2e"),F("Students know the routines and move into groups without losing learning time.","2c")],
+ "FFT13-B-02D":[T("The teacher teaches expectations, scans the room, and gives a quiet, specific reminder."),T("Students return to work and follow the expectations for the rest of the lesson."),F("The main evidence is that the teacher and students build warm personal relationships.","2a"),F("The teacher's primary concern is praising high-quality academic work and revision.","2b")],
+ "FFT13-B-02E":[T("The room is safe and workable for most students, with clear aisles and available materials."),T("Two students have a partial view, and the teacher lets them move to open seats."),F("The central evidence is that transitions and group procedures waste substantial learning time.","2c"),F("The teacher does not respond when students treat one another disrespectfully.","2a")],
+ "FFT13-C-02A":[T("Classmates welcome a new student and invite him to join their group without prompting."),T("The teacher knows students by name, and disagreements stay warm and respectful."),F("Students mainly demonstrate a shared routine for collecting materials and changing groups.","2c"),F("The teacher's main work is scanning for rule violations and issuing reminders.","2d")],
+ "FFT13-C-02B":[T("The teacher emphasizes reasoning over speed and asks students to improve weak explanations."),T("Students persist and improve, but the teacher still sets each revision goal."),F("Students independently set revision goals and consistently lead one another's learning.","2b"),F("The central evidence is how the teacher organizes movement, materials, and transitions.","2c")],
+ "FFT13-C-02C":[T("Students know the notebook and partner-work routine, but the transition still takes several minutes."),T("Distant supply bins and repeated directions leave some students waiting before work begins."),F("The main evidence is a physical safety hazard that prevents students from using the room.","2e"),F("The teacher uses warm, respectful interactions to build a strong sense of community.","2a")],
+ "FFT13-C-02D":[T("Students repeatedly call out, leave seats, and interrupt classmates during independent work."),T("The teacher notices the disruptions but gives no response, so nearby students cannot concentrate."),F("The main problem is that students do not know where to find materials or how to transition.","2c"),F("The teacher responds promptly and consistently when conduct disrupts learning.","2d")],
+ "FFT13-C-02E":[T("Glare obscures directions, and a cord and boxes create an unsafe walkway."),T("Students cannot see the task at the back, and two students trip while moving through the room."),F("The main issue is that the teacher has not taught students how to move between activities.","2c"),F("The teacher gives unclear verbal directions about the task students should complete.","3a")],
+ "FFT13-03A":[T("The teacher accurately states the lesson purpose and explains the procedure."),T("Students misunderstand the first step because it was not explicit; the teacher clarifies after they ask."),F("Students lead a discussion by responding to and challenging one another's ideas.","3b"),F("The teacher gathers a clear check of each student's understanding and adjusts the lesson.","3d")],
+ "FFT13-03B":[T("Students generate follow-up questions, invite quieter peers in, and challenge interpretations with text evidence."),T("The teacher tracks whose ideas have been heard and presses the class to examine an assumption."),F("The main evidence is a step-by-step explanation of the task and its technical vocabulary.","3a"),F("Students are engaged in a hands-on task with chosen materials, roles, and pacing.","3c")],
+ "FFT13-03C":[T("Students copy definitions and repeat items without explaining or making decisions."),T("The work is disconnected from the goal, and students finish early with nothing meaningful to do."),F("Students examine different interpretations together and build on one another's reasoning.","3b"),F("The teacher gives unclear directions, so students do not know what the task is.","3a")],
+ "FFT13-03D":[T("Feedback is given only to a few students who ask, and it remains general."),T("Only a couple of students use the rubric to judge their drafts during the lesson."),F("The teacher adjusts the writing task in response to evidence from every student's draft.","3e"),F("The teacher explains the lesson purpose and directions so every student can restate them.","3a")],
+ "FFT13-03E":[T("Student questions reveal that the class lacks prerequisite understanding of angle facts."),T("The teacher keeps the planned examples going and does not return to the gap students showed."),F("The teacher pauses to diagnose the misunderstanding and changes the lesson to address it.","3e"),F("The teacher planned an aligned assessment and criteria before the lesson began.","1f")],
+ "FFT13-B-03A":[T("“Do the next part the way we did yesterday” leaves the task, purpose, and steps unclear."),T("After students ask and begin unrelated work, the teacher refuses to clarify what to do."),F("Students exchange follow-up questions and examine each other's explanations.","3b"),F("The teacher checks every student's understanding and uses the responses to select a next step.","3d")],
+ "FFT13-B-03B":[T("Some questions invite explanation, but the teacher calls on the same few volunteers."),T("The teacher moves to a new question without inviting students to respond to one another."),F("Students take up the discussion themselves and challenge interpretations with evidence.","3b"),F("The main problem is that the directions and lesson purpose are not communicated.","3a")],
+ "FFT13-B-03C":[T("Students choose materials or testing methods, gather evidence, and revise a model."),T("Every student has a meaningful role, and the teacher extends the task when a team is ready."),F("The learning task is disconnected from the goal and leaves early finishers with nothing to do.","3c"),F("The central evidence is the teacher's step-by-step explanation of new content and vocabulary.","3a")],
+ "FFT13-B-03D":[T("A chorus of “yes” is accepted as evidence even though it does not show what students understand."),T("A later written check reveals a shared misconception, but the teacher gives no feedback or response."),F("The teacher examines each response and selects a new example that addresses the pattern.","3d"),F("Students use clear criteria to revise their own work and track their progress.","3d")],
+ "FFT13-B-03E":[T("A student's unexpected hand injury makes the planned first step inaccessible."),T("The teacher offers an oral way to organize evidence, keeps the same learning goal, and follows up."),F("The teacher changes the learning goal so the student no longer has to work toward the class target.","1c"),F("The teacher revises the whole lesson sequence before instruction based on a planned assessment.","1e")],
+ "FFT13-C-03A":[T("The teacher explains the investigation question, the steps, and technical vocabulary with a diagram."),T("Students can restate both what they will do and what a strong explanation should include."),F("Students generate questions, respond to peers, and examine competing interpretations.","3b"),F("The teacher checks each student's work and adjusts the next example using the results.","3d")],
+ "FFT13-C-03B":[T("The teacher asks rapid recall questions, answers them quickly, and calls on the same two students."),T("When a student offers another interpretation, the teacher moves on; students do not discuss ideas."),F("Students are unsure of the task because the teacher's directions are unclear.","3a"),F("Students investigate a demanding problem by choosing methods and revising after tests.","3c")],
+ "FFT13-C-03C":[T("Students predict, test, and explain how added weight changes a cart's distance."),T("The aligned task, group roles, and pacing keep nearly all students actively working."),F("Students choose how to investigate and select their own materials and testing method.","3c"),F("The teacher pauses in response to an unexpected student question and redesigns the investigation.","3e")],
+ "FFT13-C-03D":[T("Every student solves a problem, compares work with criteria, and receives specific feedback."),T("Students revise, track their progress, and explain what still needs work; the teacher reviews every board."),F("The teacher mainly explains new vocabulary and directions before students begin.","3a"),F("Students are passive during repetitive tasks that do not connect to the learning goal.","3c")],
+ "FFT13-C-03E":[T("A student's question reveals a limitation in the examples used for the historical claim."),T("The teacher pauses and reorganizes the investigation so students can test claims with contrasting sources."),F("The teacher keeps the planned sequence unchanged after students reveal a learning need.","3e"),F("The teacher's main evidence is a planned test with criteria shared before instruction.","1f")],
+ "FFT13-04A":[T("The teacher decides the lesson went well because students liked the activity."),T("The teacher notes a difficult question but does not examine work or name a next change."),F("The teacher compares multiple student-work samples and later checks whether a change helped.","4a"),F("The teacher pursues new professional learning tied to a specific classroom need.","4e")],
+ "FFT13-04B":[T("The teacher regularly updates assignment and progress records and organizes work by learning target."),T("Records help the teacher identify missing evidence and follow up before conferences."),F("The main evidence is that lesson reflection identifies causes and leads to a new teaching approach.","4a"),F("Families and students regularly co-create learning updates and follow-up supports.","4c")],
+ "FFT13-04C":[T("Students prepare accessible progress portfolios and take them home to share their learning."),T("Family knowledge and student reflections shape support after families participate in learning activities."),F("The teacher's main evidence is keeping assignment records current for conferences.","4b"),F("The teacher leads colleagues in a continuing school initiative beyond the classroom.","4d")],
+ "FFT13-04D":[T("The teacher brings student work to the inquiry team, shares a resource, and completes a substantial initiative task."),T("Colleagues rely on practical support, while the teacher does not lead the team."),F("The central evidence is the teacher's own sustained professional study and inquiry project.","4e"),F("The teacher regularly communicates individual progress with families and uses their input.","4c")],
+ "FFT13-04E":[T("A classroom need leads the teacher to study discussion practice and try a new routine."),T("The teacher welcomes coaching, adjusts the routine from feedback, and shares examples with colleagues."),F("The teacher organizes a school-wide system for colleagues to share learning over time.","4d"),F("The teacher's reflection compares student work after a lesson and plans a single next-day change.","4a")],
+ "FFT13-04F":[T("Required forms arrive only after reminders, and help outside class is inconsistent."),T("The teacher goes along with team decisions instead of raising concerns about students who may be left out."),F("The teacher leads colleagues in a substantial shared project and mentors a new teacher.","4d"),F("Families receive ongoing two-way updates and shape learning support.","4c")],
+ "FFT13-B-04A":[T("The teacher compares exit responses, group notes, and student explanations to locate a learning gap."),T("The teacher considers possible causes, revises the next lesson, and checks whether the change helped."),F("The central evidence is maintaining accurate records of work and progress for conferences.","4b"),F("The teacher's main work is pursuing a workshop and inviting coaching on a new routine.","4e")],
+ "FFT13-B-04B":[T("Records are updated irregularly, and some assignments are missing from the gradebook."),T("The teacher must reconstruct completion because the gradebook and student-work folder disagree."),F("The teacher analyzes a lesson using several sources and revises the next lesson.","4a"),F("Families receive regular individual updates and contribute information for student support.","4c")],
+ "FFT13-B-04C":[T("Families receive unit goals, monthly progress updates, and timely contact when support is needed."),T("The teacher invites family input and uses what families share, though communication is mostly teacher-initiated."),F("Students maintain and reconcile their own progress records before conferences.","4b"),F("The teacher's main contribution is leading a school initiative and mentoring colleagues.","4d")],
+ "FFT13-B-04D":[T("The teacher leads student-work inquiry, creates shared resources, and mentors a new colleague."),T("A reliable structure for colleagues to share learning continues beyond the initial project."),F("The teacher mainly pursues personal study and invites feedback on an individual inquiry.","4e"),F("The central evidence is accessible two-way communication with families about progress.","4c")],
+ "FFT13-B-04E":[T("The teacher pursues advanced learning, invites observation, and uses feedback in a sustained inquiry."),T("Professional-organization work and workshops help other educators use the findings."),F("The teacher's main role is organizing a school-wide team and mentoring a new colleague.","4d"),F("The teacher only completes a required session and makes no effort to apply or extend the learning.","4e")],
+ "FFT13-B-04F":[T("Confidential student support details are posted in a staff chat with people who do not work with the student."),T("After the privacy problem is flagged, the teacher leaves the information visible for convenience."),F("The teacher's main issue is inaccurate records that cannot support student conferences.","4b"),F("The central evidence is a delayed response to family questions about academic progress.","4c")],
+ "FFT13-C-04A":[T("The teacher compares exit explanations with the target and identifies where students are confused."),T("The reflection identifies a likely cause and plans a specific visual change for the next lesson."),F("The main evidence is that student-maintained records are checked and corrected before conferences.","4b"),F("The teacher changes the lesson while it is underway in response to an unexpected need.","3e")],
+ "FFT13-C-04B":[T("Students update dated folders and trackers and note missing or returned work."),T("The teacher checks and corrects records, then uses them to prepare conferences."),F("The main evidence is analyzing a lesson to identify a cause and revise tomorrow's teaching.","4a"),F("The teacher leads colleagues in a sustained school-wide inquiry and mentoring project.","4d")],
+ "FFT13-C-04C":[T("Families receive an initial course outline but later only required reports and general announcements."),T("Responses are delayed, and messages rarely explain individual learning progress or invite family input."),F("The teacher maintains accurate, current student records that support conferences.","4b"),F("The teacher regularly engages families in learning activities and uses their knowledge to plan support.","4c")],
+ "FFT13-C-04D":[T("The teacher attends required meetings but rarely brings student work or contributes to planning."),T("Shared tasks are not completed by the teacher, so colleagues finish them without that contribution."),F("The teacher pursues optional study and uses feedback to make sustained improvements.","4e"),F("Families are partners in learning and help shape follow-up supports for students.","4c")],
+ "FFT13-C-04E":[T("The teacher completes required professional development but does not pursue learning tied to a classroom need."),T("The teacher neither invites feedback nor checks whether the session changed classroom practice."),F("The teacher mentors colleagues and leads a continuing school improvement project.","4d"),F("The teacher analyzes a lesson using student evidence and plans a specific adjustment.","4a")],
+ "FFT13-C-04F":[T("The teacher documents an access problem without exposing private details and consults students and support staff."),T("The teacher advocates for a schedule change and follows up to confirm students can participate."),F("The teacher's main evidence is maintaining student work records and preparing conferences.","4b"),F("The teacher organizes an ongoing professional team initiative to change school-wide procedures.","4d")]
+};
+const state={mode:"domain",roundSize:8,showScores:false,showCues:false,domains:new Set(["1","2","3","4"]),focusDomain:"1",round:[],placements:{},checked:false,selected:null,menus:false,roundNumber:0,matchRound:[],matchAnswers:{},matchChoices:[],matchChecked:false,matchSelectedScenario:null,hardIndex:0,hardItems:[],hardAnswers:{},hardOptionOrders:{},hardChecked:false,hintLevel:0,memoryCards:[],memoryPicked:[],memoryMatched:new Set(),memoryPairs:6,memoryMoves:0,memoryTimeout:null,hardSummary:false};
 let bank=[],domainNames={},componentsByDomain={};
 function esc(value){return String(value).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function shuffle(list){const a=list.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
@@ -1081,8 +1164,8 @@ function setMode(mode){
  if(mode==="memory")$("#activityTitle").textContent="Memory Match";
  if(mode==="match")$("#activityTitle").textContent="Match";
  if(mode==="hard")$("#activityTitle").textContent="Evidence Challenge";
- $("#modeEyebrow").textContent=mode==="domain"?"Round 1":mode==="component"?"Component round":mode==="memory"?"Memory round":mode==="match"?"Matching round":"Three-part challenge";
- $("#activityIntro").textContent=mode==="domain"?"Sort each classroom scenario into the domain that best fits its evidence.":mode==="component"?"The domain is given. Sort each scenario into the component that best fits its central evidence.":mode==="memory"?"Find a scenario and its matching domain/component card. This is a recognition round.":mode==="match"?"Pair each scenario card with the component card that best fits its central evidence. Check the board when the class is ready.":"For each scenario, choose a domain, a component, and a practice rating. Your choices are checked together.";
+ $("#modeEyebrow").textContent=mode==="domain"?"Round 1":mode==="component"?"Component round":mode==="memory"?"Memory round":mode==="match"?"Matching round":"Four-part reasoning challenge";
+ $("#activityIntro").textContent=mode==="domain"?"Sort each classroom scenario into the domain that best fits its evidence.":mode==="component"?"The domain is given. Sort each scenario into the component that best fits its central evidence.":mode==="memory"?"Find a scenario and its matching domain/component card. This is a recognition round.":mode==="match"?"Pair each scenario card with the component card that best fits its central evidence. Check the board when the class is ready.":"Choose exactly two evidence statements, then classify the domain, component, and practice rating. Feedback explains each distractor after you submit.";
  newRound();
 }
 function makeSortRound(){
@@ -1283,28 +1366,55 @@ function renderRegularMatch(){
 }
 function makeHardRound(){
  clearHint();
- const pool=filteredPool();state.hardItems=dealBalanced(pool,roundCount(pool));state.hardIndex=0;state.hardAnswers={};state.hardChecked=false;state.hardSummary=false;renderHard();
+ const pool=filteredPool();state.hardItems=dealBalanced(pool,roundCount(pool));state.hardIndex=0;state.hardAnswers={};state.hardOptionOrders={};state.hardChecked=false;state.hardSummary=false;renderHard();
 }
-function partMark(ok){return '<span class="part-mark '+(ok?'ok':'miss')+'">'+(ok?'✓ Match':'✗ Different')+'</span>';}
+function partMark(ok,yes,no){return '<span class="part-mark '+(ok?'ok':'miss')+'">'+(ok?'✓ '+(yes||'Match'):'✗ '+(no||'Different'))+'</span>';}
+function componentForCode(code){return bank.find(item=>item.component_code===code)||null;}
+function evidenceOrder(s){
+ if(!state.hardOptionOrders[s.id])state.hardOptionOrders[s.id]=shuffle(EVIDENCE_CHECKS[s.id].map((_,i)=>i));
+ return state.hardOptionOrders[s.id];
+}
+function evidenceChoice(s,index,selected){
+ const option=EVIDENCE_CHECKS[s.id][index],id='evidence-'+s.id+'-'+index;
+ return '<span class="answer-option evidence-option"><input type="checkbox" id="'+esc(id)+'" name="evidenceChoice" value="'+index+'"'+(selected.evidence.includes(index)?' checked':'')+(state.hardChecked?' disabled':'')+'><label for="'+esc(id)+'">'+esc(option.text)+'</label></span>';
+}
+function evidenceReview(s,selected){
+ return '<div class="evidence-review">'+evidenceOrder(s).map(index=>{
+  const option=EVIDENCE_CHECKS[s.id][index],chosen=selected.evidence.includes(index);
+  const status=option.correct?(chosen?'Selected · correct evidence':'Correct evidence · missed'):(chosen?'Selected · common mix-up':'Not supported by this vignette');
+  const cls=option.correct?(chosen?'':' missed'):(chosen?' misread':'');
+  let why;
+  if(option.correct)why='This is direct evidence for '+titleFor(s)+'. '+s.component_evidence;
+  else if(option.neighbor===s.component_code)why='This describes a different performance level within '+titleFor(s)+'. '+s.score_evidence;
+  else{
+   const neighbor=componentForCode(option.neighbor),cue=COMPONENT_CUES[option.neighbor];
+   why='This is a common mix-up with '+(neighbor?titleFor(neighbor):option.neighbor)+(cue?' ('+cue.cue+')':'')+', but the vignette does not show it. '+s.boundary_note;
+  }
+  return '<div class="evidence-review-item'+cls+'"><small>'+esc(status)+'</small><p><strong>'+esc(option.text)+'</strong><br>'+esc(why)+'</p></div>';
+ }).join('')+'</div>';
+}
 function hardQuestion(){
  if(state.hardSummary){
   const items=state.hardItems,total=items.length,res=items.map(s=>(state.hardAnswers[s.id]||{}).result||{});
-  const count=k=>res.filter(r=>r[k]).length,all=res.filter(r=>r.domain&&r.component&&r.score).length;
+  const count=k=>res.filter(r=>r[k]).length,all=res.filter(r=>r.evidence&&r.domain&&r.component&&r.score).length;
   const tile=(label,n)=>'<div class="tally"><span class="tally-n">'+n+'<small> / '+total+'</small></span><span class="tally-label">'+label+'</span></div>';
-  $("#activity").innerHTML='<div class="summary-card"><p class="eyebrow">Round complete</p><h3>'+all+' of '+total+' with all three parts matching</h3><div class="tally-row">'+tile("Domain",count("domain"))+tile("Component",count("component"))+tile("Practice rating",count("score"))+'</div><p>The part with the lowest count is the one to talk through next. Each scenario has a best-fit answer for this practice set only.</p><button type="button" class="btn" id="hardAgain">Start another hard-mode round</button></div>';
+  $("#activity").innerHTML='<div class="summary-card"><p class="eyebrow">Round complete</p><h3>'+all+' of '+total+' with all four parts matching</h3><div class="tally-row four">'+tile("Evidence set",count("evidence"))+tile("Domain",count("domain"))+tile("Component",count("component"))+tile("Practice rating",count("score"))+'</div><p>Each evidence set has one exact two-choice answer. Review the item feedback to see which misconception each distractor was designed to surface.</p><button type="button" class="btn" id="hardAgain">Start another evidence challenge</button></div>';
   $("#hardAgain").onclick=makeHardRound;return;
  }
  const s=currentScenario();if(!s){state.hardSummary=true;hardQuestion();return;}
- const selected=state.hardAnswers[s.id]||{domain:"",component:"",score:""};
+ const selected=state.hardAnswers[s.id]||{domain:"",component:"",score:"",evidence:[]};
+ selected.evidence=selected.evidence||[];
  const components=selected.domain?(componentsByDomain[selected.domain]||[]):[];
- let html='<div class="round-tools"><span class="round-label">Challenge '+(state.hardIndex+1)+' of '+state.hardItems.length+'</span><span class="round-label">No timer · check all three together</span></div><div class="hard-prompt"><span class="card-id">'+esc(s.id)+'</span><span class="card-copy">'+esc(s.scenario)+'</span></div>';
- html+='<div class="step-block"><h3 class="step-title">1. Choose a domain <small>Start broad</small></h3><div class="answer-grid">'+selectedDomains().map(id=>choiceOption("domain",id,domainLabel(id),selected.domain)).join("")+'</div></div>';
+ const order=evidenceOrder(s),evidenceCount=selected.evidence.length;
+ let html='<div class="round-tools"><span class="round-label">Challenge '+(state.hardIndex+1)+' of '+state.hardItems.length+'</span><span class="round-label">No timer · check four decisions together</span></div><div class="hard-prompt"><span class="card-id">Scenario evidence</span><span class="card-copy">'+esc(s.scenario)+'</span></div>';
+ html+='<div class="step-block"><h3 class="step-title">1. Select the evidence <small>Choose exactly two</small></h3><p class="setting-help">Select the two statements that accurately describe important evidence in this vignette. Read each claim closely; the alternatives include common mix-ups.</p><div class="answer-grid">'+order.map(index=>evidenceChoice(s,index,selected)).join("")+'</div><div class="status" id="evidenceCount" role="status" aria-live="polite">'+(evidenceCount===2?'Two evidence statements selected.':evidenceCount>2?'Choose exactly two; unselect '+(evidenceCount-2)+' statement'+(evidenceCount===3?'':'s')+' to continue.':'Choose '+(2-evidenceCount)+' more evidence statement'+(2-evidenceCount===1?'':'s')+'.')+'</div></div>';
+ html+='<div class="step-block"><h3 class="step-title">2. Choose a domain <small>Start broad</small></h3><div class="answer-grid">'+selectedDomains().map(id=>choiceOption("domain",id,domainLabel(id),selected.domain)).join("")+'</div></div>';
  if(selected.domain){
-  html+='<div class="step-block"><h3 class="step-title">2. Choose a component <small>Within your chosen domain</small></h3><div class="answer-grid">'+components.map(c=>choiceOption("component",c.code,titleFor(c),selected.component)).join("")+'</div></div>';
- }else html+='<div class="step-block"><h3 class="step-title">2. Choose a component</h3><p class="setting-help">Choose a domain first to narrow the component list.</p></div>';
- html+='<div class="step-block"><h3 class="step-title">3. Estimate the practice rating <small>Use only the evidence in this vignette</small></h3><div class="answer-grid">'+["Unsatisfactory","Basic","Proficient","Distinguished"].map(x=>choiceOption("score",x,x,selected.score)).join("")+'</div></div>';
- const ready=selected.domain&&selected.component&&selected.score;
- html+='<div class="controls"><button type="button" class="btn" id="checkHard"'+(state.hardChecked||!ready?' disabled':'')+'>Check all three</button>';
+  html+='<div class="step-block"><h3 class="step-title">3. Choose a component <small>Within your chosen domain</small></h3><div class="answer-grid">'+components.map(c=>choiceOption("component",c.code,titleFor(c),selected.component)).join("")+'</div></div>';
+ }else html+='<div class="step-block"><h3 class="step-title">3. Choose a component</h3><p class="setting-help">Choose a domain first to narrow the component list.</p></div>';
+ html+='<div class="step-block"><h3 class="step-title">4. Estimate the practice rating <small>Use only the evidence in this vignette</small></h3><div class="answer-grid">'+["Unsatisfactory","Basic","Proficient","Distinguished"].map(x=>choiceOption("score",x,x,selected.score)).join("")+'</div></div>';
+ const ready=evidenceCount===2&&selected.domain&&selected.component&&selected.score;
+ html+='<div class="controls"><button type="button" class="btn" id="checkHard"'+(state.hardChecked||!ready?' disabled':'')+'>Check all four</button>';
  if(!state.hardChecked)html+='<button type="button" class="text-button" id="hardHint">'+(state.hintLevel===0?'Show a hint':state.hintLevel===1?'Show a second hint':'Hide hints')+'</button>';
  if(state.hardChecked)html+='<button type="button" class="btn secondary" id="hardNext">'+(state.hardIndex+1===state.hardItems.length?"Finish round":"Next scenario")+'</button>';
  html+='</div>';
@@ -1314,19 +1424,27 @@ function hardQuestion(){
  }
  if(state.hardChecked){
   const r=selected.result;
-  const allCorrect=r.domain&&r.component&&r.score;
+  const allCorrect=r.evidence&&r.domain&&r.component&&r.score;
   const yours=v=>v?esc(v):'—';
-  const yourComponent=(componentsByDomain[selected.domain]||[]).find(c=>c.code===selected.component);
-  html+='<div class="hard-feedback" role="status"><strong>'+(allCorrect?"All three fit the evidence.":"Compare your choices with the best-fit reading.")+'</strong>'
-   +'<div class="answer-summary"><div class="part-row"><span><b>Domain:</b> '+esc(s.domain)+(r.domain?'':'<span class="part-yours">You chose '+yours(domainLabel(selected.domain))+'</span>')+'</span>'+partMark(r.domain)+'</div>'
+  const yourComponent=componentForCode(selected.component);
+  html+='<div class="hard-feedback" role="status"><strong>'+(allCorrect?"All four fit the evidence.":"Review the evidence and the boundary between nearby ideas.")+'</strong>'
+   +'<div class="answer-summary"><div class="part-row"><span><b>Evidence set:</b> '+(r.evidence?'Both statements match.':'The exact set is different.')+'</span>'+partMark(r.evidence,'Exact set','Review set')+'</div>'
+   +'<div class="part-row"><span><b>Domain:</b> '+esc(s.domain)+(r.domain?'':'<span class="part-yours">You chose '+yours(domainLabel(selected.domain))+'</span>')+'</span>'+partMark(r.domain)+'</div>'
    +'<div class="part-row"><span><b>Component:</b> '+esc(titleFor(s))+(r.component?'':'<span class="part-yours">You chose '+yours(yourComponent?titleFor(yourComponent):selected.component)+'</span>')+'</span>'+partMark(r.component)+'</div>'
    +'<div class="part-row"><span><b>Practice rating:</b> '+esc(s.score)+(r.score?'':'<span class="part-yours">You chose '+yours(selected.score)+'</span>')+'</span>'+partMark(r.score)+'</div></div>'
-   +'<b>Component evidence:</b> '+esc(s.component_evidence)+'<br><b>Rating evidence:</b> '+esc(s.score_evidence)+'<br><b>Distinction clue:</b> '+esc(s.boundary_note)+'</div>';
+   +'<b>Evidence review</b>'+evidenceReview(s,selected)+'<b>Component evidence:</b> '+esc(s.component_evidence)+'<br><b>Rating evidence:</b> '+esc(s.score_evidence)+'<br><b>Distinction clue:</b> '+esc(s.boundary_note)+'</div>';
  }
  $("#activity").innerHTML=html;
+ $$("#activity input[name=evidenceChoice]").forEach(input=>input.onchange=()=>{
+  if(state.hardChecked)return;
+  const answers=state.hardAnswers[s.id]||(state.hardAnswers[s.id]={domain:"",component:"",score:"",evidence:[]}),picked=new Set(answers.evidence||[]),index=Number(input.value);
+  if(input.checked)picked.add(index);else picked.delete(index);
+  answers.evidence=Array.from(picked);renderHard();
+  const next=document.getElementById('evidence-'+s.id+'-'+index);if(next)next.focus({preventScroll:true});
+ });
  $$("#activity input[type=radio]").forEach(input=>input.onchange=()=>{
   if(state.hardChecked)return;
-  const key=input.name,answers=state.hardAnswers[s.id]||(state.hardAnswers[s.id]={domain:"",component:"",score:""});
+  const key=input.name,answers=state.hardAnswers[s.id]||(state.hardAnswers[s.id]={domain:"",component:"",score:"",evidence:[]});
   answers[key]=input.value;if(key==="domain")answers.component="";
   const focusName=key==="domain"?"component":key;
   renderHard();
@@ -1335,7 +1453,8 @@ function hardQuestion(){
  });
  $("#checkHard").onclick=()=>{
   if(state.hardChecked||!ready)return;
-  selected.result={domain:domainId(s.domain)===selected.domain,component:s.component_code===selected.component,score:s.score===selected.score};
+  const exactEvidence=EVIDENCE_CHECKS[s.id].every((option,index)=>option.correct===selected.evidence.includes(index));
+  selected.result={evidence:exactEvidence,domain:domainId(s.domain)===selected.domain,component:s.component_code===selected.component,score:s.score===selected.score};
   state.hardChecked=true;renderHard();
   const fb=$("#activity .hard-feedback");if(fb)fb.scrollIntoView({block:"nearest"});
   const nx=$("#hardNext");if(nx)nx.focus({preventScroll:true});
@@ -1369,6 +1488,8 @@ function updateSettings(){
 function init(data){
  bank=data.scenarios||[];
  const first=bank[0];if(!first)throw new Error("The scenario file is empty.");
+ const badEvidence=bank.filter(s=>!Array.isArray(EVIDENCE_CHECKS[s.id])||EVIDENCE_CHECKS[s.id].length!==4||EVIDENCE_CHECKS[s.id].filter(option=>option.correct).length!==2);
+ if(badEvidence.length)throw new Error("Evidence questions need four choices and exactly two answers: "+badEvidence.map(s=>s.id).join(", "));
  bank.forEach(s=>{
   const id=domainId(s.domain);domainNames[id]=s.domain;
   const key=s.component_code;
