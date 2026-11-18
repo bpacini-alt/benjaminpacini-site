@@ -131,7 +131,7 @@ select{min-height:37px;padding:7px 30px 7px 10px;border:1px solid #c8d0d8;border
 .part-mark.ok{background:var(--green-pale);color:var(--green)}
 .part-mark.miss{background:var(--red-pale);color:var(--red)}
 .tally-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:14px 0}
-.tally-row.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+.tally-row.two{grid-template-columns:repeat(2,minmax(0,1fr))}
 .tally{padding:12px;border:1px solid var(--blue-line);border-radius:8px;background:#fff;text-align:center}
 .tally-n{display:block;font-family:var(--serif);font-size:26px;font-weight:700;color:var(--ink)}
 .tally-n small{font-size:14px;color:var(--muted);font-weight:400}
@@ -153,6 +153,7 @@ select{min-height:37px;padding:7px 30px 7px 10px;border:1px solid #c8d0d8;border
 .answer-option input[type=checkbox]+label::before{content:"";position:absolute;left:11px;top:11px;width:18px;height:18px;border:1.5px solid #8799a5;border-radius:4px;background:#fff}
 .answer-option input[type=checkbox]:checked+label::before{border-color:var(--blue);background:var(--blue)}
 .answer-option input[type=checkbox]:checked+label::after{content:"✓";position:absolute;left:14px;top:10px;color:#fff;font:800 13px var(--sans)}
+#evidenceComponent{display:block;width:100%;max-width:560px;margin-top:7px}
 .hard-feedback{padding:14px;margin-top:12px;border:1px solid #d4e3d9;border-radius:8px;background:#f2f9f4;color:#294b35;font-size:12.5px;line-height:1.5}
 .hard-feedback strong{font-size:14px}
 .hard-feedback .answer-summary{margin:8px 0;padding:9px 10px;border-radius:6px;background:#fff;font-family:var(--serif);font-size:14px}
@@ -195,7 +196,6 @@ select{min-height:37px;padding:7px 30px 7px 10px;border:1px solid #c8d0d8;border
 .error-box{padding:15px;border:1px solid var(--red-line);border-radius:8px;background:var(--red-pale);color:var(--red);font-size:13px}
 @media(max-width:1050px){.layout{grid-template-columns:minmax(0,1fr) 285px}.settings{grid-template-columns:minmax(150px,.7fr) minmax(210px,1.1fr);}.settings .setting-group:last-child{grid-column:1/-1}}
 @media(max-width:760px){.match-board{grid-template-columns:1fr}.page{padding:18px 14px 42px}.topbar-inner{padding:11px 14px}.hero{grid-template-columns:1fr}.hero-note{max-width:none}.settings{grid-template-columns:1fr 1fr}.settings .setting-group:last-child{grid-column:1/-1}.layout{grid-template-columns:1fr}.ref-column{grid-template-columns:repeat(2,minmax(0,1fr))}.hint-panel{grid-column:1/-1}.activity-panel{padding:16px}.buckets,.buckets.domain-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:760px){.tally-row.four{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:520px){.settings{grid-template-columns:1fr}.settings .setting-group:last-child{grid-column:auto}.practice-picker{align-items:stretch;flex-direction:column;gap:6px;padding:11px 12px}.practice-picker select{width:100%}.settings-disclosure>summary{align-items:flex-start;flex-direction:column;gap:3px}.activity-head{display:block}.activity-head .controls{margin-top:12px}.buckets,.buckets.domain-grid{grid-template-columns:1fr}.ref-column{grid-template-columns:1fr}.hint-panel{grid-column:auto}.menu-row{grid-template-columns:1fr}.answer-grid{grid-template-columns:1fr}.memory-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.memory-card{min-height:125px}.hero-note{font-size:12px}.round-tools{align-items:flex-start}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 @media print{body{background:#fff}.topbar,.settings,.practice-picker,.ref-column,.controls,.disclaimer{display:none!important}.page{max-width:none;padding:0}.layout{display:block}.panel{box-shadow:none;border:0}.activity-panel{padding:0}}
@@ -208,16 +208,16 @@ select{min-height:37px;padding:7px 30px 7px 10px;border:1px solid #c8d0d8;border
 <div><p class="eyebrow">EDCOR 200 · Danielson Framework for Teaching (2013)</p><h1>The Teaching Practice Sort &amp; Match Lab</h1><p class="lede">Learn about the 2013 Framework for Teaching (FFT), used in Idaho to evaluate teachers. Explore its domains and components, then use classroom scenarios to consider the evidence behind practice ratings.</p></div>
 <div class="hero-note"><strong>Classroom practice.</strong> Original scenarios for discussion; ratings apply to the evidence in each vignette and do not evaluate real teachers.</div>
 </header>
-<div class="practice-picker"><label for="practiceType">Practice type</label><select id="practiceType" aria-controls="activity"><optgroup label="Core practice"><option value="domain" selected>Sort by domain</option><option value="component">Sort by component</option><option value="match">Match scenarios to components</option></optgroup><optgroup label="More practice"><option value="memory">Memory match</option><option value="hard">Evidence challenge</option></optgroup></select></div>
+<div class="practice-picker"><label for="practiceType">Practice type</label><select id="practiceType" aria-controls="activity"><optgroup label="Core practice"><option value="domain" selected>Sort by domain</option><option value="component">Sort by component</option><option value="match">Match scenarios to components</option></optgroup><optgroup label="More practice"><option value="memory">Memory match</option><option value="evidence">Evidence to component</option><option value="rating">Rating challenge</option></optgroup></select></div>
 <details class="settings-disclosure" id="setupDisclosure"><summary><span>Round setup</span><small>Round size, domains, and feedback</small></summary><section class="settings" aria-label="Activity settings">
 <div class="setting-group"><span class="setting-label">Scenario bank</span><p class="setting-help">All 66 scenarios · three per component</p><div class="inline-controls"><select id="roundSize" aria-label="Scenarios in a round"><option value="6">6 per round</option><option value="8">8 per round</option><option value="10">10 per round</option><option value="12">12 per round</option></select></div></div>
-<div class="setting-group"><span class="setting-label">Practice layers</span><label class="check-row"><input id="showScores" type="checkbox"> Reveal practice rating after checks</label><p class="setting-help">Ratings stay hidden until the answer is checked.</p></div>
+<div class="setting-group"><span class="setting-label">Practice layers</span><label class="check-row"><input id="showScores" type="checkbox"> Reveal practice rating after sorting</label><p class="setting-help">Sort and match modes show ratings only after checking; the rating challenge asks you to choose one.</p></div>
 <div class="setting-group"><span class="setting-label">Domains in this round</span><div id="domainFilters" class="domain-choices">
 <label class="check-row"><input type="checkbox" value="1" checked> Domain 1 · Planning</label>
 <label class="check-row"><input type="checkbox" value="2" checked> Domain 2 · Environment</label>
 <label class="check-row"><input type="checkbox" value="3" checked> Domain 3 · Instruction</label>
 <label class="check-row"><input type="checkbox" value="4" checked> Domain 4 · Professional</label>
-</div><p class="setting-help">Choose at least two for domain sorting. Filters also shape matching rounds and hard mode.</p></div>
+</div><p class="setting-help">Choose at least two for domain sorting. Filters also shape matching, evidence, and rating rounds.</p></div>
 <div class="setting-group hidden" id="focusGroup"><span class="setting-label">Component sort focus</span><div class="inline-controls"><select id="focusDomain" aria-label="Choose a domain for component sort"></select></div><p class="setting-help">The domain is given; sort the scenarios among its components.</p></div>
 </section></details>
 <div class="layout single-column" id="activityLayout">
@@ -1163,9 +1163,10 @@ function setMode(mode){
  if(mode==="component")$("#activityTitle").textContent="Component Sort";
  if(mode==="memory")$("#activityTitle").textContent="Memory Match";
  if(mode==="match")$("#activityTitle").textContent="Match";
- if(mode==="hard")$("#activityTitle").textContent="Evidence Challenge";
- $("#modeEyebrow").textContent=mode==="domain"?"Round 1":mode==="component"?"Component round":mode==="memory"?"Memory round":mode==="match"?"Matching round":"Four-part reasoning challenge";
- $("#activityIntro").textContent=mode==="domain"?"Sort each classroom scenario into the domain that best fits its evidence.":mode==="component"?"The domain is given. Sort each scenario into the component that best fits its central evidence.":mode==="memory"?"Find a scenario and its matching domain/component card. This is a recognition round.":mode==="match"?"Pair each scenario card with the component card that best fits its central evidence. Check the board when the class is ready.":"Choose exactly two evidence statements, then classify the domain, component, and practice rating. Feedback explains each distractor after you submit.";
+ if(mode==="evidence")$("#activityTitle").textContent="Evidence to Component";
+ if(mode==="rating")$("#activityTitle").textContent="Rating Challenge";
+ $("#modeEyebrow").textContent=mode==="domain"?"Round 1":mode==="component"?"Component round":mode==="memory"?"Memory round":mode==="match"?"Matching round":mode==="evidence"?"Evidence reasoning":"Rating reasoning";
+ $("#activityIntro").textContent=mode==="domain"?"Sort each classroom scenario into the domain that best fits its evidence.":mode==="component"?"The domain is given. Sort each scenario into the component that best fits its central evidence.":mode==="memory"?"Find a scenario and its matching domain/component card. This is a recognition round.":mode==="match"?"Pair each scenario card with the component card that best fits its central evidence. Check the board when the class is ready.":mode==="evidence"?"Choose two accurate evidence statements, then identify the component they support. The domain is shown from your component choice.":"Choose a domain, component, and practice rating. These are checked together, with rating evidence after you submit.";
  newRound();
 }
 function makeSortRound(){
@@ -1393,74 +1394,95 @@ function evidenceReview(s,selected){
   return '<div class="evidence-review-item'+cls+'"><small>'+esc(status)+'</small><p><strong>'+esc(option.text)+'</strong><br>'+esc(why)+'</p></div>';
  }).join('')+'</div>';
 }
+function challengeSummary(evidenceMode){
+ const total=state.hardItems.length,res=state.hardItems.map(s=>(state.hardAnswers[s.id]||{}).result||{});
+ const count=k=>res.filter(r=>r[k]).length;
+ const all=evidenceMode?res.filter(r=>r.evidence&&r.component).length:res.filter(r=>r.domain&&r.component&&r.score).length;
+ const tile=(label,n)=>'<div class="tally"><span class="tally-n">'+n+'<small> / '+total+'</small></span><span class="tally-label">'+label+'</span></div>';
+ const results=evidenceMode?tile('Evidence set',count('evidence'))+tile('Component',count('component')):tile('Domain',count('domain'))+tile('Component',count('component'))+tile('Practice rating',count('score'));
+ const message=evidenceMode?'The domain is implied by the component. Read the item feedback to see how each evidence choice supports or misses the component.':'Each scenario is judged on its own evidence; use the lowest tally to choose what to review next.';
+ $('#activity').innerHTML='<div class="summary-card"><p class="eyebrow">Round complete</p><h3>'+all+' of '+total+' with all '+(evidenceMode?'two':'three')+' decisions matching</h3><div class="tally-row '+(evidenceMode?'two':'')+'">'+results+'</div><p>'+message+'</p><button type="button" class="btn" id="hardAgain">Start another '+(evidenceMode?'evidence round':'rating round')+'</button></div>';
+ $('#hardAgain').onclick=makeHardRound;
+}
 function hardQuestion(){
- if(state.hardSummary){
-  const items=state.hardItems,total=items.length,res=items.map(s=>(state.hardAnswers[s.id]||{}).result||{});
-  const count=k=>res.filter(r=>r[k]).length,all=res.filter(r=>r.evidence&&r.domain&&r.component&&r.score).length;
-  const tile=(label,n)=>'<div class="tally"><span class="tally-n">'+n+'<small> / '+total+'</small></span><span class="tally-label">'+label+'</span></div>';
-  $("#activity").innerHTML='<div class="summary-card"><p class="eyebrow">Round complete</p><h3>'+all+' of '+total+' with all four parts matching</h3><div class="tally-row four">'+tile("Evidence set",count("evidence"))+tile("Domain",count("domain"))+tile("Component",count("component"))+tile("Practice rating",count("score"))+'</div><p>Each evidence set has one exact two-choice answer. Review the item feedback to see which misconception each distractor was designed to surface.</p><button type="button" class="btn" id="hardAgain">Start another evidence challenge</button></div>';
-  $("#hardAgain").onclick=makeHardRound;return;
- }
+ const evidenceMode=state.mode==='evidence';
+ if(state.hardSummary){challengeSummary(evidenceMode);return;}
  const s=currentScenario();if(!s){state.hardSummary=true;hardQuestion();return;}
- const selected=state.hardAnswers[s.id]||{domain:"",component:"",score:"",evidence:[]};
+ const selected=state.hardAnswers[s.id]||{domain:'',component:'',score:'',evidence:[]};
  selected.evidence=selected.evidence||[];
- const components=selected.domain?(componentsByDomain[selected.domain]||[]):[];
- const order=evidenceOrder(s),evidenceCount=selected.evidence.length;
- let html='<div class="round-tools"><span class="round-label">Challenge '+(state.hardIndex+1)+' of '+state.hardItems.length+'</span><span class="round-label">No timer · check four decisions together</span></div><div class="hard-prompt"><span class="card-id">Scenario evidence</span><span class="card-copy">'+esc(s.scenario)+'</span></div>';
- html+='<div class="step-block"><h3 class="step-title">1. Select the evidence <small>Choose exactly two</small></h3><p class="setting-help">Select the two statements that accurately describe important evidence in this vignette. Read each claim closely; the alternatives include common mix-ups.</p><div class="answer-grid">'+order.map(index=>evidenceChoice(s,index,selected)).join("")+'</div><div class="status" id="evidenceCount" role="status" aria-live="polite">'+(evidenceCount===2?'Two evidence statements selected.':evidenceCount>2?'Choose exactly two; unselect '+(evidenceCount-2)+' statement'+(evidenceCount===3?'':'s')+' to continue.':'Choose '+(2-evidenceCount)+' more evidence statement'+(2-evidenceCount===1?'':'s')+'.')+'</div></div>';
- html+='<div class="step-block"><h3 class="step-title">2. Choose a domain <small>Start broad</small></h3><div class="answer-grid">'+selectedDomains().map(id=>choiceOption("domain",id,domainLabel(id),selected.domain)).join("")+'</div></div>';
- if(selected.domain){
-  html+='<div class="step-block"><h3 class="step-title">3. Choose a component <small>Within your chosen domain</small></h3><div class="answer-grid">'+components.map(c=>choiceOption("component",c.code,titleFor(c),selected.component)).join("")+'</div></div>';
- }else html+='<div class="step-block"><h3 class="step-title">3. Choose a component</h3><p class="setting-help">Choose a domain first to narrow the component list.</p></div>';
- html+='<div class="step-block"><h3 class="step-title">4. Estimate the practice rating <small>Use only the evidence in this vignette</small></h3><div class="answer-grid">'+["Unsatisfactory","Basic","Proficient","Distinguished"].map(x=>choiceOption("score",x,x,selected.score)).join("")+'</div></div>';
- const ready=evidenceCount===2&&selected.domain&&selected.component&&selected.score;
- html+='<div class="controls"><button type="button" class="btn" id="checkHard"'+(state.hardChecked||!ready?' disabled':'')+'>Check all four</button>';
+ let html='<div class="round-tools"><span class="round-label">'+(evidenceMode?'Evidence case ':'Rating case ')+(state.hardIndex+1)+' of '+state.hardItems.length+'</span><span class="round-label">No timer · feedback after you commit</span></div><div class="hard-prompt"><span class="card-id">Scenario</span><span class="card-copy">'+esc(s.scenario)+'</span></div>';
+ if(evidenceMode){
+  const order=evidenceOrder(s),evidenceCount=selected.evidence.length;
+  const componentOptions=selectedDomains().map(id=>'<optgroup label="'+esc(domainLabel(id))+'">'+(componentsByDomain[id]||[]).map(c=>'<option value="'+esc(c.code)+'"'+(selected.component===c.code?' selected':'')+'>'+esc(titleFor(c))+'</option>').join('')+'</optgroup>').join('');
+  html+='<div class="step-block"><h3 class="step-title">1. Select the evidence <small>Choose exactly two</small></h3><p class="setting-help">Select the two statements that accurately describe important evidence in this vignette. The options include common mix-ups; judge each claim against the text.</p><div class="answer-grid">'+order.map(index=>evidenceChoice(s,index,selected)).join('')+'</div><div class="status" id="evidenceCount" role="status" aria-live="polite">'+(evidenceCount===2?'Two evidence statements selected.':evidenceCount>2?'Choose exactly two; unselect '+(evidenceCount-2)+' statement'+(evidenceCount===3?'':'s')+' to continue.':'Choose '+(2-evidenceCount)+' more evidence statement'+(2-evidenceCount===1?'':'s')+'.')+'</div></div>';
+  html+='<div class="step-block"><label class="step-title" for="evidenceComponent">2. Choose the component <small>Options are grouped by domain</small></label><p class="setting-help">'+(evidenceCount===2?'Your component choice determines the domain shown in feedback.':'Select exactly two evidence statements above to open the component choices.')+'</p><select id="evidenceComponent" aria-label="Choose the component that best fits"'+(state.hardChecked||evidenceCount!==2?' disabled':'')+'><option value="">Choose a component…</option>'+componentOptions+'</select></div>';
+ }else{
+  const components=selected.domain?(componentsByDomain[selected.domain]||[]):[];
+  html+='<div class="step-block"><h3 class="step-title">1. Choose a domain <small>Start broad</small></h3><div class="answer-grid">'+selectedDomains().map(id=>choiceOption('domain',id,domainLabel(id),selected.domain)).join('')+'</div></div>';
+  if(selected.domain)html+='<div class="step-block"><h3 class="step-title">2. Choose a component <small>Within your chosen domain</small></h3><div class="answer-grid">'+components.map(c=>choiceOption('component',c.code,titleFor(c),selected.component)).join('')+'</div></div>';
+  else html+='<div class="step-block"><h3 class="step-title">2. Choose a component</h3><p class="setting-help">Choose a domain first to narrow the component list.</p></div>';
+  if(selected.component)html+='<div class="step-block"><h3 class="step-title">3. Estimate the practice rating <small>Use only the evidence in this vignette</small></h3><div class="answer-grid">'+['Unsatisfactory','Basic','Proficient','Distinguished'].map(x=>choiceOption('score',x,x,selected.score)).join('')+'</div></div>';
+  else html+='<div class="step-block"><h3 class="step-title">3. Estimate the practice rating</h3><p class="setting-help">Choose a component first to continue.</p></div>';
+ }
+ const evidenceCount=selected.evidence.length,ready=evidenceMode?evidenceCount===2&&!!selected.component:!!(selected.domain&&selected.component&&selected.score);
+ html+='<div class="controls"><button type="button" class="btn" id="checkHard"'+(state.hardChecked||!ready?' disabled':'')+'>'+ (evidenceMode?'Check evidence and component':'Check domain, component, and rating')+'</button>';
  if(!state.hardChecked)html+='<button type="button" class="text-button" id="hardHint">'+(state.hintLevel===0?'Show a hint':state.hintLevel===1?'Show a second hint':'Hide hints')+'</button>';
- if(state.hardChecked)html+='<button type="button" class="btn secondary" id="hardNext">'+(state.hardIndex+1===state.hardItems.length?"Finish round":"Next scenario")+'</button>';
+ if(state.hardChecked)html+='<button type="button" class="btn secondary" id="hardNext">'+(state.hardIndex+1===state.hardItems.length?'Finish round':'Next scenario')+'</button>';
  html+='</div>';
  if(state.hintLevel>0&&!state.hardChecked){
   const d=DOMAIN_CUES[domainId(s.domain)],c=COMPONENT_CUES[s.component_code];
   html+='<div class="hint-content" role="status"><strong>Hint:</strong> '+esc(d.question)+(state.hintLevel>1?'<br><strong>Second hint:</strong> '+esc(c.question):'')+'</div>';
  }
  if(state.hardChecked){
-  const r=selected.result;
-  const allCorrect=r.evidence&&r.domain&&r.component&&r.score;
-  const yours=v=>v?esc(v):'—';
-  const yourComponent=componentForCode(selected.component);
-  html+='<div class="hard-feedback" role="status"><strong>'+(allCorrect?"All four fit the evidence.":"Review the evidence and the boundary between nearby ideas.")+'</strong>'
-   +'<div class="answer-summary"><div class="part-row"><span><b>Evidence set:</b> '+(r.evidence?'Both statements match.':'The exact set is different.')+'</span>'+partMark(r.evidence,'Exact set','Review set')+'</div>'
-   +'<div class="part-row"><span><b>Domain:</b> '+esc(s.domain)+(r.domain?'':'<span class="part-yours">You chose '+yours(domainLabel(selected.domain))+'</span>')+'</span>'+partMark(r.domain)+'</div>'
-   +'<div class="part-row"><span><b>Component:</b> '+esc(titleFor(s))+(r.component?'':'<span class="part-yours">You chose '+yours(yourComponent?titleFor(yourComponent):selected.component)+'</span>')+'</span>'+partMark(r.component)+'</div>'
-   +'<div class="part-row"><span><b>Practice rating:</b> '+esc(s.score)+(r.score?'':'<span class="part-yours">You chose '+yours(selected.score)+'</span>')+'</span>'+partMark(r.score)+'</div></div>'
-   +'<b>Evidence review</b>'+evidenceReview(s,selected)+'<b>Component evidence:</b> '+esc(s.component_evidence)+'<br><b>Rating evidence:</b> '+esc(s.score_evidence)+'<br><b>Distinction clue:</b> '+esc(s.boundary_note)+'</div>';
+  const r=selected.result,yours=v=>v?esc(v):'—',yourComponent=componentForCode(selected.component);
+  if(evidenceMode){
+   const allCorrect=r.evidence&&r.component;
+   html+='<div class="hard-feedback" role="status"><strong>'+(allCorrect?'Your evidence and component match.':'Compare the evidence with your component choice.')+'</strong><div class="answer-summary"><div class="part-row"><span><b>Best-fit component:</b> '+esc(titleFor(s))+(r.component?'':'<span class="part-yours">You chose '+yours(yourComponent?titleFor(yourComponent):selected.component)+'</span>')+'</span>'+partMark(r.component)+'</div><div class="part-row"><span><b>Evidence set:</b> '+(r.evidence?'Both statements match.':'The exact set is different.')+'</span>'+partMark(r.evidence,'Exact set','Review set')+'</div><div class="part-row"><span><b>Domain:</b> '+esc(domainLabel(domainId(s.domain)))+' <span class="part-yours">Implied by the best-fit component'+(!r.component&&yourComponent?' · your choice is '+esc(domainLabel(domainId(yourComponent.domain))):'')+'</span></span></div></div><b>Evidence review</b>'+evidenceReview(s,selected)+'<b>Distinction clue:</b> '+esc(s.boundary_note)+'</div>';
+  }else{
+   const allCorrect=r.domain&&r.component&&r.score;
+   html+='<div class="hard-feedback" role="status"><strong>'+(allCorrect?'All three fit the evidence.':'Compare your choices with the best-fit reading.')+'</strong><div class="answer-summary"><div class="part-row"><span><b>Domain:</b> '+esc(s.domain)+(r.domain?'':'<span class="part-yours">You chose '+yours(domainLabel(selected.domain))+'</span>')+'</span>'+partMark(r.domain)+'</div><div class="part-row"><span><b>Component:</b> '+esc(titleFor(s))+(r.component?'':'<span class="part-yours">You chose '+yours(yourComponent?titleFor(yourComponent):selected.component)+'</span>')+'</span>'+partMark(r.component)+'</div><div class="part-row"><span><b>Practice rating:</b> '+esc(s.score)+(r.score?'':'<span class="part-yours">You chose '+yours(selected.score)+'</span>')+'</span>'+partMark(r.score)+'</div></div><b>Component evidence:</b> '+esc(s.component_evidence)+'<br><b>Rating evidence:</b> '+esc(s.score_evidence)+'<br><b>Distinction clue:</b> '+esc(s.boundary_note)+'</div>';
+  }
  }
- $("#activity").innerHTML=html;
- $$("#activity input[name=evidenceChoice]").forEach(input=>input.onchange=()=>{
-  if(state.hardChecked)return;
-  const answers=state.hardAnswers[s.id]||(state.hardAnswers[s.id]={domain:"",component:"",score:"",evidence:[]}),picked=new Set(answers.evidence||[]),index=Number(input.value);
-  if(input.checked)picked.add(index);else picked.delete(index);
-  answers.evidence=Array.from(picked);renderHard();
-  const next=document.getElementById('evidence-'+s.id+'-'+index);if(next)next.focus({preventScroll:true});
- });
- $$("#activity input[type=radio]").forEach(input=>input.onchange=()=>{
-  if(state.hardChecked)return;
-  const key=input.name,answers=state.hardAnswers[s.id]||(state.hardAnswers[s.id]={domain:"",component:"",score:"",evidence:[]});
-  answers[key]=input.value;if(key==="domain")answers.component="";
-  const focusName=key==="domain"?"component":key;
-  renderHard();
-  const next=$("#activity input[name='"+focusName+"']:checked")||$("#activity input[name='"+focusName+"']");
-  if(next)next.focus({preventScroll:true});
- });
- $("#checkHard").onclick=()=>{
+ $('#activity').innerHTML=html;
+ if(evidenceMode){
+  $$('#activity input[name=evidenceChoice]').forEach(input=>input.onchange=()=>{
+   if(state.hardChecked)return;
+   const answers=state.hardAnswers[s.id]||(state.hardAnswers[s.id]={domain:'',component:'',score:'',evidence:[]}),picked=new Set(answers.evidence||[]),index=Number(input.value);
+   if(input.checked)picked.add(index);else picked.delete(index);
+   answers.evidence=Array.from(picked);answers.component='';renderHard();
+   const next=document.getElementById('evidence-'+s.id+'-'+index);if(next)next.focus({preventScroll:true});
+  });
+  const componentSelect=$('#evidenceComponent');if(componentSelect)componentSelect.onchange=()=>{
+   if(state.hardChecked)return;
+   const answers=state.hardAnswers[s.id]||(state.hardAnswers[s.id]={domain:'',component:'',score:'',evidence:[]});
+   answers.component=componentSelect.value;renderHard();
+   const next=$('#evidenceComponent');if(next)next.focus({preventScroll:true});
+  };
+ }else{
+  $$('#activity input[type=radio]').forEach(input=>input.onchange=()=>{
+   if(state.hardChecked)return;
+   const key=input.name,answers=state.hardAnswers[s.id]||(state.hardAnswers[s.id]={domain:'',component:'',score:'',evidence:[]});
+   answers[key]=input.value;
+   if(key==='domain'){answers.component='';answers.score='';}
+   if(key==='component')answers.score='';
+   const focusName=key==='domain'?'component':key;
+   renderHard();
+   const next=$('#activity input[name="'+focusName+'"]:checked')||$('#activity input[name="'+focusName+'"]');
+   if(next)next.focus({preventScroll:true});
+  });
+ }
+ $('#checkHard').onclick=()=>{
   if(state.hardChecked||!ready)return;
-  const exactEvidence=EVIDENCE_CHECKS[s.id].every((option,index)=>option.correct===selected.evidence.includes(index));
-  selected.result={evidence:exactEvidence,domain:domainId(s.domain)===selected.domain,component:s.component_code===selected.component,score:s.score===selected.score};
+  if(evidenceMode){
+   const exactEvidence=EVIDENCE_CHECKS[s.id].every((option,index)=>option.correct===selected.evidence.includes(index));
+   selected.result={evidence:exactEvidence,component:s.component_code===selected.component};
+  }else selected.result={domain:domainId(s.domain)===selected.domain,component:s.component_code===selected.component,score:s.score===selected.score};
   state.hardChecked=true;renderHard();
-  const fb=$("#activity .hard-feedback");if(fb)fb.scrollIntoView({block:"nearest"});
-  const nx=$("#hardNext");if(nx)nx.focus({preventScroll:true});
+  const fb=$('#activity .hard-feedback');if(fb)fb.scrollIntoView({block:'nearest'});
+  const nx=$('#hardNext');if(nx)nx.focus({preventScroll:true});
  };
- const hb=$("#hardHint");if(hb)hb.onclick=()=>{state.hintLevel=state.hintLevel>=2?0:state.hintLevel+1;renderHard();const h=$("#hardHint");if(h)h.focus({preventScroll:true});};
- const nx=$("#hardNext");if(nx)nx.onclick=()=>{clearHint();state.hardChecked=false;state.hardIndex++;if(state.hardIndex>=state.hardItems.length){state.hardSummary=true;hardQuestion();}else renderHard();window.scrollTo({top:$("#activityTitle").getBoundingClientRect().top+window.scrollY-20});};
+ const hb=$('#hardHint');if(hb)hb.onclick=()=>{state.hintLevel=state.hintLevel>=2?0:state.hintLevel+1;renderHard();const h=$('#hardHint');if(h)h.focus({preventScroll:true});};
+ const nx=$('#hardNext');if(nx)nx.onclick=()=>{clearHint();state.hardChecked=false;state.hardIndex++;if(state.hardIndex>=state.hardItems.length){state.hardSummary=true;hardQuestion();}else renderHard();window.scrollTo({top:$('#activityTitle').getBoundingClientRect().top+window.scrollY-20});};
 }
 function choiceOption(name,value,label,chosen){
  const id="opt-"+name+"-"+String(value).replace(/[^a-z0-9]/gi,"");
@@ -1478,7 +1500,7 @@ function newRound(){
  if(state.mode==="domain"||state.mode==="component")makeSortRound();
  if(state.mode==="memory")makeMemoryRound();
  if(state.mode==="match")makeRegularRound();
- if(state.mode==="hard")makeHardRound();
+ if(state.mode==="evidence"||state.mode==="rating")makeHardRound();
 }
 function updateSettings(){
  state.roundSize=$("#roundSize").value;
