@@ -8,8 +8,10 @@ const REVIEW_TOKEN_HASHES = {
   "ta:EDCOR 310": "b4258f68e598aa7ed491125bf60487697273175ab02807f1c052e1255a0882c5",
   "blind:EDCOR 310": "8cacb9d782986b8f7b655911e9773719ba181d98715c66f1b57eadcb40961c38",
   "ta:ECON 150": "14cbf2590f9400c4f18f4f555e0944456bb94c02717e1463f2a95753e224f593",
-  "blind:ECON 150": "e84db124c6ec620509c1c1261cb6d6519e4fe2d55260f166f967620f1975b417"
+  "blind:ECON 150": "e84db124c6ec620509c1c1261cb6d6519e4fe2d55260f166f967620f1975b417",
+  "blind:ALL": "a3db2b38e1aa1e79f4dd109cdb1c8df3a89995058d0bcebdd0137e9519d308b8"
 };
+const OWNER_BLIND_SCOPE = "ALL";
 const COURSE_OPTIONS = ["EDCOR 200", "EDCOR 310", "ECON 150"];
 const COURSE_TITLES = {
   "EDCOR 200": "Teaching as a Profession",
@@ -258,18 +260,28 @@ async function handleFullReview(env, scope) {
   }, 200);
 }
 
+function blindEligible(row, answers, courseScope) {
+  if (!row.blind_id) return false;
+  const selections = answers?.applicant?.courseSelections;
+  if (courseScope === OWNER_BLIND_SCOPE) return Array.isArray(selections) && selections.length > 0;
+  return canShareWithReviewers(answers) && Array.isArray(selections) && selections.includes(courseScope);
+}
+
 async function handleBlindReview(env, courseScope) {
   const all = await listReviewApplications(env);
   const eligible = all
-    .filter(({ row, answers }) =>
-      row.blind_id && canShareWithReviewers(answers) && answers?.applicant?.courseSelections?.includes(courseScope))
+    .filter(({ row, answers }) => blindEligible(row, answers, courseScope))
     .map(({ row, answers }) => ({
       blindId: row.blind_id,
+      ...(courseScope === OWNER_BLIND_SCOPE ? { courses: answers.applicant.courseSelections } : {}),
       questions: Object.fromEntries(BLIND_QUESTION_KEYS.map((key) => [key, answers?.questions?.[key] || ""]))
     }));
   for (let index = eligible.length - 1; index > 0; index -= 1) {
     const other = Math.floor(Math.random() * (index + 1));
     [eligible[index], eligible[other]] = [eligible[other], eligible[index]];
+  }
+  if (courseScope === OWNER_BLIND_SCOPE) {
+    return jsonResponse({ course: "All courses", courseTitle: "instructor view", showsCourses: true, applications: eligible }, 200);
   }
   return jsonResponse({ course: courseScope, courseTitle: COURSE_TITLES[courseScope], applications: eligible }, 200);
 }
@@ -329,7 +341,7 @@ async function handleBlindRanking(request, env, courseScope) {
 
   const all = await listReviewApplications(env);
   const eligibleIds = new Set(all
-    .filter(({ row, answers }) => row.blind_id && canShareWithReviewers(answers) && answers?.applicant?.courseSelections?.includes(courseScope))
+    .filter(({ row, answers }) => blindEligible(row, answers, courseScope))
     .map(({ row }) => row.blind_id));
   if (eligibleIds.size !== rankings.length || rankings.some((item) => !eligibleIds.has(item.blindId))) {
     return jsonResponse({ error: "The application list changed. Refresh the page and rank the current list." }, 409);
