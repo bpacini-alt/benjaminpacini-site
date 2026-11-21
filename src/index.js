@@ -202,15 +202,43 @@ async function listReviewApplications(env) {
   return rows.map((row) => ({ row, answers: parseAnswers(row.answers_json) }));
 }
 
-// Each real applicant gets a permanent number, in the order they applied.
-// The same number appears on every blind page and in the owner view.
+// Applicant numbers are locked to the printed blind ranking sheet used for
+// hiring (Nov 20, 2026), keyed by hidden blind ID. Anyone who applies later
+// gets the next number, in the order they applied.
+const LOCKED_APPLICANT_NUMBERS = {
+  "ef2b78ef637e47278e12260f87d30b00": 1,
+  "47a0a4a2d9624145bc042cb0b5f78ff9": 2,
+  "3477561a85da4bb48d14db95e5afdfa0": 3,
+  "621447b8428e48edbc44b3c555413a46": 4,
+  "2185e7217b0a442da0733c10310779d5": 5,
+  "8ae5189a11384a69bc4f64799eeec4d5": 6,
+  "7e27a31a0abd4d0393b2894518ac0eb1": 7,
+  "42b61f3484b44b81873348c8cc384ead": 8,
+  "7458960cb4194ce8a9be75260c5f1696": 9,
+  "bb9b0a3ccaae4264b9b87c1f92afcbb8": 10,
+  "b3981c9a70a94420b5118759b9985c44": 11,
+  "6accb75d2d4a4998906b05a77818dc56": 12,
+  "26c72505bf444258b32bb47c03c68681": 13,
+  "e4289de67e1c4c0580c32da0fdb1798b": 14,
+  "c1d90e89c6b74a7a84073eef58f759b0": 15,
+  "10dc3703602f4413973f15fc01552257": 16,
+  "454bb389a2694f5fa354f12f6c57c283": 17,
+  "10af36a28c54496d929e59e8132cde5b": 18,
+  "0d6cf9f3ece548608ffe33a806f0a2a3": 19
+};
+
 function applicantNumbers(all) {
+  const numbers = new Map();
+  let next = Math.max(0, ...Object.values(LOCKED_APPLICANT_NUMBERS));
   const numbered = all
     .filter(({ row, answers }) => row.blind_id && Array.isArray(answers?.applicant?.courseSelections) &&
       answers.applicant.courseSelections.length > 0)
     .sort((a, b) => (a.row.submitted_at < b.row.submitted_at ? -1 : a.row.submitted_at > b.row.submitted_at ? 1
       : a.row.blind_id < b.row.blind_id ? -1 : 1));
-  return new Map(numbered.map(({ row }, index) => [row.blind_id, index + 1]));
+  for (const { row } of numbered) {
+    numbers.set(row.blind_id, LOCKED_APPLICANT_NUMBERS[row.blind_id] || (next += 1));
+  }
+  return numbers;
 }
 
 async function handleFullReview(env, scope) {
