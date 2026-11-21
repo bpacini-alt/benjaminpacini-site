@@ -45,8 +45,8 @@ function saveDraft(){const values={};document.querySelectorAll(".rank-select").f
 function renderApplications(){
 const container=document.getElementById("applications");container.replaceChildren();
 applications.forEach(function(application,index){
-const card=el("article","application-card");const head=el("div","rank-row");const title=el("h2","", "Application "+(index+1));title.style.margin="0";const label=el("label","","Overall rank");label.htmlFor="rank-"+index;
-const select=document.createElement("select");select.id="rank-"+index;select.className="rank-select";select.dataset.blindId=application.blindId;select.setAttribute("aria-label","Overall rank for application "+(index+1));
+const card=el("article","application-card");const head=el("div","rank-row");const title=el("h2","",application.number?"Applicant #"+application.number:"Application "+(index+1));title.style.margin="0";const label=el("label","","Overall rank");label.htmlFor="rank-"+index;
+const select=document.createElement("select");select.id="rank-"+index;select.className="rank-select";select.dataset.blindId=application.blindId;select.setAttribute("aria-label","Overall rank for "+(application.number?"applicant #"+application.number:"application "+(index+1)));
 const empty=el("option","","Choose rank");empty.value="";select.appendChild(empty);
 for(let rank=1;rank<=applications.length;rank+=1){const option=el("option","",String(rank)+(rank===1?" · strongest":""));option.value=String(rank);select.appendChild(option);}
 if(draft[application.blindId])select.value=String(draft[application.blindId]);select.addEventListener("change",saveDraft);head.appendChild(title);head.appendChild(label);head.appendChild(select);card.appendChild(head);

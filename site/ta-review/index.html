@@ -40,7 +40,7 @@ const responsibilityLabels={grade:"Grade student work using the rubric","dress-c
 const roleLabels={ta:"TA job","brother-pacini":"BroPa’s job","no-one":"No one’s job"};
 function renderApplication(item,index,total,role){
 const card=document.getElementById("application-card");card.replaceChildren();const data=item.answers||{};const applicant=data.applicant||{};
-card.appendChild(el("h2","app-name",applicant.name||"Application"));
+card.appendChild(el("h2","app-name",(item.applicantNumber?"#"+item.applicantNumber+" · ":"")+(applicant.name||"Application")));
 card.appendChild(el("p","meta",(applicant.email||"No email")+" · "+(applicant.course||"No course")+" · Submitted "+new Date(item.submittedAt).toLocaleString()));
 if(role==="Instructor view"){const ranked=Object.entries(item.rankingByCourse||{}).filter(function(entry){return Array.isArray(applicant.courseSelections)&&applicant.courseSelections.includes(entry[0]);});if(ranked.length){ranked.forEach(function(entry){const rank=entry[1];addField(card,"Blind ranking · "+entry[0]+" — "+(courseTitles[entry[0]]||""),rank.reviewerCount?"Mean rank "+rank.averageRank+" across "+rank.reviewerCount+" reviewer(s); lower ranks are stronger.":"No blind rankings saved yet.");});}else{addField(card,"Blind ranking summary","No blind rankings saved yet.");}}
 const acknowledgments=data.acknowledgments||{};const basics=addSection(card,"Application details");addField(basics,"Course",applicant.course||"—");addField(basics,"Email",applicant.email||"—");addField(basics,"Shared with invited TA reviewers",acknowledgments.shareWithReviewers===true?"Yes":"No");

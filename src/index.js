@@ -202,9 +202,21 @@ async function listReviewApplications(env) {
   return rows.map((row) => ({ row, answers: parseAnswers(row.answers_json) }));
 }
 
+// Each real applicant gets a permanent number, in the order they applied.
+// The same number appears on every blind page and in the owner view.
+function applicantNumbers(all) {
+  const numbered = all
+    .filter(({ row, answers }) => row.blind_id && Array.isArray(answers?.applicant?.courseSelections) &&
+      answers.applicant.courseSelections.length > 0)
+    .sort((a, b) => (a.row.submitted_at < b.row.submitted_at ? -1 : a.row.submitted_at > b.row.submitted_at ? 1
+      : a.row.blind_id < b.row.blind_id ? -1 : 1));
+  return new Map(numbered.map(({ row }, index) => [row.blind_id, index + 1]));
+}
+
 async function handleFullReview(env, scope) {
   const all = await listReviewApplications(env);
   const courseScope = scope === "owner" ? null : scope.slice("ta:".length);
+  const numbers = applicantNumbers(all);
   const visible = scope === "owner"
     ? all
     : all.filter(({ answers }) => canShareWithReviewers(answers) && answers?.applicant?.courseSelections?.includes(courseScope));
@@ -253,6 +265,7 @@ async function handleFullReview(env, scope) {
         answers: visibleAnswers,
         ...(scope === "owner" ? {
           blindId: row.blind_id,
+          applicantNumber: numbers.get(row.blind_id) || null,
           rankingByCourse: rankingMap.get(row.blind_id) || {}
         } : {})
       };
@@ -269,10 +282,12 @@ function blindEligible(row, answers, courseScope) {
 
 async function handleBlindReview(env, courseScope) {
   const all = await listReviewApplications(env);
+  const numbers = applicantNumbers(all);
   const eligible = all
     .filter(({ row, answers }) => blindEligible(row, answers, courseScope))
     .map(({ row, answers }) => ({
       blindId: row.blind_id,
+      number: numbers.get(row.blind_id) || null,
       ...(courseScope === OWNER_BLIND_SCOPE ? { courses: answers.applicant.courseSelections } : {}),
       questions: Object.fromEntries(BLIND_QUESTION_KEYS.map((key) => [key, answers?.questions?.[key] || ""]))
     }));
