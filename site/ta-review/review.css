@@ -51,3 +51,4 @@ td.detail{background:#fbfcfd;font-size:.9rem}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .rate-panel{background:var(--soft);border-radius:12px;padding:18px 18px 8px;border-top:0;margin-top:28px}
 .rate-panel .criterion{border-top-color:#d3dde8}
+.criterion.overall-vibe{border-top:2px solid var(--navy);margin-top:6px;padding-top:14px}

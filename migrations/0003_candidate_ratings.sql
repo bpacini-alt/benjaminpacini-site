@@ -15,3 +15,15 @@ CREATE TABLE IF NOT EXISTS candidate_ratings (
   updated_at TEXT NOT NULL,
   PRIMARY KEY (rater_key, application_id, criterion)
 );
+
+-- Replaced by candidate_scores (levels 1-5) when "Overall vibe" was added.
+-- Existing ratings are copied over once; this table is no longer written.
+CREATE TABLE IF NOT EXISTS candidate_scores (
+  rater_key TEXT NOT NULL,
+  rater_label TEXT NOT NULL,
+  application_id TEXT NOT NULL,
+  criterion TEXT NOT NULL,
+  level INTEGER NOT NULL CHECK (level BETWEEN 1 AND 5),
+  updated_at TEXT NOT NULL,
+  PRIMARY KEY (rater_key, application_id, criterion)
+);

@@ -10,7 +10,7 @@ Source for Benjamin Pacini's website.
 - `site/ta-review/` holds three password-protected review pages that share `review.js` and `review.css`:
   - https://benjaminpacini.com/ta-review/ full applications with names (Benjamin's password)
   - https://benjaminpacini.com/ta-review/summary/ names, candidate names and everyone's ratings (Benjamin's password)
-  - https://benjaminpacini.com/ta-review/ta/ applications with names, emails and dates removed, with each rater's 1–4 ratings on five criteria at the bottom of every candidate (TA password or Benjamin's). The old `/ta-review/rate/` address forwards here.
+  - https://benjaminpacini.com/ta-review/ta/ applications with names, emails and dates removed, with each rater's ratings at the bottom of every candidate (five questions 1–4, plus an overall vibe from hard no to definite yes) (TA password or Benjamin's). The old `/ta-review/rate/` address forwards here.
   The two passwords are Cloudflare secrets, `OWNER_REVIEW_PASSWORD` and `TA_REVIEW_PASSWORD`, and are never stored in this repository. Each real applicant gets a permanent random tree name ("Candidate Aspen"), and every page lists candidates alphabetically by it.
 - `archive/` holds the original Google Site, preserved before the migration. It is never published.
 
