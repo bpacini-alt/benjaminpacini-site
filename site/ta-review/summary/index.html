@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer">
+<title>Summary · TA applications</title>
+<link rel="stylesheet" href="/ta-review/review.css">
+</head>
+<body data-page="summary" data-role="owner">
+<main>
+<header class="masthead"><div class="eyebrow">TA applications · private</div><h1>Summary</h1><p>Every candidate with their name and everyone’s ratings. Only you have this password.</p><p class="pages"><a href="/ta-review/">Full review</a><a href="/ta-review/summary/" aria-current="page">Summary</a><a href="/ta-review/ta/">TA review</a><a href="/ta-review/rate/">Rate candidates</a></p></header>
+<form class="panel" id="gate" hidden>
+<label class="field" for="password">Password</label>
+<p class="muted" style="margin:0 0 10px">This page needs BroPa’s password.</p>
+<div class="row"><input type="password" id="password" autocomplete="current-password" required><button class="primary" type="submit">Open</button></div>
+<p class="row" style="margin:12px 0 0"><label><input type="checkbox" id="remember" checked> Remember on this device</label></p>
+<p class="notice error" id="gate-message" role="alert" hidden></p>
+</form>
+<div class="notice" id="loading" role="status">Loading…</div>
+<div class="notice error" id="error" role="alert" hidden></div>
+<div id="content" hidden>
+<section class="panel"><p class="muted" id="summary-note" style="margin-top:0"></p><div class="scroll"><table><thead><tr>
+<th><button type="button" data-sort="code">Candidate</button></th><th><button type="button" data-sort="name">Name</button></th><th>Courses</th><th class="n"><button type="button" data-sort="raters">Raters</button></th>
+<th class="n"><button type="button" data-sort="vibe">Vibe</button></th><th class="n"><button type="button" data-sort="innovation">Innovative</button></th><th class="n"><button type="button" data-sort="managingUp">Manage up</button></th><th class="n"><button type="button" data-sort="dedication">Dedicated</button></th><th class="n"><button type="button" data-sort="content">Content</button></th><th class="n"><button type="button" data-sort="overall">Overall</button></th><th><span class="sr-only">Details</span></th>
+</tr></thead><tbody id="summary-body"></tbody></table></div></section>
+</div>
+<p><button class="linkish" type="button" id="forget" hidden>Forget the password on this device</button></p>
+</main>
+<script src="/ta-review/review.js"></script>
+</body>
+</html>

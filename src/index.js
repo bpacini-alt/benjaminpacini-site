@@ -1,17 +1,6 @@
 const MAX_BODY_BYTES = 65536;
 const PRODUCTION_HOSTS = new Set(["benjaminpacini.com", "www.benjaminpacini.com"]);
 const REQUIRED_ACKNOWLEDGMENTS = ["grade", "schedule", "attendanceHours", "relationship"];
-const REVIEW_TOKEN_HASHES = {
-  owner: "e17f928b15ce58b6f7db69087a8f54a0e7da45f9288766ee9222caacae8c0edf",
-  "ta:EDCOR 200": "113bcb6ddd91376131044c9d662993429e5bcbda5a7301c7b153dc25b64b98e1",
-  "blind:EDCOR 200": "522a0cf73aebeb76e515f65ecb55a893635ad9a1b95f5d038badb117297ba03f",
-  "ta:EDCOR 310": "b4258f68e598aa7ed491125bf60487697273175ab02807f1c052e1255a0882c5",
-  "blind:EDCOR 310": "8cacb9d782986b8f7b655911e9773719ba181d98715c66f1b57eadcb40961c38",
-  "ta:ECON 150": "14cbf2590f9400c4f18f4f555e0944456bb94c02717e1463f2a95753e224f593",
-  "blind:ECON 150": "e84db124c6ec620509c1c1261cb6d6519e4fe2d55260f166f967620f1975b417",
-  "blind:ALL": "a3db2b38e1aa1e79f4dd109cdb1c8df3a89995058d0bcebdd0137e9519d308b8"
-};
-const OWNER_BLIND_SCOPE = "ALL";
 const COURSE_OPTIONS = ["EDCOR 200", "EDCOR 310", "ECON 150"];
 const COURSE_TITLES = {
   "EDCOR 200": "Teaching as a Profession",
@@ -150,6 +139,55 @@ function validateApplication(data) {
 }
 
 
+// ---------------------------------------------------------------------------
+// TA review: two passwords, four fixed pages.
+//   /ta-review/          owner: every application, with names
+//   /ta-review/summary/  owner: names, candidate names, ratings
+//   /ta-review/ta/       TA or owner: applications with names removed
+//   /ta-review/rate/     TA or owner: four-level ratings on five criteria
+// The passwords are Cloudflare secrets (OWNER_REVIEW_PASSWORD and
+// TA_REVIEW_PASSWORD), never stored in this repository.
+// ---------------------------------------------------------------------------
+
+const RATING_CRITERIA = ["vibe", "innovation", "managingUp", "dedication", "content"];
+const RATING_LEVELS = [1, 2, 3, 4];
+
+// Candidate names are tree names. Each real applicant gets one at random,
+// once, and keeps it. Every page lists candidates alphabetically by that
+// name, so the order is fixed for everyone and says nothing about who
+// applied when. Names that match a word in an applicant's own name are skipped.
+const CANDIDATE_NAMES = [
+  "Acacia", "Alder", "Almond", "Apricot", "Ash", "Aspen", "Avocado", "Balsa", "Banyan", "Baobab",
+  "Basswood", "Beech", "Birch", "Blackthorn", "Boxelder", "Buckeye", "Butternut", "Cacao", "Camphor", "Catalpa",
+  "Cedar", "Cherry", "Chestnut", "Cinnamon", "Citron", "Coconut", "Cork", "Cottonwood", "Cypress",
+  "Dogwood", "Ebony", "Elder", "Elm", "Eucalyptus", "Fig", "Fir", "Ginkgo", "Guava", "Hackberry",
+  "Hawthorn", "Hemlock", "Hickory", "Hornbeam", "Ironwood", "Jacaranda", "Juniper", "Kapok", "Kumquat", "Larch",
+  "Lemon", "Lilac", "Locust", "Lychee", "Mahogany", "Mango", "Mangrove", "Maple", "Mesquite", "Mulberry",
+  "Nutmeg", "Oak", "Olive", "Orange", "Palm", "Papaya", "Pawpaw", "Peach", "Pear", "Pecan",
+  "Persimmon", "Pine", "Pinyon", "Pistachio", "Plum", "Pomegranate", "Poplar", "Quince", "Redbud", "Redwood",
+  "Sassafras", "Sequoia", "Spruce", "Sumac", "Sycamore", "Tamarack", "Tamarind", "Teak", "Tupelo", "Walnut",
+  "Wisteria", "Yew"
+];
+
+let reviewSchemaReady = false;
+async function ensureReviewSchema(env) {
+  if (reviewSchemaReady) return;
+  await env.TA_APPLICATIONS_DB.batch([
+    env.TA_APPLICATIONS_DB.prepare(
+      "CREATE TABLE IF NOT EXISTS candidate_codes (application_id TEXT PRIMARY KEY NOT NULL, code TEXT NOT NULL UNIQUE, assigned_at TEXT NOT NULL)"
+    ),
+    env.TA_APPLICATIONS_DB.prepare(
+      "CREATE TABLE IF NOT EXISTS candidate_ratings (rater_key TEXT NOT NULL, rater_label TEXT NOT NULL, application_id TEXT NOT NULL, criterion TEXT NOT NULL, level INTEGER NOT NULL CHECK (level BETWEEN 1 AND 4), updated_at TEXT NOT NULL, PRIMARY KEY (rater_key, application_id, criterion))"
+    )
+  ]);
+  reviewSchemaReady = true;
+}
+
+async function sha256Hex(text) {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(digest), (value) => value.toString(16).padStart(2, "0")).join("");
+}
+
 function constantTimeStringEqual(left, right) {
   if (typeof left !== "string" || typeof right !== "string" || left.length !== right.length) return false;
   let difference = 0;
@@ -157,15 +195,16 @@ function constantTimeStringEqual(left, right) {
   return difference === 0;
 }
 
-async function reviewScope(request, url) {
-  if (url.protocol !== "https:" || !PRODUCTION_HOSTS.has(url.hostname)) return null;
-  const match = (request.headers.get("Authorization") || "").match(/^Bearer ([a-f0-9]{64})$/i);
-  if (!match) return null;
-  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(match[1].toLowerCase()));
-  const candidate = Array.from(new Uint8Array(digest), (value) => value.toString(16).padStart(2, "0")).join("");
-  for (const [scope, expected] of Object.entries(REVIEW_TOKEN_HASHES)) {
-    if (constantTimeStringEqual(candidate, expected)) return scope;
-  }
+// Returns "owner", "ta", "unset" (passwords not configured), or null.
+async function reviewRole(request, env) {
+  if (!env.OWNER_REVIEW_PASSWORD || !env.TA_REVIEW_PASSWORD) return "unset";
+  const given = request.headers.get("X-Review-Password");
+  if (typeof given !== "string" || given.length < 1 || given.length > 200) return null;
+  const givenHash = await sha256Hex(given);
+  const ownerMatch = constantTimeStringEqual(givenHash, await sha256Hex(env.OWNER_REVIEW_PASSWORD));
+  const taMatch = constantTimeStringEqual(givenHash, await sha256Hex(env.TA_REVIEW_PASSWORD));
+  if (ownerMatch) return "owner";
+  if (taMatch) return "ta";
   return null;
 }
 
@@ -178,265 +217,207 @@ function parseAnswers(json) {
   }
 }
 
+function isCandidate(answers) {
+  return Array.isArray(answers?.applicant?.courseSelections) && answers.applicant.courseSelections.length > 0;
+}
+
+function nameParts(name) {
+  return String(name || "").split(/[^A-Za-zÀ-ɏ'’-]+/).filter((part) => part.length >= 3);
+}
+
+// Every application, each real applicant with a permanent candidate name.
+// Sorted by candidate name; applications without one (tests) come last.
+async function listCandidates(env) {
+  await ensureReviewSchema(env);
+  const db = env.TA_APPLICATIONS_DB;
+  const [apps, codes] = await Promise.all([
+    db.prepare("SELECT id, submitted_at, name, email, answers_json FROM applications ORDER BY submitted_at").all(),
+    db.prepare("SELECT application_id, code FROM candidate_codes").all()
+  ]);
+  const codeById = new Map((codes.results || []).map((item) => [item.application_id, item.code]));
+  const rows = (apps.results || []).map((row) => ({ row, answers: parseAnswers(row.answers_json) }));
+
+  const blocked = new Set(rows.flatMap(({ row }) => nameParts(row.name).map((part) => part.toLowerCase())));
+  const used = new Set(codeById.values());
+  const missing = rows.filter(({ row, answers }) => isCandidate(answers) && !codeById.has(row.id));
+  for (const { row } of missing) {
+    const open = CANDIDATE_NAMES.filter((code) => !used.has(code) && !blocked.has(code.toLowerCase()));
+    if (!open.length) throw new Error("No candidate names left. Add more to CANDIDATE_NAMES.");
+    const pick = new Uint32Array(1);
+    crypto.getRandomValues(pick);
+    const code = open[pick[0] % open.length];
+    await db.prepare("INSERT OR IGNORE INTO candidate_codes (application_id, code, assigned_at) VALUES (?, ?, ?)")
+      .bind(row.id, code, new Date().toISOString()).run();
+    const saved = await db.prepare("SELECT code FROM candidate_codes WHERE application_id = ?").bind(row.id).first();
+    if (saved?.code) {
+      codeById.set(row.id, saved.code);
+      used.add(saved.code);
+    }
+  }
+
+  return rows
+    .map((item) => ({ ...item, code: isCandidate(item.answers) ? codeById.get(item.row.id) || null : null }))
+    .sort((a, b) => {
+      if (a.code && b.code) return a.code.localeCompare(b.code);
+      if (a.code || b.code) return a.code ? -1 : 1;
+      return a.row.submitted_at < b.row.submitted_at ? -1 : 1;
+    });
+}
+
+// Strip names, emails, dates and timing; scrub the applicant's own name
+// and any email address out of every answer.
+function anonymize(answers, name) {
+  const parts = nameParts(name).sort((a, b) => b.length - a.length)
+    .map((part) => part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+  const pattern = parts.length ? new RegExp("(^|[^A-Za-zÀ-ɏ])(" + parts.join("|") + ")(?=$|[^A-Za-zÀ-ɏ])", "gi") : null;
+  const scrub = (value) => {
+    if (typeof value === "string") {
+      let text = value.replace(/[\w.+-]+@[\w-]+(\.[\w-]+)+/g, "[email removed]");
+      if (pattern) text = text.replace(pattern, "$1[name removed]");
+      return text;
+    }
+    if (Array.isArray(value)) return value.map(scrub);
+    if (isObject(value)) return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, scrub(item)]));
+    return value;
+  };
+  const { applicant, timing, ...rest } = answers || {};
+  return { ...scrub(rest), applicant: { courseSelections: applicant?.courseSelections || [], otherCourse: scrub(applicant?.otherCourse || "") } };
+}
+
+async function handleApplications(env, role, view) {
+  if (view === "owner" && role !== "owner") return jsonResponse({ error: "This page needs BroPa's password." }, 403);
+  const all = await listCandidates(env);
+  const showNames = role === "owner" && view !== "ta";
+  const list = showNames ? all : all.filter(({ code, answers }) => code && canShareWithReviewers(answers));
+  return jsonResponse({
+    role: showNames ? "owner" : "ta",
+    applications: list.map(({ row, answers, code }) => showNames
+      ? { code, name: row.name, email: row.email, submittedAt: row.submitted_at, answers }
+      : { code, answers: anonymize(answers, row.name) })
+  }, 200);
+}
+
 function canShareWithReviewers(answers) {
   return answers?.acknowledgments?.shareWithReviewers === true;
 }
 
-async function listReviewApplications(env) {
-  const result = await env.TA_APPLICATIONS_DB.prepare(
-    "SELECT id, submitted_at, name, email, course, answers_json, blind_id FROM applications ORDER BY submitted_at DESC"
-  ).all();
-  const rows = result.results || [];
-  for (const row of rows) {
-    if (!row.blind_id) {
-      const candidate = crypto.randomUUID().replace(/-/g, "");
-      await env.TA_APPLICATIONS_DB.prepare(
-        "UPDATE applications SET blind_id = ? WHERE id = ? AND blind_id IS NULL"
-      ).bind(candidate, row.id).run();
-      const assigned = await env.TA_APPLICATIONS_DB.prepare(
-        "SELECT blind_id FROM applications WHERE id = ?"
-      ).bind(row.id).first();
-      row.blind_id = assigned?.blind_id || candidate;
-    }
-  }
-  return rows.map((row) => ({ row, answers: parseAnswers(row.answers_json) }));
+function raterKey(label) {
+  return label.toLowerCase();
 }
 
-// Applicant numbers are locked to the printed blind ranking sheet used for
-// hiring (Nov 20, 2026), keyed by hidden blind ID. Anyone who applies later
-// gets the next number, in the order they applied.
-const LOCKED_APPLICANT_NUMBERS = {
-  "ef2b78ef637e47278e12260f87d30b00": 1,
-  "47a0a4a2d9624145bc042cb0b5f78ff9": 2,
-  "3477561a85da4bb48d14db95e5afdfa0": 3,
-  "621447b8428e48edbc44b3c555413a46": 4,
-  "2185e7217b0a442da0733c10310779d5": 5,
-  "8ae5189a11384a69bc4f64799eeec4d5": 6,
-  "7e27a31a0abd4d0393b2894518ac0eb1": 7,
-  "42b61f3484b44b81873348c8cc384ead": 8,
-  "7458960cb4194ce8a9be75260c5f1696": 9,
-  "bb9b0a3ccaae4264b9b87c1f92afcbb8": 10,
-  "b3981c9a70a94420b5118759b9985c44": 11,
-  "6accb75d2d4a4998906b05a77818dc56": 12,
-  "26c72505bf444258b32bb47c03c68681": 13,
-  "e4289de67e1c4c0580c32da0fdb1798b": 14,
-  "c1d90e89c6b74a7a84073eef58f759b0": 15,
-  "10dc3703602f4413973f15fc01552257": 16,
-  "454bb389a2694f5fa354f12f6c57c283": 17,
-  "10af36a28c54496d929e59e8132cde5b": 18,
-  "0d6cf9f3ece548608ffe33a806f0a2a3": 19
-};
-
-function applicantNumbers(all) {
-  const numbers = new Map();
-  let next = Math.max(0, ...Object.values(LOCKED_APPLICANT_NUMBERS));
-  const numbered = all
-    .filter(({ row, answers }) => row.blind_id && Array.isArray(answers?.applicant?.courseSelections) &&
-      answers.applicant.courseSelections.length > 0)
-    .sort((a, b) => (a.row.submitted_at < b.row.submitted_at ? -1 : a.row.submitted_at > b.row.submitted_at ? 1
-      : a.row.blind_id < b.row.blind_id ? -1 : 1));
-  for (const { row } of numbered) {
-    numbers.set(row.blind_id, LOCKED_APPLICANT_NUMBERS[row.blind_id] || (next += 1));
-  }
-  return numbers;
+function cleanRater(value) {
+  const label = typeof value === "string" ? value.trim().replace(/\s+/g, " ") : "";
+  return hasText(label, 60) && !/[\u0000-\u001f]/.test(label) ? label : null;
 }
 
-async function handleFullReview(env, scope) {
-  const all = await listReviewApplications(env);
-  const courseScope = scope === "owner" ? null : scope.slice("ta:".length);
-  const numbers = applicantNumbers(all);
-  const visible = scope === "owner"
-    ? all
-    : all.filter(({ answers }) => canShareWithReviewers(answers) && answers?.applicant?.courseSelections?.includes(courseScope));
-  const rankingMap = new Map();
-  if (scope === "owner") {
-    const rankings = await env.TA_APPLICATIONS_DB.prepare(
-      "SELECT reviewer_key, blind_id, rank FROM blind_rankings"
-    ).all();
-    const totals = new Map();
-    for (const item of rankings.results || []) {
-      const separator = item.reviewer_key.indexOf("::");
-      if (separator < 1) continue;
-      const course = item.reviewer_key.slice(0, separator).toUpperCase();
-      const key = item.blind_id + "|" + course;
-      const total = totals.get(key) || { total: 0, count: 0 };
-      total.total += item.rank;
-      total.count += 1;
-      totals.set(key, total);
-    }
-    for (const [key, total] of totals) {
-      const separator = key.lastIndexOf("|");
-      const blindId = key.slice(0, separator);
-      const course = key.slice(separator + 1);
-      const byCourse = rankingMap.get(blindId) || {};
-      byCourse[course] = { reviewerCount: total.count, averageRank: Math.round((total.total / total.count) * 100) / 100 };
-      rankingMap.set(blindId, byCourse);
-    }
+async function handleRatingsGet(env, role, url) {
+  const rater = cleanRater(url.searchParams.get("rater"));
+  if (!rater) return jsonResponse({ error: "Type your name first." }, 400);
+  const all = await listCandidates(env);
+  const visible = all.filter(({ code, answers }) => code && (role === "owner" || canShareWithReviewers(answers)));
+  const ids = new Map(visible.map(({ row, code }) => [row.id, code]));
+  const saved = await env.TA_APPLICATIONS_DB.prepare(
+    "SELECT application_id, criterion, level FROM candidate_ratings WHERE rater_key = ?"
+  ).bind(raterKey(rater)).all();
+  const ratings = {};
+  for (const item of saved.results || []) {
+    const code = ids.get(item.application_id);
+    if (!code) continue;
+    (ratings[code] = ratings[code] || {})[item.criterion] = item.level;
   }
   return jsonResponse({
-    role: scope === "owner" ? "Instructor view" : "TA reviewer view · " + courseScope + " — " + COURSE_TITLES[courseScope],
-    applications: visible.map(({ row, answers }) => {
-      const visibleAnswers = scope === "owner" || !answers ? answers : { ...answers };
-      if (scope !== "owner" && visibleAnswers) {
-        delete visibleAnswers.timing;
-        if (visibleAnswers.applicant) {
-          visibleAnswers.applicant = {
-            ...visibleAnswers.applicant,
-            course: courseScope,
-            courseSelections: [courseScope],
-            otherCourse: ""
-          };
-        }
-      }
-      return {
-        submittedAt: row.submitted_at,
-        answers: visibleAnswers,
-        ...(scope === "owner" ? {
-          blindId: row.blind_id,
-          applicantNumber: numbers.get(row.blind_id) || null,
-          rankingByCourse: rankingMap.get(row.blind_id) || {}
-        } : {})
-      };
-    })
+    rater,
+    candidates: visible.map(({ code, answers }) => ({ code, courses: answers.applicant.courseSelections })),
+    ratings
   }, 200);
 }
 
-function blindEligible(row, answers, courseScope) {
-  if (!row.blind_id) return false;
-  const selections = answers?.applicant?.courseSelections;
-  if (courseScope === OWNER_BLIND_SCOPE) return Array.isArray(selections) && selections.length > 0;
-  return canShareWithReviewers(answers) && Array.isArray(selections) && selections.includes(courseScope);
-}
-
-async function handleBlindReview(env, courseScope) {
-  const all = await listReviewApplications(env);
-  const numbers = applicantNumbers(all);
-  const eligible = all
-    .filter(({ row, answers }) => blindEligible(row, answers, courseScope))
-    .map(({ row, answers }) => ({
-      blindId: row.blind_id,
-      number: numbers.get(row.blind_id) || null,
-      ...(courseScope === OWNER_BLIND_SCOPE ? { courses: answers.applicant.courseSelections } : {}),
-      questions: Object.fromEntries(BLIND_QUESTION_KEYS.map((key) => [key, answers?.questions?.[key] || ""]))
-    }));
-  for (let index = eligible.length - 1; index > 0; index -= 1) {
-    const other = Math.floor(Math.random() * (index + 1));
-    [eligible[index], eligible[other]] = [eligible[other], eligible[index]];
-  }
-  if (courseScope === OWNER_BLIND_SCOPE) {
-    return jsonResponse({ course: "All courses", courseTitle: "instructor view", showsCourses: true, applications: eligible }, 200);
-  }
-  return jsonResponse({ course: courseScope, courseTitle: COURSE_TITLES[courseScope], applications: eligible }, 200);
-}
-
-async function handleBlindRanking(request, env, courseScope) {
+async function readJson(request, limit) {
   const contentType = request.headers.get("Content-Type") || "";
-  if (!/^application\/json(?:\s*;|$)/i.test(contentType)) {
-    return jsonResponse({ error: "Please submit the ranking form." }, 415);
-  }
-  const origin = request.headers.get("Origin");
-  if (origin) {
-    try {
-      const originUrl = new URL(origin);
-      if (!PRODUCTION_HOSTS.has(originUrl.hostname) || originUrl.protocol !== "https:") {
-        return jsonResponse({ error: "This request could not be accepted." }, 403);
-      }
-    } catch {
-      return jsonResponse({ error: "This request could not be accepted." }, 403);
-    }
-  }
-  let rawBody;
+  if (!/^application\/json(?:\s*;|$)/i.test(contentType)) return null;
+  const raw = await request.text();
+  if (new TextEncoder().encode(raw).byteLength > limit) return null;
   try {
-    rawBody = await request.text();
+    return JSON.parse(raw);
   } catch {
-    return jsonResponse({ error: "The ranking could not be read. Please try again." }, 400);
+    return null;
   }
-  if (new TextEncoder().encode(rawBody).byteLength > 16384) {
-    return jsonResponse({ error: "The ranking is too large to save." }, 413);
-  }
-  let data;
-  try {
-    data = JSON.parse(rawBody);
-  } catch {
-    return jsonResponse({ error: "Please review the ranking and try again." }, 400);
-  }
-  const reviewerLabel = typeof data?.reviewerLabel === "string" ? data.reviewerLabel.trim().replace(/\s+/g, " ") : "";
-  const reviewerKey = courseScope.toLowerCase() + "::" + reviewerLabel.toLowerCase();
-  const rankings = data?.rankings;
-  if (!hasText(reviewerLabel, 80) || /[\u0000-\u001f]/.test(reviewerLabel) ||
-      !Array.isArray(rankings) || rankings.length < 1 || rankings.length > 100) {
-    return jsonResponse({ error: "Enter your name or initials and rank each application." }, 400);
-  }
-  const ids = new Set();
-  const ranks = new Set();
-  for (const item of rankings) {
-    if (!isObject(item) || !/^[a-f0-9]{32}$/i.test(item.blindId) ||
-        !Number.isInteger(item.rank) || item.rank < 1 || item.rank > rankings.length ||
-        ids.has(item.blindId) || ranks.has(item.rank)) {
-      return jsonResponse({ error: "Each application needs one unique rank." }, 400);
-    }
-    ids.add(item.blindId);
-    ranks.add(item.rank);
-  }
-  if (ranks.size !== rankings.length) {
-    return jsonResponse({ error: "Use each rank from 1 through the number of applications exactly once." }, 400);
-  }
+}
 
-  const all = await listReviewApplications(env);
-  const eligibleIds = new Set(all
-    .filter(({ row, answers }) => blindEligible(row, answers, courseScope))
-    .map(({ row }) => row.blind_id));
-  if (eligibleIds.size !== rankings.length || rankings.some((item) => !eligibleIds.has(item.blindId))) {
-    return jsonResponse({ error: "The application list changed. Refresh the page and rank the current list." }, 409);
+async function handleRatingsPost(request, env, role) {
+  const data = await readJson(request, 2048);
+  const rater = cleanRater(data?.rater);
+  if (!rater) return jsonResponse({ error: "Type your name first." }, 400);
+  if (typeof data?.code !== "string" || !RATING_CRITERIA.includes(data?.criterion) ||
+      !(data.level === null || RATING_LEVELS.includes(data.level))) {
+    return jsonResponse({ error: "That rating could not be saved." }, 400);
   }
+  const all = await listCandidates(env);
+  const target = all.find(({ code, answers }) => code === data.code && (role === "owner" || canShareWithReviewers(answers)));
+  if (!target) return jsonResponse({ error: "That candidate was not found. Refresh the page." }, 404);
+  const db = env.TA_APPLICATIONS_DB;
+  if (data.level === null) {
+    await db.prepare("DELETE FROM candidate_ratings WHERE rater_key = ? AND application_id = ? AND criterion = ?")
+      .bind(raterKey(rater), target.row.id, data.criterion).run();
+  } else {
+    await db.prepare(
+      "INSERT INTO candidate_ratings (rater_key, rater_label, application_id, criterion, level, updated_at) VALUES (?, ?, ?, ?, ?, ?) " +
+      "ON CONFLICT (rater_key, application_id, criterion) DO UPDATE SET rater_label = excluded.rater_label, level = excluded.level, updated_at = excluded.updated_at"
+    ).bind(raterKey(rater), rater, target.row.id, data.criterion, data.level, new Date().toISOString()).run();
+  }
+  return jsonResponse({ ok: true }, 200);
+}
 
-  const updatedAt = new Date().toISOString();
-  const statements = [
-    env.TA_APPLICATIONS_DB.prepare("DELETE FROM blind_rankings WHERE reviewer_key = ?").bind(reviewerKey),
-    ...rankings.map((item) => env.TA_APPLICATIONS_DB.prepare(
-      "INSERT INTO blind_rankings (reviewer_key, reviewer_label, blind_id, rank, updated_at) VALUES (?, ?, ?, ?, ?)"
-    ).bind(reviewerKey, reviewerLabel, item.blindId, item.rank, updatedAt))
-  ];
-  await env.TA_APPLICATIONS_DB.batch(statements);
-  return jsonResponse({ ok: true, saved: rankings.length, updatedAt }, 200);
+async function handleSummary(env) {
+  const all = await listCandidates(env);
+  const saved = await env.TA_APPLICATIONS_DB.prepare(
+    "SELECT rater_key, rater_label, application_id, criterion, level FROM candidate_ratings"
+  ).all();
+  const byApp = new Map();
+  for (const item of saved.results || []) {
+    const raters = byApp.get(item.application_id) || new Map();
+    const entry = raters.get(item.rater_key) || { rater: item.rater_label, scores: {} };
+    entry.scores[item.criterion] = item.level;
+    raters.set(item.rater_key, entry);
+    byApp.set(item.application_id, raters);
+  }
+  return jsonResponse({
+    criteria: RATING_CRITERIA,
+    candidates: all.filter(({ code }) => code).map(({ row, answers, code }) => ({
+      code,
+      name: row.name,
+      courses: answers.applicant.courseSelections,
+      sharedWithTAs: canShareWithReviewers(answers),
+      ratings: Array.from((byApp.get(row.id) || new Map()).values()).sort((a, b) => a.rater.localeCompare(b.rater))
+    }))
+  }, 200);
 }
 
 async function handleReviewRequest(request, env, url) {
   if (url.protocol !== "https:" || !PRODUCTION_HOSTS.has(url.hostname)) {
     return jsonResponse({ error: "Review pages work on the live site only." }, 403);
   }
-  const scope = await reviewScope(request, url);
-  if (!scope) return jsonResponse({ error: "This private review link is invalid." }, 401);
+  const role = await reviewRole(request, env);
+  if (role === "unset") return jsonResponse({ error: "The review passwords have not been set up yet." }, 503);
+  if (!role) return jsonResponse({ error: "That password didn't work." }, 401);
 
-  if (url.pathname === "/api/review/full") {
-    if (request.method !== "GET") return jsonResponse({ error: "Use the review page to view applications." }, 405);
-    if (scope !== "owner" && !scope.startsWith("ta:")) return jsonResponse({ error: "This link does not open the full review page." }, 403);
-    try {
-      return await handleFullReview(env, scope);
-    } catch (error) {
-      console.error("Could not load TA applications for review.", error);
-      return jsonResponse({ error: "Applications could not be loaded right now." }, 500);
+  try {
+    if (url.pathname === "/api/review/applications" && request.method === "GET") {
+      return await handleApplications(env, role, url.searchParams.get("view"));
     }
-  }
-  if (url.pathname === "/api/review/blind") {
-    if (request.method !== "GET") return jsonResponse({ error: "Use the blind review page to view applications." }, 405);
-    if (!scope.startsWith("blind:")) return jsonResponse({ error: "This link does not open the blind review page." }, 403);
-    try {
-      return await handleBlindReview(env, scope.slice("blind:".length));
-    } catch (error) {
-      console.error("Could not load blind TA application responses.", error);
-      return jsonResponse({ error: "Responses could not be loaded right now." }, 500);
+    if (url.pathname === "/api/review/ratings" && request.method === "GET") {
+      return await handleRatingsGet(env, role, url);
     }
-  }
-  if (url.pathname === "/api/review/blind/rankings") {
-    if (request.method !== "POST") return jsonResponse({ error: "Use the blind review page to save rankings." }, 405);
-    if (!scope.startsWith("blind:")) return jsonResponse({ error: "This link cannot save blind rankings." }, 403);
-    try {
-      return await handleBlindRanking(request, env, scope.slice("blind:".length));
-    } catch (error) {
-      console.error("Could not save blind TA application rankings.", error);
-      return jsonResponse({ error: "Rankings could not be saved right now." }, 500);
+    if (url.pathname === "/api/review/ratings" && request.method === "POST") {
+      return await handleRatingsPost(request, env, role);
     }
+    if (url.pathname === "/api/review/summary" && request.method === "GET") {
+      if (role !== "owner") return jsonResponse({ error: "This page needs BroPa's password." }, 403);
+      return await handleSummary(env);
+    }
+  } catch (error) {
+    console.error("TA review request failed.", error);
+    return jsonResponse({ error: "Something went wrong loading this. Try again in a minute." }, 500);
   }
   return jsonResponse({ error: "This page could not be found." }, 404);
 }

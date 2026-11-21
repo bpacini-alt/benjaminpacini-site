@@ -237,14 +237,14 @@
     <span class="eyebrow">A chance to contribute</span>
     <h1>Teaching Assistant Application</h1>
     <p>Share what you bring, what you are still learning, and how you would help make this class better for students.</p>
-    <div class="hero-meta"><span>Basics · ≤ 5 minutes</span><span>Sliders · 10 minutes</span><span>Questions · 20 minutes</span><span>Email BroPa · up to 1 hour</span><span>Reflection · under 5 minutes</span></div>
+    <div class="hero-meta"><span>Basics · ≤ 5 minutes</span><span>Sliders · 10 minutes</span><span>Questions · 20 minutes</span><span>Work samples · up to 1 hour</span><span>Reflection · under 5 minutes</span></div>
   </header>
   <nav class="wizard-tabs" aria-label="Application steps">
     <div class="step-list" role="tablist" aria-label="Five application steps">
       <button type="button" class="step-tab" id="tab-basics" role="tab" data-step-tab="0" aria-controls="step-basics" aria-selected="true" tabindex="0"><span class="step-number">1</span><span class="step-copy"><strong>Basics</strong><small>≤ 5 min</small></span></button>
       <button type="button" class="step-tab" id="tab-sliders" role="tab" data-step-tab="1" aria-controls="step-sliders" aria-selected="false" tabindex="-1"><span class="step-number">2</span><span class="step-copy"><strong>Sliders</strong><small>10 minutes</small></span></button>
       <button type="button" class="step-tab" id="tab-questions" role="tab" data-step-tab="2" aria-controls="step-questions" aria-selected="false" tabindex="-1"><span class="step-number">3</span><span class="step-copy"><strong>Questions</strong><small>20 minutes</small></span></button>
-      <button type="button" class="step-tab" id="tab-work" role="tab" data-step-tab="3" aria-controls="step-work" aria-selected="false" tabindex="-1"><span class="step-number">4</span><span class="step-copy"><strong>Email BroPa</strong><small>up to 1 hour</small></span></button>
+      <button type="button" class="step-tab" id="tab-work" role="tab" data-step-tab="3" aria-controls="step-work" aria-selected="false" tabindex="-1"><span class="step-number">4</span><span class="step-copy"><strong>Work samples</strong><small>up to 1 hour</small></span></button>
       <button type="button" class="step-tab" id="tab-reflection" role="tab" data-step-tab="4" aria-controls="step-reflection" aria-selected="false" tabindex="-1"><span class="step-number">5</span><span class="step-copy"><strong>Reflection</strong><small>under 5 min</small></span></button>
     </div>
   </nav>
@@ -423,14 +423,16 @@
 
       <div class="wizard-actions">
         <button class="back-button" type="button" data-back>Back</button>
-        <button class="submit-button wizard-next" type="button" data-next>Continue to Email BroPa</button>
+        <button class="submit-button wizard-next" type="button" data-next>Continue to Work samples</button>
       </div>
     </section>
 
     <section class="section-card wizard-panel" id="step-work" data-step-panel="3" role="tabpanel" aria-labelledby="tab-work" tabindex="0" hidden>
-      <p class="section-kicker">04 · Email BroPa · up to one hour total</p>
-      <h2 id="samples-title">Send BroPa a BYU-Idaho email with your three work samples</h2>
-      <p class="section-intro">Plan up to one hour total for this tab. Choose exactly three prompts across the eight buckets and set a 15-minute timer for each sample. Spend no more than 45 minutes on the samples, leaving time to choose, organize, and email your work. Short bullets and rough drafts are fine; focus on useful work, not polish. If a prompt calls for a video, include preparation and a one-take recording in the timer; keep the recording to five minutes or less. Send your work from your BYU-Idaho email account. Put written work in the message, and attach or link videos and other media. Need BroPa’s email address? Find him in the <a href="https://web.byui.edu/directory/employees/" target="_blank" rel="noopener noreferrer">BYU-Idaho employee directory</a>.</p>
+      <p class="section-kicker">04 · Work samples · up to one hour total</p>
+      <h2 id="samples-title">Paste your three work samples</h2>
+      <p class="section-intro">Plan up to one hour total for this tab. Choose exactly three prompts across the eight buckets and set a 15-minute timer for each sample. Spend no more than 45 minutes on the samples, leaving time to choose and paste your work. Short bullets and rough drafts are fine; focus on useful work, not polish. If a prompt calls for a video, include preparation and a one-take recording in the timer; keep the recording to five minutes or less.</p>
+      <p class="section-intro">Paste each sample into its box below. Paste written work as text. For videos, slides, images, or anything else you made somewhere else, paste a link.</p>
+      <p class="section-intro"><strong> Check your sharing before you paste a link. </strong> Set the file to “Anyone with the link can view” (in Google Drive, Docs, or Slides: Share, then General access). Then open the link in a private or incognito window. If it asks you to sign in or request access, we can’t see it, and we can’t count it.</p>
       <div class="menu-intro">
         <p style="margin:0;color:var(--muted)">Pick the samples that best show your strengths and interests.</p>
         <div class="selection-count" id="selection-count" aria-live="polite">0 / 3 selected</div>
@@ -569,7 +571,7 @@
   const jobBuckets = Array.from(document.querySelectorAll('[data-job-bucket]'));
   let activeJobTask = null;
   let currentStep = 0;
-  const stepNames = ['Basic application information', 'Self-assessment sliders', 'Common questions', 'Email BroPa with your work samples', 'Reflection'];
+  const stepNames = ['Basic application information', 'Self-assessment sliders', 'Common questions', 'Work samples', 'Reflection'];
   const courseTitles = {
     'EDCOR 200': 'Teaching as a Profession',
     'EDCOR 310': 'Educational Psychology and Human Development',
@@ -665,7 +667,7 @@
     const selected = choices.filter((choice) => choice.checked);
     selectionCount.textContent = selected.length + ' / 3 selected';
     selectedWork.replaceChildren();
-    if (selected.length === 3) selectionMessage.textContent = 'Three selected. Add a concise response or link for each.';
+    if (selected.length === 3) selectionMessage.textContent = 'Three selected. Paste your work or a link for each.';
     else if (selected.length > 0) selectionMessage.textContent = 'Choose ' + (3 - selected.length) + ' more option' + (selected.length === 2 ? '' : 's') + '.';
     else selectionMessage.textContent = 'Choose three options. Draft your work in the response spaces below.';
 
@@ -683,14 +685,14 @@
 
       const responseLabel = document.createElement('label');
       responseLabel.htmlFor = 'response-' + id;
-      responseLabel.textContent = 'Your response or shareable link';
+      responseLabel.textContent = 'Paste your response or a link';
       card.appendChild(responseLabel);
       const response = document.createElement('textarea');
       response.id = 'response-' + id;
       response.name = 'response-' + id;
       response.required = true;
       response.maxLength = 1400;
-      response.placeholder = 'Keep it focused; a concise response or shareable link is enough.';
+      response.placeholder = 'Paste your work as text, or paste a link set to “Anyone with the link can view.”';
       card.appendChild(response);
 
       const aiLabel = document.createElement('label');
