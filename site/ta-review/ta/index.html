@@ -8,7 +8,7 @@
 </head>
 <body data-page="ta-review" data-role="ta">
 <main>
-<header class="masthead"><div class="eyebrow">TA applications · private</div><h1>TA review</h1><p>Each candidate’s full application, with names, emails and dates removed. Candidates are listed in the same order for everyone.</p><p class="pages"><a href="/ta-review/ta/" aria-current="page">TA review</a><a href="/ta-review/rate/">Rate candidates</a></p></header>
+<header class="masthead"><div class="eyebrow">TA applications · private</div><h1>TA review</h1><p>Read each candidate’s application, then rate them at the bottom on five questions. Names, emails and dates are removed, and candidates are in the same order for everyone.</p><p class="pages"><a href="/ta-review/ta/" aria-current="page">TA review</a></p></header>
 <form class="panel" id="gate" hidden>
 <label class="field" for="password">Password</label>
 <p class="muted" style="margin:0 0 10px">This page needs the TA review password. BroPa’s password works too.</p>
@@ -19,6 +19,9 @@
 <div class="notice" id="loading" role="status">Loading…</div>
 <div class="notice error" id="error" role="alert" hidden></div>
 <div id="content" hidden>
+<section class="panel" id="rater-bar" hidden><p class="status" id="progress" role="status" style="margin:0"></p>
+<form id="rater-form" class="row" style="margin-top:10px"><label class="sr-only" for="rater">Your name</label><input type="text" id="rater" maxlength="60" autocomplete="name" placeholder="Your name" required><button class="primary" type="submit">Start rating</button></form>
+<button type="button" class="linkish" id="change-rater" hidden>Not you? Change name</button></section>
 <div class="toolbar"><button type="button" id="previous">← Previous</button><select id="picker" aria-label="Choose a candidate"></select><button type="button" id="next">Next →</button></div>
 <p class="counter muted" id="counter" style="text-align:center;margin:8px 0 0"></p>
 <article class="panel" id="application-card" aria-live="polite"></article>

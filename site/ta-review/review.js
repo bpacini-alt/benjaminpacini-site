@@ -209,8 +209,12 @@ async function applicationPage(view) {
   if (!list.length) throw new Error(isOwner ? "There are no applications yet." : "No candidates have agreed to TA review yet.");
   const picker = document.getElementById("picker");
   const card = document.getElementById("application-card");
+  const rating = isOwner ? null : ratingState(list);
+  const label = (item) => isOwner ? candidateLabel(item.code) + " — " + (item.name || "No name")
+    : candidateLabel(item.code) + (rating ? rating.mark(item.code) : "");
+  const relabel = () => [...picker.options].forEach((option) => { option.textContent = label(list[Number(option.value)]); });
   picker.replaceChildren(...list.map((item, index) => {
-    const option = el("option", "", isOwner ? candidateLabel(item.code) + " — " + (item.name || "No name") : candidateLabel(item.code));
+    const option = el("option", "", label(item));
     option.value = String(index);
     return option;
   }));
@@ -221,6 +225,7 @@ async function applicationPage(view) {
     current = index;
     picker.value = String(index);
     renderApplication(card, list[index], isOwner);
+    if (rating) card.append(rating.panel(list[index].code));
     document.getElementById("previous").disabled = index === 0;
     document.getElementById("next").disabled = index === list.length - 1;
     document.getElementById("counter").textContent = (index + 1) + " of " + list.length;
@@ -230,71 +235,96 @@ async function applicationPage(view) {
   picker.addEventListener("change", () => go(Number(picker.value), true));
   document.getElementById("previous").addEventListener("click", () => current > 0 && go(current - 1, true));
   document.getElementById("next").addEventListener("click", () => current < list.length - 1 && go(current + 1, true));
+  if (rating) {
+    rating.onChange = relabel;
+    rating.onRater = () => { relabel(); go(current, false); };
+    await rating.start();
+  }
   go(current, false);
 }
 
-// ---------- rating page ----------
+// ---------- rating, at the bottom of each candidate on the TA review page ----------
 const raterKey = "ta-review-rater";
-async function ratePage() {
-  const nameBox = document.getElementById("rater");
-  try { nameBox.value = nameBox.value || localStorage.getItem(raterKey) || ""; } catch (error) { /* ignore */ }
+function ratingState(list) {
+  const state = { rater: "", saved: {}, onChange() {}, onRater() {} };
   const form = document.getElementById("rater-form");
-  const begin = async () => {
-    const rater = nameBox.value.trim().replace(/\s+/g, " ");
-    if (!rater) { nameBox.focus(); return; }
-    try { localStorage.setItem(raterKey, rater); } catch (error) { /* ignore */ }
-    const data = await api("/api/review/ratings?rater=" + encodeURIComponent(rater));
-    renderRatings(rater, data);
-  };
-  form.onsubmit = (event) => { event.preventDefault(); begin().catch((error) => fail(error.message)); };
-  if (nameBox.value) await begin();
-}
-
-function renderRatings(rater, data) {
-  const holder = document.getElementById("ratings");
-  holder.replaceChildren();
+  const nameBox = document.getElementById("rater");
   const progress = document.getElementById("progress");
-  const saved = data.ratings || {};
+  const isDone = (code) => CRITERIA.every(([key]) => (state.saved[code] || {})[key]);
+  const count = (code) => CRITERIA.filter(([key]) => (state.saved[code] || {})[key]).length;
+  state.mark = (code) => !state.rater ? "" : isDone(code) ? "  ✓ rated" : count(code) ? "  · partly rated" : "";
   const updateProgress = () => {
-    const done = data.candidates.filter((item) => CRITERIA.every(([key]) => saved[item.code] && saved[item.code][key])).length;
-    progress.textContent = "Rating as " + rater + ". " + done + " of " + data.candidates.length + " candidates fully rated. Every choice saves as you click it.";
+    progress.textContent = state.rater
+      ? "Rating as " + state.rater + ". " + list.filter((item) => isDone(item.code)).length + " of " + list.length +
+        " candidates fully rated. Every choice saves as you click it."
+      : "Type your name to rate. Use the same name every time so your ratings stay together.";
+    form.hidden = Boolean(state.rater);
+    document.getElementById("change-rater").hidden = !state.rater;
   };
-  data.candidates.forEach((item) => {
-    const card = el("article", "panel rate-card");
-    card.id = slug(item.code);
-    const head = el("div", "rate-head");
-    head.append(el("h2", "", candidateLabel(item.code)));
-    const link = el("a", "", "Read their application ↗");
-    link.href = "/ta-review/ta/#" + slug(item.code);
-    link.target = "_blank"; link.rel = "noopener";
-    const meta = el("p", "meta");
-    meta.append("Applied for: " + courseList(item.courses) + " · ", link);
-    meta.style.margin = "0";
-    head.append(meta);
-    card.append(head);
+  const load = async (name) => {
+    const rater = name.trim().replace(/\s+/g, " ");
+    if (!rater) return;
+    const data = await api("/api/review/ratings?rater=" + encodeURIComponent(rater));
+    state.rater = rater;
+    state.saved = data.ratings || {};
+    try { localStorage.setItem(raterKey, rater); } catch (error) { /* ignore */ }
+    updateProgress();
+    state.onRater();
+  };
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    load(nameBox.value).catch((error) => { progress.textContent = "Couldn't load your ratings: " + error.message; });
+  });
+  document.getElementById("change-rater").addEventListener("click", () => {
+    state.rater = "";
+    state.saved = {};
+    try { localStorage.removeItem(raterKey); } catch (error) { /* ignore */ }
+    updateProgress();
+    state.onRater();
+    nameBox.focus();
+  });
+  state.start = async () => {
+    document.getElementById("rater-bar").hidden = false;
+    let remembered = "";
+    try { remembered = localStorage.getItem(raterKey) || ""; } catch (error) { /* ignore */ }
+    nameBox.value = remembered;
+    updateProgress();
+    if (remembered) await load(remembered);
+  };
+
+  state.panel = (code) => {
+    const panel = el("section", "answer-section rate-panel");
+    panel.append(el("h3", "", "Your rating"));
+    if (!code) return panel;
+    if (!state.rater) {
+      panel.append(el("p", "muted", "Type your name at the top of the page to rate this candidate."));
+      return panel;
+    }
+    panel.append(el("p", "muted", "1 = not yet, 4 = absolutely. Click a choice again to clear it."));
     const status = el("p", "status");
     status.setAttribute("role", "status");
-    CRITERIA.forEach(([key, label]) => {
+    CRITERIA.forEach(([key, text]) => {
       const row = el("div", "criterion");
-      const labelId = "label-" + slug(item.code) + "-" + key;
-      const text = el("span", "criterion-label", label);
-      text.id = labelId;
+      const labelId = "label-" + slug(code) + "-" + key;
+      const name = el("span", "criterion-label", text);
+      name.id = labelId;
       const levels = el("div", "levels");
       levels.setAttribute("role", "radiogroup");
       levels.setAttribute("aria-labelledby", labelId);
       const paint = () => levels.querySelectorAll("button").forEach((button) =>
-        button.setAttribute("aria-checked", String(Number(button.dataset.level) === (saved[item.code] || {})[key])));
-      LEVELS.forEach(([level, name]) => {
+        button.setAttribute("aria-checked", String(Number(button.dataset.level) === (state.saved[code] || {})[key])));
+      LEVELS.forEach(([level, word]) => {
         const button = el("button");
         button.type = "button";
         button.setAttribute("role", "radio");
         button.dataset.level = String(level);
-        button.append(el("b", "", level), name);
+        button.append(el("b", "", level), word);
         button.addEventListener("click", async () => {
-          const before = (saved[item.code] || {})[key];
-          const next = before === level ? null : level; // click again to clear
-          saved[item.code] = saved[item.code] || {};
-          if (next === null) delete saved[item.code][key]; else saved[item.code][key] = next;
+          const rater = state.rater;
+          const mine = state.saved[code] = state.saved[code] || {};
+          const before = mine[key];
+          const next = before === level ? null : level;
+          if (next === null) delete mine[key]; else mine[key] = next;
           paint();
           status.className = "status";
           status.textContent = "Saving…";
@@ -302,33 +332,29 @@ function renderRatings(rater, data) {
             await api("/api/review/ratings", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ rater, code: item.code, criterion: key, level: next })
+              body: JSON.stringify({ rater, code, criterion: key, level: next })
             });
             status.className = "status saved";
-            status.textContent = "Saved.";
+            status.textContent = isDone(code) ? "Saved. All five rated." : "Saved.";
           } catch (error) {
-            if (before === undefined) delete saved[item.code][key]; else saved[item.code][key] = before;
+            if (before === undefined) delete mine[key]; else mine[key] = before;
             paint();
             status.className = "status fail";
             status.textContent = "Not saved: " + error.message;
           }
           updateProgress();
+          state.onChange();
         });
         levels.append(button);
       });
       paint();
-      row.append(text, levels);
-      card.append(row);
+      row.append(name, levels);
+      panel.append(row);
     });
-    card.append(status);
-    holder.append(card);
-  });
-  updateProgress();
-  document.getElementById("rating-area").hidden = false;
-  if (location.hash) {
-    const target = document.getElementById(decodeURIComponent(location.hash.slice(1)).toLowerCase());
-    if (target) target.scrollIntoView();
-  }
+    panel.append(status);
+    return panel;
+  };
+  return state;
 }
 
 // ---------- summary page ----------
@@ -411,7 +437,6 @@ async function summaryPage() {
 const PAGES = {
   "owner-review": () => applicationPage("owner"),
   "ta-review": () => applicationPage("ta"),
-  rate: ratePage,
   summary: summaryPage
 };
 start();
