@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer">
+<title>TA review · TA applications</title>
+<link rel="stylesheet" href="/ta-review/review.css">
+</head>
+<body data-page="ta-review" data-role="ta">
+<main>
+<header class="masthead"><div class="eyebrow">TA applications · private</div><h1>TA review</h1><p>Each candidate’s full application, with names, emails and dates removed. Candidates are listed in the same order for everyone.</p><p class="pages"><a href="/ta-review/ta/" aria-current="page">TA review</a><a href="/ta-review/rate/">Rate candidates</a></p></header>
+<form class="panel" id="gate" hidden>
+<label class="field" for="password">Password</label>
+<p class="muted" style="margin:0 0 10px">This page needs the TA review password. BroPa’s password works too.</p>
+<div class="row"><input type="password" id="password" autocomplete="current-password" required><button class="primary" type="submit">Open</button></div>
+<p class="row" style="margin:12px 0 0"><label><input type="checkbox" id="remember" checked> Remember on this device</label></p>
+<p class="notice error" id="gate-message" role="alert" hidden></p>
+</form>
+<div class="notice" id="loading" role="status">Loading…</div>
+<div class="notice error" id="error" role="alert" hidden></div>
+<div id="content" hidden>
+<div class="toolbar"><button type="button" id="previous">← Previous</button><select id="picker" aria-label="Choose a candidate"></select><button type="button" id="next">Next →</button></div>
+<p class="counter muted" id="counter" style="text-align:center;margin:8px 0 0"></p>
+<article class="panel" id="application-card" aria-live="polite"></article>
+</div>
+<p><button class="linkish" type="button" id="forget" hidden>Forget the password on this device</button></p>
+</main>
+<script src="/ta-review/review.js"></script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer">
+<title>Rate candidates · TA applications</title>
+<link rel="stylesheet" href="/ta-review/review.css">
+</head>
+<body data-page="rate" data-role="ta">
+<main>
+<header class="masthead"><div class="eyebrow">TA applications · private</div><h1>Rate candidates</h1><p>Rate each candidate on five questions, from 1 (not yet) to 4 (absolutely). Use the same name every time so your ratings stay together. Click a choice again to clear it.</p><p class="pages"><a href="/ta-review/ta/">TA review</a><a href="/ta-review/rate/" aria-current="page">Rate candidates</a></p></header>
+<form class="panel" id="gate" hidden>
+<label class="field" for="password">Password</label>
+<p class="muted" style="margin:0 0 10px">This page needs the TA review password. BroPa’s password works too.</p>
+<div class="row"><input type="password" id="password" autocomplete="current-password" required><button class="primary" type="submit">Open</button></div>
+<p class="row" style="margin:12px 0 0"><label><input type="checkbox" id="remember" checked> Remember on this device</label></p>
+<p class="notice error" id="gate-message" role="alert" hidden></p>
+</form>
+<div class="notice" id="loading" role="status">Loading…</div>
+<div class="notice error" id="error" role="alert" hidden></div>
+<div id="content" hidden>
+<form class="panel" id="rater-form"><label class="field" for="rater">Your name</label><div class="row"><input type="text" id="rater" maxlength="60" autocomplete="name" required><button class="primary" type="submit">Start rating</button></div></form>
+<div id="rating-area" hidden><p class="notice" id="progress" role="status"></p><div id="ratings"></div></div>
+</div>
+<p><button class="linkish" type="button" id="forget" hidden>Forget the password on this device</button></p>
+</main>
+<script src="/ta-review/review.js"></script>
+</body>
+</html>
