@@ -6,14 +6,18 @@ const page = document.body.dataset.page;
 const needs = document.body.dataset.role; // "owner" or "ta"
 const storageKey = "ta-review-password-" + needs;
 
-const CRITERIA = [
-  ["vibe", "Can they bring the vibe?"],
-  ["innovation", "Can they be innovative?"],
-  ["managingUp", "Can they manage up?"],
-  ["dedication", "Will they work hard and be dedicated?"],
-  ["content", "Do they know and love the content?"]
-];
+// The five rubric questions (1-4), then a gut-check overall vibe (1-5).
 const LEVELS = [[1, "Not yet"], [2, "Somewhat"], [3, "Yes"], [4, "Absolutely"]];
+const VIBE_LEVELS = [[1, "Hard no"], [2, "Concern"], [3, "Meh"], [4, "Good vibe"], [5, "Definite yes"]];
+const CRITERIA = [
+  ["vibe", "Can they bring the vibe?", LEVELS],
+  ["innovation", "Can they be innovative?", LEVELS],
+  ["managingUp", "Can they manage up?", LEVELS],
+  ["dedication", "Will they work hard and be dedicated?", LEVELS],
+  ["content", "Do they know and love the content?", LEVELS],
+  ["overallVibe", "Overall vibe", VIBE_LEVELS]
+];
+const RUBRIC = CRITERIA.filter(([, , levels]) => levels === LEVELS);
 const QUESTION_LABELS = {
   courseMagic: "Three magical things to preserve, and the highest-priority change",
   managingUp: "Managing up",
@@ -300,10 +304,10 @@ function ratingState(list) {
       panel.append(el("p", "muted", "Type your name at the top of the page to rate this candidate."));
       return panel;
     }
-    panel.append(el("p", "muted", "1 = not yet, 4 = absolutely. Click a choice again to clear it."));
+    panel.append(el("p", "muted", "The five questions run from 1 (not yet) to 4 (absolutely). Overall vibe is your gut call. Click a choice again to clear it."));
     const status = el("p", "status");
     status.setAttribute("role", "status");
-    CRITERIA.forEach(([key, text]) => {
+    CRITERIA.forEach(([key, text, scale]) => {
       const row = el("div", "criterion");
       const labelId = "label-" + slug(code) + "-" + key;
       const name = el("span", "criterion-label", text);
@@ -311,9 +315,11 @@ function ratingState(list) {
       const levels = el("div", "levels");
       levels.setAttribute("role", "radiogroup");
       levels.setAttribute("aria-labelledby", labelId);
+      levels.style.gridTemplateColumns = "repeat(" + scale.length + ", 1fr)";
+      if (scale !== LEVELS) row.classList.add("overall-vibe");
       const paint = () => levels.querySelectorAll("button").forEach((button) =>
         button.setAttribute("aria-checked", String(Number(button.dataset.level) === (state.saved[code] || {})[key])));
-      LEVELS.forEach(([level, word]) => {
+      scale.forEach(([level, word]) => {
         const button = el("button");
         button.type = "button";
         button.setAttribute("role", "radio");
@@ -368,7 +374,7 @@ async function summaryPage() {
   const data = await api("/api/review/summary");
   const rows = data.candidates.map((item) => {
     const byCriterion = Object.fromEntries(CRITERIA.map(([key]) => [key, mean(item.ratings.map((r) => r.scores[key]))]));
-    const averages = Object.values(byCriterion).filter((value) => value !== null);
+    const averages = RUBRIC.map(([key]) => byCriterion[key]).filter((value) => value !== null);
     return { ...item, byCriterion, overall: averages.length ? averages.reduce((a, b) => a + b, 0) / averages.length : null };
   });
   let sortKey = "code";
@@ -393,8 +399,8 @@ async function summaryPage() {
       const toggle = el("button", "linkish", row.ratings.length ? "show" : "");
       toggle.type = "button";
       tr.append(first, el("td", "", row.name + (row.sharedWithTAs ? "" : " (not shared with TAs)")), el("td", "", courseList(row.courses)), el("td", "n", row.ratings.length));
-      CRITERIA.forEach(([key]) => tr.append(el("td", "n", fmt(row.byCriterion[key]))));
-      tr.append(el("td", "n", fmt(row.overall)));
+      RUBRIC.forEach(([key]) => tr.append(el("td", "n", fmt(row.byCriterion[key]))));
+      tr.append(el("td", "n", fmt(row.overall)), el("td", "n", fmt(row.byCriterion.overallVibe)));
       const last = el("td");
       if (row.ratings.length) last.append(toggle);
       tr.append(last);
@@ -431,7 +437,7 @@ async function summaryPage() {
   }));
   draw();
   const raters = new Set(rows.flatMap((row) => row.ratings.map((r) => r.rater.toLowerCase())));
-  document.getElementById("summary-note").textContent = rows.length + " candidates, " + raters.size + " rater" + (raters.size === 1 ? "" : "s") + " so far. Scores run 1 (not yet) to 4 (absolutely). Overall is the mean of the five criterion averages. Click a column to sort.";
+  document.getElementById("summary-note").textContent = rows.length + " candidates, " + raters.size + " rater" + (raters.size === 1 ? "" : "s") + " so far. The five questions run 1 (not yet) to 4 (absolutely); Rubric avg is the mean of those five. Overall vibe runs 1 (hard no) to 5 (definite yes) and is kept separate. Click a column to sort.";
 }
 
 const PAGES = {

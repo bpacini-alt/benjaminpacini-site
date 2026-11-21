@@ -149,8 +149,13 @@ function validateApplication(data) {
 // TA_REVIEW_PASSWORD), never stored in this repository.
 // ---------------------------------------------------------------------------
 
-const RATING_CRITERIA = ["vibe", "innovation", "managingUp", "dedication", "content"];
-const RATING_LEVELS = [1, 2, 3, 4];
+// Five rubric questions scored 1-4, plus an overall vibe scored 1-5
+// (hard no, concern, meh, good vibe, definite yes).
+const RATING_LEVELS = {
+  vibe: [1, 2, 3, 4], innovation: [1, 2, 3, 4], managingUp: [1, 2, 3, 4], dedication: [1, 2, 3, 4], content: [1, 2, 3, 4],
+  overallVibe: [1, 2, 3, 4, 5]
+};
+const RATING_CRITERIA = Object.keys(RATING_LEVELS);
 
 // Candidate names are tree names. Each real applicant gets one at random,
 // once, and keeps it. Every page lists candidates alphabetically by that
@@ -169,17 +174,32 @@ const CANDIDATE_NAMES = [
   "Wisteria", "Yew"
 ];
 
+// Ratings live in candidate_scores (levels 1-5). The first version kept
+// them in candidate_ratings (levels 1-4); those are copied over once, the
+// first time candidate_scores is created, and the old table is left alone.
 let reviewSchemaReady = false;
 async function ensureReviewSchema(env) {
   if (reviewSchemaReady) return;
-  await env.TA_APPLICATIONS_DB.batch([
-    env.TA_APPLICATIONS_DB.prepare(
-      "CREATE TABLE IF NOT EXISTS candidate_codes (application_id TEXT PRIMARY KEY NOT NULL, code TEXT NOT NULL UNIQUE, assigned_at TEXT NOT NULL)"
-    ),
-    env.TA_APPLICATIONS_DB.prepare(
-      "CREATE TABLE IF NOT EXISTS candidate_ratings (rater_key TEXT NOT NULL, rater_label TEXT NOT NULL, application_id TEXT NOT NULL, criterion TEXT NOT NULL, level INTEGER NOT NULL CHECK (level BETWEEN 1 AND 4), updated_at TEXT NOT NULL, PRIMARY KEY (rater_key, application_id, criterion))"
-    )
-  ]);
+  const db = env.TA_APPLICATIONS_DB;
+  const existing = await db.prepare(
+    "SELECT name FROM sqlite_master WHERE type = 'table' AND name IN ('candidate_codes', 'candidate_ratings', 'candidate_scores')"
+  ).all();
+  const tables = new Set((existing.results || []).map((row) => row.name));
+  const steps = [
+    db.prepare("CREATE TABLE IF NOT EXISTS candidate_codes (application_id TEXT PRIMARY KEY NOT NULL, code TEXT NOT NULL UNIQUE, assigned_at TEXT NOT NULL)")
+  ];
+  if (!tables.has("candidate_scores")) {
+    steps.push(db.prepare(
+      "CREATE TABLE IF NOT EXISTS candidate_scores (rater_key TEXT NOT NULL, rater_label TEXT NOT NULL, application_id TEXT NOT NULL, criterion TEXT NOT NULL, level INTEGER NOT NULL CHECK (level BETWEEN 1 AND 5), updated_at TEXT NOT NULL, PRIMARY KEY (rater_key, application_id, criterion))"
+    ));
+    if (tables.has("candidate_ratings")) {
+      steps.push(db.prepare(
+        "INSERT OR IGNORE INTO candidate_scores (rater_key, rater_label, application_id, criterion, level, updated_at) " +
+        "SELECT rater_key, rater_label, application_id, criterion, level, updated_at FROM candidate_ratings"
+      ));
+    }
+  }
+  await db.batch(steps);
   reviewSchemaReady = true;
 }
 
@@ -317,7 +337,7 @@ async function handleRatingsGet(env, role, url) {
   const visible = all.filter(({ code, answers }) => code && (role === "owner" || canShareWithReviewers(answers)));
   const ids = new Map(visible.map(({ row, code }) => [row.id, code]));
   const saved = await env.TA_APPLICATIONS_DB.prepare(
-    "SELECT application_id, criterion, level FROM candidate_ratings WHERE rater_key = ?"
+    "SELECT application_id, criterion, level FROM candidate_scores WHERE rater_key = ?"
   ).bind(raterKey(rater)).all();
   const ratings = {};
   for (const item of saved.results || []) {
@@ -349,7 +369,7 @@ async function handleRatingsPost(request, env, role) {
   const rater = cleanRater(data?.rater);
   if (!rater) return jsonResponse({ error: "Type your name first." }, 400);
   if (typeof data?.code !== "string" || !RATING_CRITERIA.includes(data?.criterion) ||
-      !(data.level === null || RATING_LEVELS.includes(data.level))) {
+      !(data.level === null || RATING_LEVELS[data.criterion].includes(data.level))) {
     return jsonResponse({ error: "That rating could not be saved." }, 400);
   }
   const all = await listCandidates(env);
@@ -357,11 +377,11 @@ async function handleRatingsPost(request, env, role) {
   if (!target) return jsonResponse({ error: "That candidate was not found. Refresh the page." }, 404);
   const db = env.TA_APPLICATIONS_DB;
   if (data.level === null) {
-    await db.prepare("DELETE FROM candidate_ratings WHERE rater_key = ? AND application_id = ? AND criterion = ?")
+    await db.prepare("DELETE FROM candidate_scores WHERE rater_key = ? AND application_id = ? AND criterion = ?")
       .bind(raterKey(rater), target.row.id, data.criterion).run();
   } else {
     await db.prepare(
-      "INSERT INTO candidate_ratings (rater_key, rater_label, application_id, criterion, level, updated_at) VALUES (?, ?, ?, ?, ?, ?) " +
+      "INSERT INTO candidate_scores (rater_key, rater_label, application_id, criterion, level, updated_at) VALUES (?, ?, ?, ?, ?, ?) " +
       "ON CONFLICT (rater_key, application_id, criterion) DO UPDATE SET rater_label = excluded.rater_label, level = excluded.level, updated_at = excluded.updated_at"
     ).bind(raterKey(rater), rater, target.row.id, data.criterion, data.level, new Date().toISOString()).run();
   }
@@ -371,7 +391,7 @@ async function handleRatingsPost(request, env, role) {
 async function handleSummary(env) {
   const all = await listCandidates(env);
   const saved = await env.TA_APPLICATIONS_DB.prepare(
-    "SELECT rater_key, rater_label, application_id, criterion, level FROM candidate_ratings"
+    "SELECT rater_key, rater_label, application_id, criterion, level FROM candidate_scores"
   ).all();
   const byApp = new Map();
   for (const item of saved.results || []) {
