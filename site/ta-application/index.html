@@ -406,7 +406,7 @@
     <section class="section-card wizard-panel" id="step-work" data-step-panel="3" role="tabpanel" aria-labelledby="tab-work" tabindex="0" hidden>
       <p class="section-kicker">04 · Work samples · up to one hour total</p>
       <h2 id="samples-title">Paste your three work samples</h2>
-      <p class="section-intro">Plan up to one hour total for this tab. Choose exactly three prompts across the seven buckets and set a 15-minute timer for each sample. Spend no more than 45 minutes on the samples, leaving time to choose and paste your work. Short bullets and rough drafts are fine; focus on useful work, not polish. If a prompt calls for a video, include preparation and a one-take recording in the timer; keep the recording to five minutes or less.</p>
+      <p class="section-intro">Plan up to one hour total for this tab. Choose exactly three prompts across the eight buckets and set a 15-minute timer for each sample. Spend no more than 45 minutes on the samples, leaving time to choose and paste your work. Short bullets and rough drafts are fine; focus on useful work, not polish. If a prompt calls for a video, include preparation and a one-take recording in the timer; keep the recording to five minutes or less.</p>
       <p class="section-intro">Paste each sample into its box below. Paste written work as text. For videos, slides, images, or anything else you made somewhere else, paste a link.</p>
       <p class="section-intro"><strong> Check your sharing before you paste a link. </strong> Set the file to “Anyone with the link can view” (in Google Drive, Docs, or Slides: Share, then General access). Then open the link in a private or incognito window. If it asks you to sign in or request access, we can’t see it, and we can’t count it.</p>
       <div class="menu-intro">
@@ -423,6 +423,9 @@
           <label class="task-option"><input type="checkbox" class="task-choice" data-id="roast-bropa" data-title="Roast BroPa" data-prompt="Set a five-minute timer. Write a short roast that is as funny as you can make it: a little mean, but never unkind."><span class="task-copy"><strong>Roast BroPa</strong><small>Set a five-minute timer. Write a short roast that is as funny as you can make it: a little mean, but never unkind.</small></span></label>
         </div></section>
 
+        <section class="bucket" aria-labelledby="bucket-mentor"><div class="bucket-header"><h3 id="bucket-mentor">Champion of the Proletariat</h3></div><p class="bucket-subtitle">The student advocate: notices who’s thriving, who’s stuck, and how to help without making anyone feel small.</p><div class="task-options">
+          <label class="task-option"><input type="checkbox" class="task-choice" data-id="overwhelmed-student" data-title="The Overwhelmed Student" data-prompt="Every applicant who picks this one gets the same scenario. It’s week 6. A student sends you this Zoom message at 11:40 p.m.: “hey sorry to bother you. i’ve missed the last 3 classes and i’m behind on everything. i don’t think i can catch up and i’m thinking about just dropping. is it too late to fix this?” Write your actual reply. Then, in one or two lines, tell BroPa what you would do next and what you would bring to him."><span class="task-copy"><strong>The Overwhelmed Student</strong><small>Every applicant who picks this one gets the same scenario. It’s week 6. A student sends you this Zoom message at 11:40 p.m.: “hey sorry to bother you. i’ve missed the last 3 classes and i’m behind on everything. i don’t think i can catch up and i’m thinking about just dropping. is it too late to fix this?” Write your actual reply. Then, in one or two lines, tell BroPa what you would do next and what you would bring to him.</small></span></label>
+        </div></section>
 
         <section class="bucket" aria-labelledby="bucket-teacher"><div class="bucket-header"><h3 id="bucket-teacher">Teacher of Teachers</h3></div><p class="bucket-subtitle">Knows the content, can make it click, and helps other people get better at teaching it.</p><div class="task-options">
           <label class="task-option"><input type="checkbox" class="task-choice" data-id="hardest-concept-video" data-title="Teach Your Hardest Concept" data-prompt="Think of the hardest course concept you learned in BroPa’s class. Explain it with one slide and a recorded video no longer than five minutes. Use one take; no editing is expected."><span class="task-copy"><strong>Teach Your Hardest Concept</strong><small>Think of the hardest course concept you learned in BroPa’s class. Explain it with one slide and a recorded video no longer than five minutes. Use one take; no editing is expected.</small></span></label>
@@ -488,6 +491,11 @@
       <p class="section-kicker">05 · Reflection · under 5 minutes</p>
       <h2 id="reflection-title">What will you take with you?</h2>
       <p class="section-intro">This final reflection should take under five minutes. Whether or not you get the job, use it to consider what you learned and what you can carry forward.</p>
+      <div class="prompt-block time-estimate">
+        <label for="application-time">Estimate how much time you really spent on this full application.</label>
+        <input id="application-time" name="application-time-minutes" type="number" min="1" step="1" placeholder="Minutes" required>
+        <p class="helper">Enter your estimate in minutes.</p>
+      </div>
       <div class="prompt-block" style="margin-top:0;padding-top:0;border-top:0">
         <label for="reflection-answer">What have you learned through this application that you can apply to the rest of your life?</label>
         <textarea id="reflection-answer" name="reflection" maxlength="1000" placeholder="Name one thing you can carry forward, whether or not you are selected." required></textarea>
@@ -497,6 +505,10 @@
         <label class="choice-row"><input id="relationship-acknowledgment" name="relationship-acknowledgment" type="checkbox" required><span>I know that if Brother Pacini chooses someone else this semester, he still loves me. I’m welcome to visit his office, join the PacPack Zoom channel, and keep hanging out. The decision is about which student feels right, and sometimes that means identifying the student who needs the opportunity, not necessarily the “best” candidate. It doesn’t change that I’m valued and welcome.</span></label>
       </div>
 
+      <fieldset class="prompt-block">
+        <legend>Would you like to hear about other opportunities?</legend>
+        <div class="check-stack"><label class="choice-row"><input id="other-jobs" name="other-opportunities" type="checkbox"><span>I’d be interested in hearing about other on-campus, online, or future jobs.</span></label></div>
+      </fieldset>
 
       <div class="wizard-actions">
         <button class="back-button" type="button" data-back>Back</button>
@@ -920,9 +932,12 @@
         };
       }),
       reflection: {
-        answer: readValue('reflection')
+        timeSpentMinutes: Number(readValue('application-time-minutes')),
+        answer: readValue('reflection'),
+        otherOpportunities: isChecked('other-opportunities')
       },
-      timing: { activeSeconds: getTrackedActiveSeconds() }
+      timing: { activeSeconds: getTrackedActiveSeconds() },
+      formVersion: 2
     };
   }
 

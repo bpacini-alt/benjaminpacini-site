@@ -12,8 +12,8 @@ const RATING_FIELDS = [
   "vibe", "technology", "mentorship", "content",
   "assertiveness", "grading", "innovation", "initiative"
 ];
-// Only the items that split applicants (Nov 2026 data). Older applications
-// may hold answers for items that have since been removed.
+// Form version 2 (Nov 2026) keeps only the items that split applicants.
+// Version 1 applications hold answers for all 18 original items.
 const RESPONSIBILITY_IDS = [
   "dress-code", "canvas-bugs", "redirect-student", "practical-jokes", "change-memes", "promise-grade"
 ];
@@ -119,8 +119,16 @@ function validateApplication(data) {
 
   const reflection = data.reflection;
   if (!isObject(reflection) ||
-      !hasText(reflection.answer, 1000)) {
+      !Number.isInteger(reflection.timeSpentMinutes) ||
+      reflection.timeSpentMinutes < 1 ||
+      reflection.timeSpentMinutes > 1440 ||
+      !hasText(reflection.answer, 1000) ||
+      typeof reflection.otherOpportunities !== "boolean") {
     return "Please complete the final reflection.";
+  }
+
+  if (data.formVersion !== undefined && (!Number.isInteger(data.formVersion) || data.formVersion < 1 || data.formVersion > 100)) {
+    return "Please resubmit the application.";
   }
 
   if (data.timing !== undefined &&
