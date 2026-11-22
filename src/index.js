@@ -12,12 +12,10 @@ const RATING_FIELDS = [
   "vibe", "technology", "mentorship", "content",
   "assertiveness", "grading", "innovation", "initiative"
 ];
+// Form version 2 (Nov 2026) keeps only the items that split applicants.
+// Version 1 applications hold answers for all 18 original items.
 const RESPONSIBILITY_IDS = [
-  "grade", "dress-code", "personal-life", "integrity", "canvas-bugs",
-  "call-it", "weekend-zoom", "refer-support", "diagnose-disability",
-  "modify-assignment", "grade-exception", "correct-ta", "redirect-student",
-  "practical-jokes", "change-memes", "financial-support", "interview-tas",
-  "promise-grade"
+  "dress-code", "canvas-bugs", "redirect-student", "practical-jokes", "change-memes", "promise-grade"
 ];
 const RESPONSIBILITY_ROLES = new Set(["ta", "brother-pacini", "no-one"]);
 const QUESTION_LIMITS = {
@@ -127,6 +125,10 @@ function validateApplication(data) {
       !hasText(reflection.answer, 1000) ||
       typeof reflection.otherOpportunities !== "boolean") {
     return "Please complete the final reflection.";
+  }
+
+  if (data.formVersion !== undefined && (!Number.isInteger(data.formVersion) || data.formVersion < 1 || data.formVersion > 100)) {
+    return "Please resubmit the application.";
   }
 
   if (data.timing !== undefined &&

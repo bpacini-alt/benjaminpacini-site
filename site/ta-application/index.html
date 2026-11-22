@@ -323,23 +323,11 @@
         <p class="sr-only" id="job-sort-help">You can drag tasks with a mouse. With a keyboard or touch screen, select a task, then activate a bucket to place it.</p>
         <div class="job-sort-board" aria-describedby="job-sort-help">
           <div class="job-task-bank" id="job-task-bank" aria-label="Unsorted responsibilities">
-            <button type="button" class="job-task" draggable="true" data-task-id="grade" aria-pressed="false">Grade student work using the rubric</button>
             <button type="button" class="job-task" draggable="true" data-task-id="dress-code" aria-pressed="false">Talk with a student about a dress-code violation</button>
-            <button type="button" class="job-task" draggable="true" data-task-id="personal-life" aria-pressed="false">Monitor students’ personal lives outside class</button>
-            <button type="button" class="job-task" draggable="true" data-task-id="integrity" aria-pressed="false">Deal with academic-integrity issues</button>
             <button type="button" class="job-task" draggable="true" data-task-id="canvas-bugs" aria-pressed="false">Fix bugs in Canvas</button>
-            <button type="button" class="job-task" draggable="true" data-task-id="call-it" aria-pressed="false">Call IT if the classroom computer is broken</button>
-            <button type="button" class="job-task" draggable="true" data-task-id="weekend-zoom" aria-pressed="false">Answer Zoom messages on a weekend</button>
-            <button type="button" class="job-task" draggable="true" data-task-id="refer-support" aria-pressed="false">Refer a student to the Dean of Students or Title IX</button>
-            <button type="button" class="job-task" draggable="true" data-task-id="diagnose-disability" aria-pressed="false">Diagnose a student with a disability</button>
-            <button type="button" class="job-task" draggable="true" data-task-id="modify-assignment" aria-pressed="false">Modify a major assignment</button>
-            <button type="button" class="job-task" draggable="true" data-task-id="grade-exception" aria-pressed="false">Make an exception to a student’s grade (e.g., extra credit or dropping an assignment)</button>
-            <button type="button" class="job-task" draggable="true" data-task-id="correct-ta" aria-pressed="false">Correct a TA’s behavior or performance</button>
             <button type="button" class="job-task" draggable="true" data-task-id="redirect-student" aria-pressed="false">Correct a student who leaves early, is on their phone, or is doing something distracting</button>
             <button type="button" class="job-task" draggable="true" data-task-id="practical-jokes" aria-pressed="false">Play practical jokes</button>
             <button type="button" class="job-task" draggable="true" data-task-id="change-memes" aria-pressed="false">Change memes</button>
-            <button type="button" class="job-task" draggable="true" data-task-id="financial-support" aria-pressed="false">Provide financial support to a student</button>
-            <button type="button" class="job-task" draggable="true" data-task-id="interview-tas" aria-pressed="false">Interview TAs</button>
             <button type="button" class="job-task" draggable="true" data-task-id="promise-grade" aria-pressed="false">Promise a certain grade to a student</button>
             <p class="job-bank-empty" hidden>All tasks are sorted.</p>
           </div>
@@ -363,23 +351,11 @@
           <label for="job-sort-context">Which ones need more context? Keep it brief, but feel free to add a little more.</label>
           <textarea id="job-sort-context" name="job-sort-context" maxlength="800" placeholder="Name a task and add any context that would help explain your choice."></textarea>
         </div>
-        <input type="hidden" id="job-sort-grade" name="job-sort-grade" value="">
         <input type="hidden" id="job-sort-dress-code" name="job-sort-dress-code" value="">
-        <input type="hidden" id="job-sort-personal-life" name="job-sort-personal-life" value="">
-        <input type="hidden" id="job-sort-integrity" name="job-sort-integrity" value="">
         <input type="hidden" id="job-sort-canvas-bugs" name="job-sort-canvas-bugs" value="">
-        <input type="hidden" id="job-sort-call-it" name="job-sort-call-it" value="">
-        <input type="hidden" id="job-sort-weekend-zoom" name="job-sort-weekend-zoom" value="">
-        <input type="hidden" id="job-sort-refer-support" name="job-sort-refer-support" value="">
-        <input type="hidden" id="job-sort-diagnose-disability" name="job-sort-diagnose-disability" value="">
-        <input type="hidden" id="job-sort-modify-assignment" name="job-sort-modify-assignment" value="">
-        <input type="hidden" id="job-sort-grade-exception" name="job-sort-grade-exception" value="">
-        <input type="hidden" id="job-sort-correct-ta" name="job-sort-correct-ta" value="">
         <input type="hidden" id="job-sort-redirect-student" name="job-sort-redirect-student" value="">
         <input type="hidden" id="job-sort-practical-jokes" name="job-sort-practical-jokes" value="">
         <input type="hidden" id="job-sort-change-memes" name="job-sort-change-memes" value="">
-        <input type="hidden" id="job-sort-financial-support" name="job-sort-financial-support" value="">
-        <input type="hidden" id="job-sort-interview-tas" name="job-sort-interview-tas" value="">
         <input type="hidden" id="job-sort-promise-grade" name="job-sort-promise-grade" value="">
       </section>
 
@@ -445,14 +421,10 @@
           <label class="task-option"><input type="checkbox" class="task-choice" data-id="class-button-pins" data-title="Class Button Pins" data-prompt="Design two rough button-pin concepts that could become class swag, based on ideas or concepts from the course. Quick sketches or captions are fine."><span class="task-copy"><strong>Class Button Pins</strong><small>Design two rough button-pin concepts that could become class swag, based on ideas or concepts from the course. Quick sketches or captions are fine.</small></span></label>
           <label class="task-option"><input type="checkbox" class="task-choice" data-id="door-meme-collection" data-title="Door Meme Collection" data-prompt="Find or design up to three memes for BroPa’s door that fit his vibe and this class. Captions, rough concepts, or links are fine."><span class="task-copy"><strong>Door Meme Collection</strong><small>Find or design up to three memes for BroPa’s door that fit his vibe and this class. Captions, rough concepts, or links are fine.</small></span></label>
           <label class="task-option"><input type="checkbox" class="task-choice" data-id="roast-bropa" data-title="Roast BroPa" data-prompt="Set a five-minute timer. Write a short roast that is as funny as you can make it: a little mean, but never unkind."><span class="task-copy"><strong>Roast BroPa</strong><small>Set a five-minute timer. Write a short roast that is as funny as you can make it: a little mean, but never unkind.</small></span></label>
-          <label class="task-option"><input type="checkbox" class="task-choice" data-id="zoom-welcome" data-title="Zoom Welcome" data-prompt="Write a short, class-wide Zoom opening message that welcomes students and sets a warm, playful tone."><span class="task-copy"><strong>Zoom Welcome</strong><small>Write a short, class-wide Zoom opening message that welcomes students and sets a warm, playful tone.</small></span></label>
         </div></section>
 
         <section class="bucket" aria-labelledby="bucket-mentor"><div class="bucket-header"><h3 id="bucket-mentor">Champion of the Proletariat</h3></div><p class="bucket-subtitle">The student advocate: notices who’s thriving, who’s stuck, and how to help without making anyone feel small.</p><div class="task-options">
-          <label class="task-option"><input type="checkbox" class="task-choice" data-id="checkpoint-plan" data-title="Weeks 2, 5, 7, 10, and 13" data-prompt="Give us a quick plan: what will you do to support students in weeks 2, 5, 7, and 10? What about week 13? What data will you use? What actions will you take? Short bullets are fine."><span class="task-copy"><strong>Weeks 2, 5, 7, 10, and 13</strong><small>Give us a quick plan: what will you do to support students in weeks 2, 5, 7, and 10? What about week 13? What data will you use? What actions will you take? Short bullets are fine.</small></span></label>
-          <label class="task-option"><input type="checkbox" class="task-choice" data-id="classwide-zoom-message" data-title="Class-Wide Zoom Message" data-prompt="Write a brief, encouraging midsemester message to the whole class. Include a clear next step, such as: “If you need help with ___, reach out by ___.”"><span class="task-copy"><strong>Class-Wide Zoom Message</strong><small>Write a brief, encouraging midsemester message to the whole class. Include a clear next step, such as: “If you need help with ___, reach out by ___.”</small></span></label>
-          <label class="task-option"><input type="checkbox" class="task-choice" data-id="highflyer-thanks" data-title="Give a High-Flyer Their Flowers" data-prompt="Write a brief note thanking a student for a specific contribution or achievement. Make it sincere and specific."><span class="task-copy"><strong>Give a High-Flyer Their Flowers</strong><small>Write a brief note thanking a student for a specific contribution or achievement. Make it sincere and specific.</small></span></label>
-          <label class="task-option"><input type="checkbox" class="task-choice" data-id="highflyer-growth" data-title="Help a High-Flyer Keep Growing" data-prompt="Write a brief check-in that recognizes a student’s strengths and opens a conversation about what they’d like to learn or try next."><span class="task-copy"><strong>Help a High-Flyer Keep Growing</strong><small>Write a brief check-in that recognizes a student’s strengths and opens a conversation about what they’d like to learn or try next.</small></span></label>
+          <label class="task-option"><input type="checkbox" class="task-choice" data-id="overwhelmed-student" data-title="The Overwhelmed Student" data-prompt="Every applicant who picks this one gets the same scenario. It’s week 6. A student sends you this Zoom message at 11:40 p.m.: “hey sorry to bother you. i’ve missed the last 3 classes and i’m behind on everything. i don’t think i can catch up and i’m thinking about just dropping. is it too late to fix this?” Write your actual reply. Then, in one or two lines, tell BroPa what you would do next and what you would bring to him."><span class="task-copy"><strong>The Overwhelmed Student</strong><small>Every applicant who picks this one gets the same scenario. It’s week 6. A student sends you this Zoom message at 11:40 p.m.: “hey sorry to bother you. i’ve missed the last 3 classes and i’m behind on everything. i don’t think i can catch up and i’m thinking about just dropping. is it too late to fix this?” Write your actual reply. Then, in one or two lines, tell BroPa what you would do next and what you would bring to him.</small></span></label>
         </div></section>
 
         <section class="bucket" aria-labelledby="bucket-teacher"><div class="bucket-header"><h3 id="bucket-teacher">Teacher of Teachers</h3></div><p class="bucket-subtitle">Knows the content, can make it click, and helps other people get better at teaching it.</p><div class="task-options">
@@ -463,7 +435,6 @@
         </div></section>
 
         <section class="bucket" aria-labelledby="bucket-grading"><div class="bucket-header"><h3 id="bucket-grading">More Than a Grading Monkey, but a Very Effective Grading Monkey</h3></div><p class="bucket-subtitle">Fast, fair, and consistent with the rubric—and still leaves feedback that sounds like it came from a human.</p><div class="task-options">
-          <label class="task-option"><input type="checkbox" class="task-choice" data-id="grading-efficiency" data-title="Your Grading Efficiency Plan" data-prompt="In three to five steps, explain how you would grade quickly and effectively while maintaining high-quality, consistent feedback."><span class="task-copy"><strong>Your Grading Efficiency Plan</strong><small>In three to five steps, explain how you would grade quickly and effectively while maintaining high-quality, consistent feedback.</small></span></label>
           <label class="task-option"><input type="checkbox" class="task-choice" data-id="same-mistake-feedback" data-title="Firm and Warm Feedback" data-prompt="Imagine a student has made the same mistake on an assignment three times in a row. Write brief feedback that is firm and warm, and gives the student a concrete next step."><span class="task-copy"><strong>Firm and Warm Feedback</strong><small>Imagine a student has made the same mistake on an assignment three times in a row. Write brief feedback that is firm and warm, and gives the student a concrete next step.</small></span></label>
           <label class="task-option"><input type="checkbox" class="task-choice" data-id="ethical-ai-grading" data-title="Ethical, Fair AI-Assisted Grading" data-prompt="Describe how you could use AI in grading sustainably, ethically, and fairly. Name the safeguards you would use and what decisions must remain yours."><span class="task-copy"><strong>Ethical, Fair AI-Assisted Grading</strong><small>Describe how you could use AI in grading sustainably, ethically, and fairly. Name the safeguards you would use and what decisions must remain yours.</small></span></label>
         </div></section>
@@ -965,7 +936,8 @@
         answer: readValue('reflection'),
         otherOpportunities: isChecked('other-opportunities')
       },
-      timing: { activeSeconds: getTrackedActiveSeconds() }
+      timing: { activeSeconds: getTrackedActiveSeconds() },
+      formVersion: 2
     };
   }
 
