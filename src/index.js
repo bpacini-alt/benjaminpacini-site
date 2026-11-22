@@ -12,12 +12,10 @@ const RATING_FIELDS = [
   "vibe", "technology", "mentorship", "content",
   "assertiveness", "grading", "innovation", "initiative"
 ];
+// Only the items that split applicants (Nov 2026 data). Older applications
+// may hold answers for items that have since been removed.
 const RESPONSIBILITY_IDS = [
-  "grade", "dress-code", "personal-life", "integrity", "canvas-bugs",
-  "call-it", "weekend-zoom", "refer-support", "diagnose-disability",
-  "modify-assignment", "grade-exception", "correct-ta", "redirect-student",
-  "practical-jokes", "change-memes", "financial-support", "interview-tas",
-  "promise-grade"
+  "dress-code", "canvas-bugs", "redirect-student", "practical-jokes", "change-memes", "promise-grade"
 ];
 const RESPONSIBILITY_ROLES = new Set(["ta", "brother-pacini", "no-one"]);
 const QUESTION_LIMITS = {
@@ -121,11 +119,7 @@ function validateApplication(data) {
 
   const reflection = data.reflection;
   if (!isObject(reflection) ||
-      !Number.isInteger(reflection.timeSpentMinutes) ||
-      reflection.timeSpentMinutes < 1 ||
-      reflection.timeSpentMinutes > 1440 ||
-      !hasText(reflection.answer, 1000) ||
-      typeof reflection.otherOpportunities !== "boolean") {
+      !hasText(reflection.answer, 1000)) {
     return "Please complete the final reflection.";
   }
 

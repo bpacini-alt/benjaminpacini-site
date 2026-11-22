@@ -198,12 +198,12 @@ function renderApplication(card, item, isOwner) {
   });
   const reflection = data.reflection || {};
   const last = addSection(card, "Final reflection");
-  addField(last, "Time spent (applicant estimate)", reflection.timeSpentMinutes ? reflection.timeSpentMinutes + " minutes" : "—");
+  if (reflection.timeSpentMinutes) addField(last, "Time spent (applicant estimate)", reflection.timeSpentMinutes + " minutes");
   if (isOwner && data.timing && Number.isInteger(data.timing.activeSeconds)) {
     addField(last, "Tracked active time", Math.floor(data.timing.activeSeconds / 60) + " min " + data.timing.activeSeconds % 60 + " sec");
   }
   addField(last, "What they will carry forward", reflection.answer);
-  addField(last, "Interested in other opportunities", reflection.otherOpportunities ? "Yes" : "No");
+  if (typeof reflection.otherOpportunities === "boolean") addField(last, "Interested in other opportunities", reflection.otherOpportunities ? "Yes" : "No");
 }
 
 async function applicationPage(view) {
